@@ -9,7 +9,7 @@ defmodule BingX.Helpers.Response do
   def extract_payload(%{"code" => 0, "data" => payload} = data, keys) when is_list(keys) do
     case get_in(payload, keys) do
       nil ->
-        {:error, "unexpected response", data}
+        {:error, "unexpected response"}
 
       param ->
         {:ok, param}
@@ -22,9 +22,5 @@ defmodule BingX.Helpers.Response do
 
   def extract_payload(%{"code" => code, "msg" => message}, _keys) do
     {:exception, "exception: #{message}, code: #{code}"}
-  end
-
-  def extract_payload(_response, _keys) do
-    {:error, "unexpected response"}
   end
 end
