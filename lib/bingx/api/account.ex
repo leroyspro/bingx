@@ -3,22 +3,26 @@ defmodule BingX.API.Account do
 
   alias BingX.API.Helpers.{Response, Headers, QueryParams}
 
+  alias BingX.API.Account.BalanceResponse
+
   @endpoint Application.compile_env!(:bingx, :endpoint)
 
   @impl true
   def process_request_url(url), do: @endpoint <> url
 
-  @spec get_perpetual_swap_positions(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
-  def get_perpetual_swap_positions(api_key, secret_key) when is_binary(api_key) do
+  @spec get_balance(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
+  def get_balance(api_key, secret_key)
+      when is_binary(api_key) and is_binary(secret_key) do
     with(
-      {:ok, resp} <- do_get_perpetual_swap_positions(api_key, secret_key),
-      {:ok, data} <- Jason.decode(resp.body, keys: :strings)
+      {:ok, resp} <- do_get_balance(api_key, secret_key),
+      {:ok, data} <- Jason.decode(resp.body, keys: :strings),
+      {:ok, payload} = Response.extract_payload(data, "balance")
     ) do
-      {:ok, _payload} = Response.extract_payload(data, "balance")
+      {:ok, BalanceResponse.new(payload)}
     end
   end
 
-  defp do_get_perpetual_swap_positions(api_key, secret_key) do
+  defp do_get_balance(api_key, secret_key) do
     headers = Headers.append_api_key(api_key)
 
     params =
