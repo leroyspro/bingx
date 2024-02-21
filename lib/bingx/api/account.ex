@@ -3,11 +3,7 @@ defmodule BingX.API.Account do
 
   alias BingX.API.Helpers.{Response, Headers, QueryParams}
 
-  @endpoint Application.compile_env(
-              :bingx,
-              :endpoint,
-              "https://open-api.bingx.com"
-            )
+  @endpoint Application.compile_env!(:bingx, :endpoint)
 
   @impl true
   def process_request_url(url), do: @endpoint <> url

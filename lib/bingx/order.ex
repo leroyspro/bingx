@@ -1,27 +1,6 @@
 defmodule BingX.Order do
   alias __MODULE__
 
-  @enforce_keys [
-    :symbol,
-    :side,
-    :position_side,
-    :price,
-    :quantity,
-    :type
-  ]
-
-  @type t() :: %__MODULE__{
-          :order_id => any(),
-          :client_order_id => any(),
-          :symbol => any(),
-          :side => any(),
-          :position_side => any(),
-          :price => any(),
-          :quantity => any(),
-          :stop_price => any(),
-          :type => any()
-        }
-
   defstruct [
     :symbol,
     :side,
@@ -29,28 +8,29 @@ defmodule BingX.Order do
     :price,
     :quantity,
     :type,
-    stop_price: nil,
-    order_id: nil,
-    client_order_id: nil
+    :stop_price,
+    :order_id,
+    :client_order_id,
+    :stop_loss,
+    :take_profit,
+    :working_type
   ]
 
-  @spec new(%{
-          :order_id => any(),
-          :symbol => any(),
-          :side => any(),
-          :position_side => any(),
-          :price => any(),
-          :quantity => any(),
-          :type => any()
-        }) :: __MODULE__.t()
+  @spec new(map()) :: %Order{}
   def new(params) when is_map(params), do: struct(Order, params)
 
+  @spec symbol(:btc_usdt) :: binary()
   def symbol(:btc_usdt), do: "BTC-USDT"
 
+  @spec side(:buy | :sell) :: binary()
   def side(:buy), do: "BUY"
   def side(:sell), do: "SELL"
 
+  @spec position_side(:both | :long | :short) :: binary()
   def position_side(:long), do: "LONG"
   def position_side(:short), do: "SHORT"
   def position_side(:both), do: "BOTH"
+
+  @spec type(:trigger_market) :: binary()
+  def type(:trigger_market), do: "TRIGGER_MARKET"
 end

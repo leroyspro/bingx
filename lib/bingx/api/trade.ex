@@ -1,14 +1,11 @@
-defmodule Bingx.API.Trade do
+defmodule BingX.API.Trade do
   use HTTPoison.Base
 
   alias BingX.Order
   alias BingX.API.Helpers.{Response, QueryParams, Headers}
 
-  @endpoint Application.compile_env(
-              :bingx,
-              :endpoint,
-              "https://open-api.bingx.com"
-            )
+  @endpoint Application.compile_env!(:bingx, :endpoint)
+
   @api_v2 "/openApi/swap/v2"
   @scope "/trade"
   @url_base @api_v2 <> @scope
@@ -62,16 +59,17 @@ defmodule Bingx.API.Trade do
 
   defp order_to_query_params(order) do
     order
-    |> Enum.reduce(fn
-      {:order_id, x}, acc -> Map.merge(acc, %{"orderId" => x})
-      {:type, x}, acc -> Map.merge(acc, %{"type" => x})
-      {:symbol, x}, acc -> Map.merge(acc, %{"symbol" => x})
-      {:side, x}, acc -> Map.merge(acc, %{"side" => x})
-      {:position_side, x}, acc -> Map.merge(acc, %{"positionSide" => x})
-      {:stop_price, x}, acc -> Map.merge(acc, %{"stopPrice" => x})
-      {:price, x}, acc -> Map.merge(acc, %{"price" => x})
-      {:quantity, x}, acc -> Map.merge(acc, %{"quantity" => x})
-      {_key, _value}, acc -> acc
+    |> Map.from_struct()
+    |> Stream.reject(fn {_k, v} -> is_nil(v) end)
+    |> Stream.map(fn
+      {:position_side, x} -> {"positionSide", x}
+      {:client_order_id, x} -> {"clientOrderID", x}
+      {:stop_price, x} -> {"stopPrice", x}
+      {:stop_loss, x} -> {"stopLoss", x}
+      {:take_profit, x} -> {"takeProfit", x}
+      {:working_type, x} -> {"workingType", x}
+      {k, v} -> {to_string(k), v}
     end)
+    |> Map.new()
   end
 end
