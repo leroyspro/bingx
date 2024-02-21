@@ -1,4 +1,5 @@
 {
   "elixirLS.projectDir": "./",
+  "elixirLS.mixEnv": "./",
   // "elixirLS.mixEnv": "prod"
 }

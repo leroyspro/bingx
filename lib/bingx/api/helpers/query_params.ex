@@ -1,4 +1,4 @@
-defmodule BingX.Helpers.QueryParams do
+defmodule BingX.API.Helpers.QueryParams do
   import BingX.Helpers
 
   alias :crypto, as: Crypto

@@ -1,4 +1,4 @@
-defmodule BingX.Account do
+defmodule BingX.API.Account do
   use HTTPoison.Base
 
   alias BingX.Helpers.{Response, Headers, QueryParams}
@@ -15,20 +15,10 @@ defmodule BingX.Account do
   @spec get_perpetual_swap_positions(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
   def get_perpetual_swap_positions(api_key, secret_key) when is_binary(api_key) do
     with(
-      {:ok, %{body: body}} <- do_get_perpetual_swap_positions(api_key, secret_key),
-      {:ok, response} <- Jason.decode(body, keys: :strings)
+      {:ok, resp} <- do_get_perpetual_swap_positions(api_key, secret_key),
+      {:ok, data} <- Jason.decode(resp.body, keys: :strings)
     ) do
-      IO.puts(inspect(body))
-      Response.extract_payload(response, "balance")
-    else
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-
-      {:error, %Jason.DecodeError{}} ->
-        {:error, "bad JSON parse"}
-
-      _ ->
-        {:error, "unexpected error"}
+      {:ok, _payload} = Response.extract_payload(data, "balance")
     end
   end
 
