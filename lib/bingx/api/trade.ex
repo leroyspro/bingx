@@ -60,7 +60,7 @@ defmodule Bingx.API.Trade do
     __MODULE__.post(@url_base <> "/order", "", headers, params: params)
   end
 
-  defp order_to_query_params(%Order{} = order) do
+  defp order_to_query_params(order) do
     order
     |> Enum.reduce(fn
       {:order_id, x}, acc -> Map.merge(acc, %{"orderId" => x})
