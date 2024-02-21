@@ -1,7 +1,7 @@
 defmodule BingX.API.Account do
   use HTTPoison.Base
 
-  alias BingX.Helpers.{Response, Headers, QueryParams}
+  alias BingX.API.Helpers.{Response, Headers, QueryParams}
 
   @endpoint Application.compile_env(
               :bingx,
