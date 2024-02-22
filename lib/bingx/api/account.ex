@@ -1,9 +1,9 @@
 defmodule BingX.API.Account do
   use HTTPoison.Base
 
-  alias BingX.API.Helpers.{Response, Headers, QueryParams}
-
+  alias BingX.API.Helpers.{Headers, QueryParams}
   alias BingX.API.Account.BalanceResponse
+  alias BingX.API.Exception
 
   @endpoint Application.compile_env!(:bingx, :endpoint)
 
@@ -13,12 +13,16 @@ defmodule BingX.API.Account do
   @spec get_balance(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
   def get_balance(api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-    with(
-      {:ok, resp} <- do_get_balance(api_key, secret_key),
-      {:ok, data} <- Jason.decode(resp.body, keys: :strings),
-      {:ok, payload} = Response.extract_payload(data, "balance")
-    ) do
-      {:ok, BalanceResponse.new(payload)}
+    with {:ok, %{body: body}} <- do_get_balance(api_key, secret_key) do
+      {:ok, data} = Jason.decode(body, keys: :strings)
+
+      case data do
+        %{"code" => 0, "data" => %{ "balance" => payload }} ->
+          {:ok, BalanceResponse.new(payload)}
+
+        %{"code" => code, "msg" => message} ->
+          {:error, Exception.new(%{ message: message, code: code })}
+      end
     end
   end
 

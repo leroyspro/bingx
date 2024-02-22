@@ -3,37 +3,45 @@ defmodule BingX.Order.TriggerMarket do
   alias __MODULE__
 
   @type t() :: %Order{
-          :order_id => any(),
-          :position_side => any(),
-          :price => any(),
-          :quantity => any(),
+          :order_id => Order.order_id(),
           :side => any(),
-          :symbol => any(),
-          :stop_price => any(),
-          :working_type => any()
+          :position_side => Order.position_side(),
+          :price => float(),
+          :quantity => float(),
+          :symbol => Order.symbol(),
+          :stop_price => float(),
+          :working_type => Order.working_type()
         }
 
   @spec new(%{
+          :side => any(),
           :position_side => any(),
           :price => any(),
           :quantity => any(),
-          :side => any(),
           :symbol => any(),
           :stop_price => any(),
-          :working_type => any()
+          optional(:working_type) => any()
         }) :: TriggerMarket.t()
   def new(
         %{
-          position_side: _,
-          price: _,
-          quantity: _,
-          side: _,
-          symbol: _,
-          stop_price: _
+          side: side,
+          position_side: position_side,
+          price: price,
+          quantity: quantity,
+          symbol: symbol,
+          stop_price: stop_price
         } = params
       ) do
-    params
-    |> Map.merge(%{type: Order.type(:trigger_market)})
+    %{
+      side: side,
+      position_side: position_side,
+      price: price,
+      quantity: quantity,
+      symbol: symbol,
+      stop_price: stop_price,
+      working_type: Map.get(params, :working_type, :mark_price),
+      type: :trigger_market
+    }
     |> Order.new()
   end
 end
