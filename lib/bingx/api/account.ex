@@ -7,8 +7,7 @@ defmodule BingX.API.Account do
   def url_base, do: @hostname <> "/openApi/swap/v2/user"
 
   @spec get_balance(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
-  def get_balance(api_key, secret_key)
-      when is_binary(api_key) and is_binary(secret_key) do
+  def get_balance(api_key, secret_key) when is_binary(api_key) and is_binary(secret_key) do
     with {:ok, %{body: body}} <- do_get_balance(api_key, secret_key) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 

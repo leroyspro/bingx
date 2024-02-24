@@ -1,5 +1,8 @@
 {
   "elixirLS.projectDir": "./",
-  "elixirLS.mixEnv": "./",
-  // "elixirLS.mixEnv": "prod"
+  "elixirLS.mixTarget": "./",
+  "elixirLS.mixEnv": "dev",
+  "editor.rulers": [
+    100
+  ]
 }

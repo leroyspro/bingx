@@ -3,7 +3,7 @@ defmodule BingX.Order.Helpers do
 
   @sides [:buy, :sell]
   @position_sides [:short, :long, :both]
-  @types [:trigger_market]
+  @types [:market, :trigger_market]
   @working_types [:index_price, :mark_price, :contract_price]
 
   def validate!(key, value) do

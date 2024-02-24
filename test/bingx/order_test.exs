@@ -16,9 +16,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected :working_type to be one of [:index_price, :mark_price, :contract_price], got: :unknown",
-                   fn ->
-                     Order.new(%{working_type: :unknown})
-                   end
+                   fn -> Order.new(%{working_type: :unknown}) end
     end
 
     test "should validate :type key" do
@@ -26,9 +24,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected :type to be one of [:trigger_market], got: :unknown",
-                   fn ->
-                     Order.new(%{type: :unknown})
-                   end
+                   fn -> Order.new(%{type: :unknown}) end
     end
 
     test "should validate :side key" do
@@ -37,9 +33,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected :side to be one of [:buy, :sell], got: :unknown",
-                   fn ->
-                     Order.new(%{side: :unknown})
-                   end
+                   fn -> Order.new(%{side: :unknown}) end
     end
 
     test "should validate :position_side key" do
@@ -49,9 +43,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected :position_side to be one of [:short, :long, :both], got: :unknown",
-                   fn ->
-                     Order.new(%{position_side: :unknown})
-                   end
+                   fn -> Order.new(%{position_side: :unknown}) end
     end
 
     test "should validate :order_id key", do: build_assert(:order_id, :binary)
@@ -74,9 +66,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected #{inspect(key)} to be type of number, got: :unknown",
-                   fn ->
-                     Order.new(%{key => :unknown})
-                   end
+                   fn -> Order.new(%{key => :unknown}) end
     end
 
     def build_assert(key, :binary) do
@@ -87,9 +77,7 @@ defmodule BingX.API.OrderTest do
 
       assert_raise ArgumentError,
                    "expected #{inspect(key)} to be type of binary, got: :unknown",
-                   fn ->
-                     Order.new(%{key => :unknown})
-                   end
+                   fn -> Order.new(%{key => :unknown}) end
     end
   end
 end
