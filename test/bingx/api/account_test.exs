@@ -18,9 +18,8 @@ defmodule BingX.API.AccountTest do
 
   setup_all do
     {
-      :ok, 
-      api_key: "API_KEY_FOR_TEST", 
-      secret_key: "SECRET_KEY_FOR_TEST"
+      :ok,
+      api_key: "API_KEY_FOR_TEST", secret_key: "SECRET_KEY_FOR_TEST"
     }
   end
 
@@ -37,7 +36,7 @@ defmodule BingX.API.AccountTest do
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once HTTPoison.get(endpoint, headers, _options)
+      assert_called_once(HTTPoison.get(endpoint, headers, _options))
     end
 
     test "should put the provided api_key into the request headers", context do
@@ -50,8 +49,8 @@ defmodule BingX.API.AccountTest do
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once HTTPoison.get(_url, headers, _options)
-      assert_called_once Headers.append_api_key(_, api_key)
+      assert_called_once(HTTPoison.get(_url, headers, _options))
+      assert_called_once(Headers.append_api_key(_, api_key))
     end
 
     test "should emit the error if request is unsuccessful", context do
@@ -70,16 +69,20 @@ defmodule BingX.API.AccountTest do
       params_with_receive_window = %{"TEST_RECEIVE_WINDOW" => 100}
       http_options = [params: params_with_receive_window]
 
-      patch(QueryParams, :append_receive_window, callable(fn params -> 
-        Map.merge(params, params_with_receive_window)
-      end))
+      patch(
+        QueryParams,
+        :append_receive_window,
+        callable(fn params ->
+          Map.merge(params, params_with_receive_window)
+        end)
+      )
 
       patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once HTTPoison.get(_url, _headers, http_options)
-      assert_called_once QueryParams.append_receive_window(_)
+      assert_called_once(HTTPoison.get(_url, _headers, http_options))
+      assert_called_once(QueryParams.append_receive_window(_))
     end
 
     test "should put query params with timestamp", context do
@@ -88,16 +91,20 @@ defmodule BingX.API.AccountTest do
       params_with_timestamp = %{"TEST_TIMESTAMP" => 100}
       http_options = [params: params_with_timestamp]
 
-      patch(QueryParams, :append_timestamp, callable(fn params -> 
-        Map.merge(params, params_with_timestamp)
-      end))
+      patch(
+        QueryParams,
+        :append_timestamp,
+        callable(fn params ->
+          Map.merge(params, params_with_timestamp)
+        end)
+      )
 
       patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once HTTPoison.get(_url, _headers, http_options)
-      assert_called_once QueryParams.append_timestamp(_)
+      assert_called_once(HTTPoison.get(_url, _headers, http_options))
+      assert_called_once(QueryParams.append_timestamp(_))
     end
 
     test "should sign query params with the provided secret_key", context do
@@ -106,16 +113,20 @@ defmodule BingX.API.AccountTest do
       params_with_signature = %{"SIGNATURE" => "*******"}
       http_options = [params: params_with_signature]
 
-      patch(QueryParams, :append_signature, callable(fn params, _secret_key -> 
-        Map.merge(params, params_with_signature)
-      end))
+      patch(
+        QueryParams,
+        :append_signature,
+        callable(fn params, _secret_key ->
+          Map.merge(params, params_with_signature)
+        end)
+      )
 
       patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once HTTPoison.get(_url, _headers, http_options)
-      assert_called_once QueryParams.append_signature(_, secret_key)
+      assert_called_once(HTTPoison.get(_url, _headers, http_options))
+      assert_called_once(QueryParams.append_signature(_, secret_key))
     end
 
     test "should wrap the successful response with BalanceResponse", context do
@@ -130,7 +141,7 @@ defmodule BingX.API.AccountTest do
 
       assert {:ok, ^struct} = Account.get_balance(api_key, secret_key)
 
-      assert_called_once BalanceResponse.new(data)
+      assert_called_once(BalanceResponse.new(data))
     end
 
     test "should wrap the unsuccessful response with Exception", context do
@@ -147,7 +158,7 @@ defmodule BingX.API.AccountTest do
 
       assert {:error, ^struct} = Account.get_balance(api_key, secret_key)
 
-      assert_called_once Exception.new(code, message)
+      assert_called_once(Exception.new(code, message))
     end
   end
 end

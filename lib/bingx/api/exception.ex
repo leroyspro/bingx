@@ -1,6 +1,6 @@
 defmodule BingX.API.Exception do
   alias __MODULE__
-  defexception [message: "No error description message", code: 1]
+  defexception message: "No error description message", code: 1
 
   @spec new(code :: any(), message :: any()) :: %Exception{
           __exception__: true,

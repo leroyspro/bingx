@@ -45,7 +45,7 @@ defmodule BingX.MixProject do
     [
       {:httpoison, "~> 2.2"},
       {:jason, "~> 1.4"},
-      {:patch, "~> 0.13.0", only: [:test]},
+      {:patch, "~> 0.13.0", only: [:test]}
     ]
   end
 end

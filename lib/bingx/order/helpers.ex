@@ -17,7 +17,7 @@ defmodule BingX.Order.Helpers do
   def validate(:order_id, x) when is_binary(x), do: {:ok, x}
 
   def validate(:order_id, x) do
-    reason = "expected :order_id to be given and be binary type, got: #{inspect(x)}"
+    reason = "expected :order_id to be type of binary, got: #{inspect(x)}"
     {:error, reason}
   end
 
@@ -25,7 +25,7 @@ defmodule BingX.Order.Helpers do
   def validate(:symbol, x) when is_binary(x), do: {:ok, x}
 
   def validate(:symbol, x) do
-    reason = "expected :symbol to be given and be binary type, got: #{inspect(x)}"
+    reason = "expected :symbol to be type of binary, got: #{inspect(x)}"
     {:error, reason}
   end
 
@@ -33,7 +33,7 @@ defmodule BingX.Order.Helpers do
   def validate(:side, x) when x in @sides, do: {:ok, x}
 
   def validate(:side, x) do
-    reason = "expected :side to be given and be one of #{inspect(@sides)}, got: #{inspect(x)}"
+    reason = "expected :side to be one of #{inspect(@sides)}, got: #{inspect(x)}"
     {:error, reason}
   end
 
@@ -42,7 +42,7 @@ defmodule BingX.Order.Helpers do
 
   def validate(:position_side, x) do
     reason =
-      "expected :position_side to be given and be one of #{inspect(@position_sides)}, got: #{inspect(x)}"
+      "expected :position_side to be one of #{inspect(@position_sides)}, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -51,7 +51,7 @@ defmodule BingX.Order.Helpers do
   def validate(:type, x) when x in @types, do: {:ok, x}
 
   def validate(:type, x) do
-    reason = "expected :type to be given and be one of #{inspect(@types)}, got: #{inspect(x)}"
+    reason = "expected :type to be one of #{inspect(@types)}, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -60,7 +60,7 @@ defmodule BingX.Order.Helpers do
   def validate(:price, x) when is_number(x), do: {:ok, x}
 
   def validate(:price, x) do
-    reason = "expected :price to be given and be number type, got: #{inspect(x)}"
+    reason = "expected :price to be type of number, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -69,7 +69,7 @@ defmodule BingX.Order.Helpers do
   def validate(:stop_price, x) when is_number(x), do: {:ok, x}
 
   def validate(:stop_price, x) do
-    reason = "expected :stop_price to be given and be number type, got: #{inspect(x)}"
+    reason = "expected :stop_price to be type of number, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -78,7 +78,7 @@ defmodule BingX.Order.Helpers do
   def validate(:quantity, x) when is_number(x), do: {:ok, x}
 
   def validate(:quantity, x) do
-    reason = "expected :quantity to be given and be number type, got: #{inspect(x)}"
+    reason = "expected :quantity to be type of number, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -88,7 +88,7 @@ defmodule BingX.Order.Helpers do
 
   def validate(:working_type, x) do
     reason =
-      "expected :working_type to be given and be one of #{inspect(@working_types)}, got: #{inspect(x)}"
+      "expected :working_type to be one of #{inspect(@working_types)}, got: #{inspect(x)}"
 
     {:error, reason}
   end
@@ -97,7 +97,7 @@ defmodule BingX.Order.Helpers do
   def validate(:client_order_id, x) when is_binary(x), do: {:ok, x}
 
   def validate(:client_order_id, x) do
-    reason = "expected :client_order_id to be given and be binary type, got: #{inspect(x)}"
+    reason = "expected :client_order_id to be type of binary, got: #{inspect(x)}"
 
     {:error, reason}
   end

@@ -1,4 +1,3 @@
 import Config
 
-config :bingx, :api,
-  http_client: BingX.HTTPClientMock
+config :bingx, :api, http_client: BingX.HTTPClientMock

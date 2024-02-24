@@ -10,7 +10,7 @@ defmodule BingX.Order.TriggerMarket do
           :quantity => float(),
           :symbol => Order.symbol(),
           :stop_price => float(),
-          :working_type => Order.working_type() 
+          :working_type => Order.working_type()
         }
 
   @spec new(%{

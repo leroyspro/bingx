@@ -4,16 +4,16 @@ defmodule BingX.API.Account.BalanceResponse do
   alias __MODULE__
 
   @type t() :: %__MODULE__{
-    :asset => binary(),
-    :available_margin => float(),
-    :balance => float(),
-    :equity => float(),
-    :freezed_margin => float(),
-    :realized_profit => float(),
-    :unrealized_profit => float(),
-    :used_margin => float(),
-    :user_id => binary()
-  }
+          :asset => binary(),
+          :available_margin => float(),
+          :balance => float(),
+          :equity => float(),
+          :freezed_margin => float(),
+          :realized_profit => float(),
+          :unrealized_profit => float(),
+          :used_margin => float(),
+          :user_id => binary()
+        }
 
   defstruct [
     :asset,
