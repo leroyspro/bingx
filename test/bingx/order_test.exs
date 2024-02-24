@@ -23,7 +23,7 @@ defmodule BingX.API.OrderTest do
       assert %Order{type: :trigger_market} = Order.new(%{type: :trigger_market})
 
       assert_raise ArgumentError,
-                   "expected :type to be one of [:trigger_market], got: :unknown",
+                   "expected :type to be one of [:market, :trigger_market], got: :unknown",
                    fn -> Order.new(%{type: :unknown}) end
     end
 

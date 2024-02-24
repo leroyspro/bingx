@@ -7,8 +7,8 @@ defmodule BingX.API.QueryParams do
     Map.merge(params, %{"recvWindow" => value})
   end
 
-  def append_timestamp(%{} = params, value \\ timestamp()) do
-    Map.merge(params, %{"timestamp" => value})
+  def append_timestamp(%{} = params) do
+    Map.merge(params, %{"timestamp" => timestamp()})
   end
 
   def append_signature(%{} = params, secret_key) do
@@ -20,7 +20,7 @@ defmodule BingX.API.QueryParams do
     Map.merge(params, %{"signature" => signature})
   end
 
-  defp signature(raw, key) when is_binary(raw) and is_binary(key) do
+  def signature(raw, key) when is_binary(raw) and is_binary(key) do
     Crypto.mac(:hmac, :sha256, key, raw)
     |> Base.encode16(case: :lower)
   end

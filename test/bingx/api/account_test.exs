@@ -1,10 +1,10 @@
 defmodule BingX.API.AccountTest do
   @moduledoc """
-  Module to test BingX.API.Account. 
+  Module to test BingX.API.Account.
 
   # ATTENTION
 
-  Do patch **every** network request to real world! 
+  Do patch **every** network request to real world!
   This tests are used only to verify internal logic of the module, not others.
   """
 
@@ -147,7 +147,6 @@ defmodule BingX.API.AccountTest do
     test "should wrap the unsuccessful response with Exception", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      data = %{"success" => "NEVER!"}
       code = 1001
       message = "Too funny"
       body = Jason.encode!(%{"code" => code, "msg" => message})
