@@ -1,4 +1,4 @@
-defmodule BingX.API.Helpers.QueryParams do
+defmodule BingX.API.QueryParams do
   import BingX.Helpers
 
   alias :crypto, as: Crypto
@@ -11,7 +11,7 @@ defmodule BingX.API.Helpers.QueryParams do
     Map.merge(params, %{"timestamp" => value})
   end
 
-  def sign(%{} = params, secret_key) do
+  def append_signature(%{} = params, secret_key) do
     signature =
       params
       |> URI.encode_query()

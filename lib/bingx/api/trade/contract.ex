@@ -4,24 +4,14 @@ defmodule BingX.API.Trade.Contract do
   def from_order(%Order{} = order) do
     order
     |> Map.from_struct()
-    |> filter_empty()
+    |> omit_empty_values()
     |> transform_values()
     |> transform_keys()
     |> Map.new()
   end
 
-  defp filter_empty(stream) do
+  defp omit_empty_values(stream) do
     Stream.reject(stream, fn {_k, v} -> is_nil(v) end)
-  end
-
-  defp transform_keys(stream) do
-    Stream.map(stream, fn
-      {:position_side, v} -> {"positionSide", v}
-      {:client_order_id, v} -> {"clientOrderID", v}
-      {:stop_price, v} -> {"stopPrice", v}
-      {:working_type, v} -> {"workingType", v}
-      {k, v} -> {Atom.to_string(k), v}
-    end)
   end
 
   defp transform_values(stream) do
@@ -32,6 +22,16 @@ defmodule BingX.API.Trade.Contract do
 
       x ->
         x
+    end)
+  end
+
+  defp transform_keys(stream) do
+    Stream.map(stream, fn
+      {:position_side, v} -> {"positionSide", v}
+      {:client_order_id, v} -> {"clientOrderID", v}
+      {:stop_price, v} -> {"stopPrice", v}
+      {:working_type, v} -> {"workingType", v}
+      {k, v} -> {Atom.to_string(k), v}
     end)
   end
 end

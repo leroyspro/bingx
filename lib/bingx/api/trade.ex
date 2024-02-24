@@ -1,19 +1,11 @@
 defmodule BingX.API.Trade do
-  use HTTPoison.Base
-
   alias BingX.Order
-  alias BingX.API.Helpers.{QueryParams, Headers}
+  alias BingX.API.{Exception, Headers, QueryParams}
   alias BingX.API.Trade.{Contract, PlaceOrderResponse, CancelAllOrdersResponse}
-  alias BingX.API.Exception
 
-  @endpoint Application.compile_env!(:bingx, :endpoint)
+  @hostname Application.compile_env!(:bingx, :hostname)
 
-  @api_v2 "/openApi/swap/v2"
-  @scope "/trade"
-  @url_base @api_v2 <> @scope
-
-  @impl true
-  def process_request_url(url), do: @endpoint <> url
+  def url_base, do: @hostname <> "/openApi/swap/v2/trade"
 
   def cancel_all_orders(api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
@@ -25,21 +17,23 @@ defmodule BingX.API.Trade do
           {:ok, CancelAllOrdersResponse.new(payload)}
 
         %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(%{message: message, code: code})}
+          {:error, Exception.new(code, message)}
       end
     end
   end
 
   defp do_cancel_all_orders(api_key, secret_key) do
-    headers = Headers.append_api_key(api_key)
+    url = url_base() <> "/allOpenOrders"
+
+    headers = Headers.append_api_key(Map.new(), api_key)
 
     params =
       %{"symbol" => "BTC-USDT"}
       |> QueryParams.append_receive_window()
       |> QueryParams.append_timestamp()
-      |> QueryParams.sign(secret_key)
+      |> QueryParams.append_signature(secret_key)
 
-    __MODULE__.delete(@url_base <> "/allOpenOrders", headers, params: params)
+    HTTPoison.delete(url, headers, params: params)
   end
 
   def place_order(%Order{} = order, api_key, secret_key)
@@ -52,21 +46,25 @@ defmodule BingX.API.Trade do
           {:ok, PlaceOrderResponse.new(payload)}
 
         %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(%{message: message, code: code})}
+          {:error, Exception.new(code, message)}
       end
     end
   end
 
   defp do_place_order(order, api_key, secret_key) do
-    headers = Headers.append_api_key(api_key)
+    url = url_base() <> "/order"
+
+    body = ""
+
+    headers = Headers.append_api_key(Map.new(), api_key)
 
     params =
       order
       |> Contract.from_order()
       |> QueryParams.append_receive_window()
       |> QueryParams.append_timestamp()
-      |> QueryParams.sign(secret_key)
+      |> QueryParams.append_signature(secret_key)
 
-    __MODULE__.post(@url_base <> "/order", "", headers, params: params)
+    HTTPoison.post(url, body, headers, params: params)
   end
 end

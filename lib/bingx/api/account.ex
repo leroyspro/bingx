@@ -1,14 +1,10 @@
 defmodule BingX.API.Account do
-  use HTTPoison.Base
-
-  alias BingX.API.Helpers.{Headers, QueryParams}
+  alias BingX.API.{Exception, QueryParams, Headers}
   alias BingX.API.Account.BalanceResponse
-  alias BingX.API.Exception
 
-  @endpoint Application.compile_env!(:bingx, :endpoint)
+  @hostname Application.compile_env!(:bingx, :hostname)
 
-  @impl true
-  def process_request_url(url), do: @endpoint <> url
+  def url_base, do: @hostname <> "/openApi/swap/v2/user"
 
   @spec get_balance(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
   def get_balance(api_key, secret_key)
@@ -17,24 +13,26 @@ defmodule BingX.API.Account do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
       case data do
-        %{"code" => 0, "data" => %{ "balance" => payload }} ->
+        %{"code" => 0, "data" => %{"balance" => payload}} ->
           {:ok, BalanceResponse.new(payload)}
 
         %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(%{ message: message, code: code })}
+          {:error, Exception.new(code, message)}
       end
     end
   end
 
   defp do_get_balance(api_key, secret_key) do
-    headers = Headers.append_api_key(api_key)
+    url = url_base() <> "/balance"
+
+    headers = Headers.append_api_key(Map.new(), api_key)
 
     params =
       Map.new()
       |> QueryParams.append_timestamp()
       |> QueryParams.append_receive_window()
-      |> QueryParams.sign(secret_key)
+      |> QueryParams.append_signature(secret_key)
 
-    __MODULE__.get("/openApi/swap/v2/user/balance", headers, params: params)
+    HTTPoison.get(url, headers, params: params)
   end
 end
