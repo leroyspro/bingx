@@ -52,7 +52,8 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
       reduce_only?: Map.get(data, "reduceOnly"),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &parse_float!/1),
-      take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
+      take_profit_entrust_price:
+        get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }
@@ -113,7 +114,8 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Failed do
       reduce_only?: Map.get(data, "reduceOnly"),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &parse_float!/1),
-      take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
+      take_profit_entrust_price:
+        get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }
@@ -126,15 +128,19 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse do
   defstruct [:failed, :succeeded]
 
   @type t() :: %__MODULE__{
-          failed: list(%Failed{}),
-          succeeded: list(%Succeeded{})
+          failed: list(map()),
+          succeeded: list(map())
         }
 
   @spec new(map()) :: t()
   def new(%{"success" => succeeded, "failed" => failed}) do
+    # %__MODULE__{
+    #   succeeded: transform_succeeded(succeeded),
+    #   failed: transform_failed(failed)
+    # }
     %__MODULE__{
-      succeeded: transform_succeeded(succeeded),
-      failed: transform_failed(failed)
+      succeeded: succeeded,
+      failed: failed
     }
   end
 

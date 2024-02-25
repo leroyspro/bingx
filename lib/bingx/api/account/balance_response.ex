@@ -1,19 +1,7 @@
 defmodule BingX.API.Account.BalanceResponse do
-  import BingX.Helpers, only: [to_float!: 1]
+  import BingX.Helpers
 
   alias __MODULE__
-
-  @type t() :: %__MODULE__{
-          :asset => binary(),
-          :available_margin => float(),
-          :balance => float(),
-          :equity => float(),
-          :freezed_margin => float(),
-          :realized_profit => float(),
-          :unrealized_profit => float(),
-          :used_margin => float(),
-          :user_id => binary()
-        }
 
   defstruct [
     :asset,
@@ -27,28 +15,30 @@ defmodule BingX.API.Account.BalanceResponse do
     :user_id
   ]
 
+  @type t() :: %__MODULE__{
+          :asset => binary(),
+          :available_margin => float(),
+          :balance => float(),
+          :equity => float(),
+          :freezed_margin => float(),
+          :realized_profit => float(),
+          :unrealized_profit => float(),
+          :used_margin => float(),
+          :user_id => binary()
+        }
+
   @spec new(map()) :: BalanceResponse.t()
-  def new(%{
-        "asset" => asset,
-        "availableMargin" => available_margin,
-        "balance" => balance,
-        "equity" => equity,
-        "freezedMargin" => freezed_margin,
-        "realisedProfit" => realized_profit,
-        "unrealizedProfit" => unrealized_profit,
-        "usedMargin" => used_margin,
-        "userId" => user_id
-      }) do
+  def new(data) do
     %__MODULE__{
-      asset: asset,
-      available_margin: to_float!(available_margin),
-      balance: to_float!(balance),
-      equity: to_float!(equity),
-      freezed_margin: to_float!(freezed_margin),
-      realized_profit: to_float!(realized_profit),
-      unrealized_profit: to_float!(unrealized_profit),
-      used_margin: to_float!(used_margin),
-      user_id: user_id
+      asset: Map.get(data, :asset),
+      available_margin: get_and_transform(data, "availableMargin", &to_float!/1),
+      balance: get_and_transform(data, "balance", &to_float!/1),
+      equity: get_and_transform(data, "equity", &to_float!/1),
+      freezed_margin: get_and_transform(data, "freezedMargin", &to_float!/1),
+      realized_profit: get_and_transform(data, "realisedProfit", &to_float!/1),
+      unrealized_profit: get_and_transform(data, "unrealisedProfit", &to_float!/1),
+      used_margin: get_and_transform(data, "usedMargin", &to_float!/1),
+      user_id: get_and_transform(data, "userId", &to_string/1)
     }
   end
 end

@@ -1,8 +1,6 @@
 defmodule BingX.API.Trade.PlaceOrderResponse do
   import BingX.Helpers
 
-  alias BingX.Order
-
   defstruct [
     :symbol,
     :side,
@@ -21,25 +19,7 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
     :price_rate
   ]
 
-  @type t() :: %__MODULE__{
-          :order_id => Order.order_id(),
-          :symbol => Order.symbol(),
-          :side => Order.side(),
-          :position_side => Order.position_side(),
-          :price => Order.price(),
-          :stop_price => Order.stop_price(),
-          :working_type => Order.working_type(),
-          :quantity => Order.quantity(),
-          :type => Order.type(),
-          :client_order_id => Order.client_order_id(),
-          :stop_loss => any(),
-          :take_profit => any(),
-          :time_in_force => binary(),
-          :reduce_only? => boolean(),
-          :price_rate => float()
-        }
-
-  @spec new(map()) :: PlaceOrderResponse.t()
+  @spec new(map()) :: %__MODULE__{}
   def new(data) do
     %__MODULE__{
       order_id: get_and_transform(data, "orderId", &to_string/1),
@@ -59,7 +39,4 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
       price_rate: Map.get(data, "priceRate")
     }
   end
-
-  @spec to_order(t()) :: BingX.Order.t()
-  def to_order(contract), do: Order.new(contract)
 end
