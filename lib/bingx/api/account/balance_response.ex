@@ -1,5 +1,6 @@
 defmodule BingX.API.Account.BalanceResponse do
-  import BingX.Helpers
+  import BingX.Helpers, only: [get_and_transform: 3]
+  import BingX.API.Interpretators
 
   alias __MODULE__
 
@@ -30,14 +31,14 @@ defmodule BingX.API.Account.BalanceResponse do
   @spec new(map()) :: BalanceResponse.t()
   def new(data) do
     %__MODULE__{
-      asset: Map.get(data, :asset),
-      available_margin: get_and_transform(data, "availableMargin", &to_float!/1),
-      balance: get_and_transform(data, "balance", &to_float!/1),
-      equity: get_and_transform(data, "equity", &to_float!/1),
-      freezed_margin: get_and_transform(data, "freezedMargin", &to_float!/1),
-      realized_profit: get_and_transform(data, "realisedProfit", &to_float!/1),
-      unrealized_profit: get_and_transform(data, "unrealisedProfit", &to_float!/1),
-      used_margin: get_and_transform(data, "usedMargin", &to_float!/1),
+      asset: Map.get(data, "asset"),
+      available_margin: get_and_transform(data, "availableMargin", &interp_as_float/1),
+      balance: get_and_transform(data, "balance", &interp_as_float/1),
+      equity: get_and_transform(data, "equity", &interp_as_float/1),
+      freezed_margin: get_and_transform(data, "freezedMargin", &interp_as_float/1),
+      realized_profit: get_and_transform(data, "realisedProfit", &interp_as_float/1),
+      unrealized_profit: get_and_transform(data, "unrealizedProfit", &interp_as_float/1),
+      used_margin: get_and_transform(data, "usedMargin", &interp_as_float/1),
       user_id: get_and_transform(data, "userId", &to_string/1)
     }
   end

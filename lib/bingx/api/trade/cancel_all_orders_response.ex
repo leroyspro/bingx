@@ -1,5 +1,6 @@
 defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
   import BingX.Helpers
+  import BingX.API.Interpretators
 
   defstruct [
     :order_id,
@@ -31,19 +32,19 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
 
   def new(data) do
     %__MODULE__{
-      order_id: get_and_transform(data, "orderId", &to_string/1),
+      order_id: get_and_transform(data, "orderId", &interp_order_id/1),
       symbol: Map.get(data, "symbol"),
-      side: Map.get(data, "side"),
-      position_side: Map.get(data, "positionSide"),
-      status: Map.get(data, "status"),
-      stop_price: get_and_transform(data, "stopPrice", &parse_float!/1),
-      price: get_and_transform(data, "price", &parse_float!/1),
+      side: get_and_transform(data, "side", &interp_order_side/1),
+      position_side: get_and_transform(data, "position_side", &interp_position_side/1),
+      status: get_and_transform(data, "status", &interp_order_status/1),
+      stop_price: get_and_transform(data, "stopPrice", &interp_as_float/1),
+      price: get_and_transform(data, "price", &interp_as_float/1),
       type: Map.get(data, "type"),
       working_type: Map.get(data, "workingType"),
-      leverage: get_and_transform(data, "leverage", &parse_float!/1),
-      fee: get_and_transform(data, "commission", &parse_float!/1),
-      transaction_amount: get_and_transform(data, "cumQuote", &parse_float!/1),
-      executed_quantity: get_and_transform(data, "executedQty", &parse_float!/1),
+      leverage: get_and_transform(data, "leverage", &interp_as_float/1),
+      fee: get_and_transform(data, "commission", &interp_as_float/1),
+      transaction_amount: get_and_transform(data, "cumQuote", &interp_as_float/1),
+      executed_quantity: get_and_transform(data, "executedQty", &interp_as_float/1),
       only_one_position?: Map.get(data, "onlyOnePosition"),
       order_type: Map.get(data, "orderType"),
       original_quantity: Map.get(data, "origQty"),
@@ -51,9 +52,8 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
       profit: Map.get(data, "profit"),
       reduce_only?: Map.get(data, "reduceOnly"),
       stop_loss: Map.get(data, "stopLoss"),
-      stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &parse_float!/1),
-      take_profit_entrust_price:
-        get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
+      stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
+      take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }
@@ -61,64 +61,10 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
 end
 
 defmodule BingX.API.Trade.CancelAllOrdersResponse.Failed do
-  import BingX.Helpers
+  defstruct []
 
-  defstruct [
-    :order_id,
-    :symbol,
-    :side,
-    :position_side,
-    :status,
-    :stop_price,
-    :price,
-    :type,
-    :working_type,
-    :leverage,
-    :fee,
-    :transaction_amount,
-    :executed_quantity,
-    :only_one_position?,
-    :order_type,
-    :original_quantity,
-    :position_id,
-    :profit,
-    :reduce_only?,
-    :stop_loss,
-    :stop_loss_entrust_price,
-    :take_profit,
-    :take_profit_entrust_price,
-    :timestamp,
-    :update_time
-  ]
-
-  def new(data) do
-    %__MODULE__{
-      order_id: get_and_transform(data, "orderId", &to_string/1),
-      symbol: Map.get(data, "symbol"),
-      side: Map.get(data, "side"),
-      position_side: Map.get(data, "positionSide"),
-      status: Map.get(data, "status"),
-      stop_price: get_and_transform(data, "stopPrice", &parse_float!/1),
-      price: get_and_transform(data, "price", &parse_float!/1),
-      type: Map.get(data, "type"),
-      working_type: Map.get(data, "workingType"),
-      leverage: get_and_transform(data, "leverage", &parse_float!/1),
-      fee: get_and_transform(data, "commission", &parse_float!/1),
-      transaction_amount: get_and_transform(data, "cumQuote", &parse_float!/1),
-      executed_quantity: get_and_transform(data, "executedQty", &parse_float!/1),
-      only_one_position?: Map.get(data, "onlyOnePosition"),
-      order_type: Map.get(data, "orderType"),
-      original_quantity: Map.get(data, "origQty"),
-      position_id: Map.get(data, "positionID"),
-      profit: Map.get(data, "profit"),
-      reduce_only?: Map.get(data, "reduceOnly"),
-      stop_loss: Map.get(data, "stopLoss"),
-      stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &parse_float!/1),
-      take_profit_entrust_price:
-        get_and_transform(data, "takeProfitEntrustPrice", &parse_float!/1),
-      timestamp: Map.get(data, "time"),
-      update_time: Map.get(data, "updateTime")
-    }
+  def new(_data) do
+    %__MODULE__{}
   end
 end
 
@@ -134,13 +80,9 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse do
 
   @spec new(map()) :: t()
   def new(%{"success" => succeeded, "failed" => failed}) do
-    # %__MODULE__{
-    #   succeeded: transform_succeeded(succeeded),
-    #   failed: transform_failed(failed)
-    # }
     %__MODULE__{
-      succeeded: succeeded,
-      failed: failed
+      succeeded: transform_succeeded(succeeded),
+      failed: transform_failed(failed)
     }
   end
 

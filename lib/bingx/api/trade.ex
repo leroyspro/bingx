@@ -3,13 +3,13 @@ defmodule BingX.API.Trade do
   alias BingX.API.{Exception, Headers, QueryParams}
   alias BingX.API.Trade.{Contract, PlaceOrderResponse, CancelAllOrdersResponse}
 
-  @hostname Application.compile_env!(:bingx, :hostname)
+  @origin Application.compile_env!(:bingx, :origin)
 
-  def url_base, do: @hostname <> "/openApi/swap/v2/trade"
+  def url_base, do: @origin <> "/openApi/swap/v2/trade"
 
   def place_order(%Order{} = order, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-    with {:ok, %{body: body}} <- do_place_order(order, api_key, secret_key) do
+    with {:ok, %{body: body, status_code: 200}} <- do_place_order(order, api_key, secret_key) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
       case data do

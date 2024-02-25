@@ -12,11 +12,6 @@ defmodule BingX.Helpers do
 
   def to_float!(x) when is_number(x), do: x + 0.0
 
-  @spec parse_float!(any()) :: float() | nil
-  def parse_float!(x) when is_number(x), do: to_float!(x)
-  def parse_float!(x) when is_binary(x) and byte_size(x) > 0, do: to_float!(x)
-  def parse_float!(_), do: nil
-
   def get_and_transform(data, key, default \\ nil, transformer)
       when is_function(transformer, 1) do
     case Map.get(data, key, :default) do
@@ -24,4 +19,10 @@ defmodule BingX.Helpers do
       x -> transformer.(x)
     end
   end
+
+  def downcase(nil), do: ""
+  def downcase(x), do: String.downcase(x)
+
+  def upcase(nil), do: ""
+  def upcase(x), do: String.upcase(x)
 end
