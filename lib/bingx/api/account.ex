@@ -11,7 +11,6 @@ defmodule BingX.API.Account do
     with {:ok, %{body: body, status_code: 200}} <- do_get_balance(api_key, secret_key) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
-      dbg()
       case data do
         %{"code" => 0, "data" => %{"balance" => payload}} ->
           {:ok, BalanceResponse.new(payload)}
