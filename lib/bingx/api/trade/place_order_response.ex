@@ -22,6 +22,7 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
 
   @spec new(map()) :: %__MODULE__{}
   def new(data) do
+    dbg()
     %__MODULE__{
       order_id: get_and_transform(data, "orderId", &to_internal_order_id/1),
       client_order_id: get_and_transform(data, "clientOrderID", &to_string/1),

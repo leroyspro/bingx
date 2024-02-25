@@ -48,25 +48,23 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
-
   def to_internal_position_side(_), do: nil
 
   def to_external_position_side(:long), do: "LONG"
   def to_external_position_side(:short), do: "SHORT"
   def to_external_position_side(:both), do: "BOTH"
 
-  def inter_order_side(x) when is_binary(x) do
+  def to_internal_order_side(x) when is_binary(x) do
     case Helpers.upcase(x) do
       "BUY" -> :buy
       "SELL" -> :sell
       _ -> nil
     end
   end
-
   def to_internal_order_side(_), do: nil
 
-  def to_external_order_side(:buy), do: "BUY"
   def to_external_order_side(:sell), do: "SELL"
+  def to_external_order_side(:buy), do: "BUY"
 
   def to_internal_working_type(x) when is_binary(x) do
     case Helpers.upcase(x) do
