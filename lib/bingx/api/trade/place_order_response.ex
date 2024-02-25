@@ -37,7 +37,7 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
       take_profit: Map.get(data, "takeProfit"),
       time_in_force: Map.get(data, "timeInForce"),
       reduce_only?: Map.get(data, "reduceOnly"),
-      price_rate: Map.get(data, "priceRate")
+      price_rate: get_and_transform(data, "priceRate", &interp_as_float/1)
     }
   end
 end

@@ -31,7 +31,7 @@ defmodule BingX.API.Account.BalanceResponse do
   @spec new(map()) :: BalanceResponse.t()
   def new(data) do
     %__MODULE__{
-      asset: Map.get(data, "asset"),
+      asset: get_and_transform(data, "asset", &interp_as_binary(&1, empty?: false)),
       available_margin: get_and_transform(data, "availableMargin", &interp_as_float/1),
       balance: get_and_transform(data, "balance", &interp_as_float/1),
       equity: get_and_transform(data, "equity", &interp_as_float/1),
@@ -39,7 +39,7 @@ defmodule BingX.API.Account.BalanceResponse do
       realized_profit: get_and_transform(data, "realisedProfit", &interp_as_float/1),
       unrealized_profit: get_and_transform(data, "unrealizedProfit", &interp_as_float/1),
       used_margin: get_and_transform(data, "usedMargin", &interp_as_float/1),
-      user_id: get_and_transform(data, "userId", &to_string/1)
+      user_id: get_and_transform(data, "userId", &interp_as_binary(&1, empty?: false))
     }
   end
 end

@@ -87,6 +87,10 @@ defmodule BingX.API.Interpretators do
       {x, _} -> x
     end
   end
-
   def interp_as_float(_), do: nil
+
+  def interp_as_binary(x, options \\ [empty?:  true])
+  def interp_as_binary("", empty?: false), do: nil
+  def interp_as_binary(x, _options) when is_binary(x), do: x
+  def interp_as_binary(x, _options), do: to_string(x)
 end
