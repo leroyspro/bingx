@@ -1,8 +1,8 @@
 defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
   import BingX.Helpers
-  import BingX.API.Interpretators
+  import BingX.API.Interpretators 
 
-  defstruct [
+  defstruct [ 
     :order_id,
     :symbol,
     :side,
@@ -32,15 +32,15 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
 
   def new(data) do
     %__MODULE__{
-      order_id: get_and_transform(data, "orderId", &interp_order_id/1),
+      order_id: get_and_transform(data, "orderId", &to_internal_order_id/1),
       symbol: Map.get(data, "symbol"),
-      side: get_and_transform(data, "side", &interp_order_side/1),
-      position_side: get_and_transform(data, "position_side", &interp_position_side/1),
-      status: get_and_transform(data, "status", &interp_order_status/1),
+      side: get_and_transform(data, "side", &to_internal_order_side/1),
+      position_side: get_and_transform(data, "positionSide", &to_internal_position_side/1),
+      status: get_and_transform(data, "status", &to_internal_order_status/1),
       stop_price: get_and_transform(data, "stopPrice", &interp_as_float/1),
       price: get_and_transform(data, "price", &interp_as_float/1),
       type: Map.get(data, "type"),
-      working_type: Map.get(data, "workingType"),
+      working_type: get_and_transform(data, "workingType", &to_internal_working_type/1),
       leverage: get_and_transform(data, "leverage", &interp_as_float/1),
       fee: get_and_transform(data, "commission", &interp_as_float/1),
       transaction_amount: get_and_transform(data, "cumQuote", &interp_as_float/1),
@@ -53,8 +53,7 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
       reduce_only?: Map.get(data, "reduceOnly"),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
-      take_profit_entrust_price:
-        get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
+      take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }
