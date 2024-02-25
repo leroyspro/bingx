@@ -9,6 +9,32 @@ defmodule BingX.API.OrderTest do
       assert %Order{} = Order.new(%{})
     end
 
+    test "should create struct with all params" do
+      assert %Order{
+        :type => :market,
+        :order_id => "123214124312",
+        :symbol => "BTC-USDT",
+        :side => :sell,
+        :position_side => :short,
+        :price => 324.11,
+        :stop_price => 321,
+        :quantity => 0.1,
+        :client_order_id => "supra",
+        :working_type => :contract_price
+      } = Order.new(%{
+        :type => :market,
+        :order_id => "123214124312",
+        :symbol => "BTC-USDT",
+        :side => :sell,
+        :position_side => :short,
+        :price => 324.11,
+        :stop_price => 321,
+        :quantity => 0.1,
+        :client_order_id => "supra",
+        :working_type => :contract_price
+      })
+    end
+
     test "should validate :working_type key" do
       assert %Order{working_type: :mark_price} = Order.new(%{working_type: :mark_price})
       assert %Order{working_type: :index_price} = Order.new(%{working_type: :index_price})
