@@ -81,6 +81,7 @@ defmodule BingX.API.Interpretators do
   def to_external_working_type(:mark_price), do: "MARK_PRICE"
   def to_external_working_type(:contract_price), do: "CONTRACT_PRICE"
 
+  def interp_as_float(x) when is_number(x), do: x + 0.0
   def interp_as_float(x) when is_binary(x) do
     case Float.parse(x) do
       :error -> nil
