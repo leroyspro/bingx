@@ -53,7 +53,8 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
       reduce_only?: Map.get(data, "reduceOnly"),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
-      take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
+      take_profit_entrust_price:
+        get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }

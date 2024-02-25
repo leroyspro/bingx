@@ -16,6 +16,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def interp_order_type(_), do: nil
 
   def interp_order_status(x) when is_binary(x) do
@@ -25,6 +26,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def interp_order_status(_), do: nil
 
   def interp_position_side(x) when is_binary(x) do
@@ -35,6 +37,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def interp_position_side(_), do: nil
 
   def interp_order_side(x) when is_binary(x) do
@@ -44,6 +47,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def interp_order_side(_), do: nil
 
   def interp_as_float(x) when is_binary(x) do
@@ -52,5 +56,6 @@ defmodule BingX.API.Interpretators do
       {x, _} -> x
     end
   end
+
   def interp_as_float(_), do: nil
 end
