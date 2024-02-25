@@ -39,7 +39,7 @@ defmodule BingX.API.Trade do
 
   def cancel_all_orders(api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-    with {:ok, %{body: body}} <- do_cancel_all_orders(api_key, secret_key) do
+    with {:ok, %{body: body, status_code: 200}} <- do_cancel_all_orders(api_key, secret_key) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
       case data do
