@@ -14,7 +14,7 @@ defmodule BingX.API.TradeTest do
   alias BingX.API.Trade.{PlaceOrderResponse, CancelAllOrdersResponse}
   alias BingX.Order.TriggerMarket
 
-  @hostname Application.compile_env!(:bingx, :hostname)
+  @origin Application.compile_env!(:bingx, :origin)
 
   setup_all do
     {
@@ -35,7 +35,7 @@ defmodule BingX.API.TradeTest do
           symbol: "BTC-USDT"
         })
 
-      {:ok, endpoint: @hostname <> "/openApi/swap/v2/trade/order", order: order}
+      {:ok, endpoint: @origin <> "/openApi/swap/v2/trade/order", order: order}
     end
 
     test "should make POST request", context do
@@ -141,6 +141,16 @@ defmodule BingX.API.TradeTest do
       assert ^result = Trade.place_order(order, api_key, secret_key)
     end
 
+    test "should return the original error if request is not 200", context do
+      %{api_key: api_key, secret_key: secret_key, order: order} = context
+
+      result = {:error, %HTTPoison.Response{status_code: 301}}
+
+      patch(HTTPoison, :post, result)
+
+      assert ^result = Trade.place_order(order, api_key, secret_key)
+    end
+
     test "should wrap the successful response in PlaceOrderResponse", context do
       %{api_key: api_key, secret_key: secret_key, order: order} = context
 
@@ -148,7 +158,7 @@ defmodule BingX.API.TradeTest do
       body = Jason.encode!(%{"code" => 0, "data" => %{"order" => data}})
       struct = %{success: "ALWAYS!"}
 
-      patch(HTTPoison, :post, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :post, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(PlaceOrderResponse, :new, struct)
 
       assert {:ok, ^struct} = Trade.place_order(order, api_key, secret_key)
@@ -164,7 +174,7 @@ defmodule BingX.API.TradeTest do
       body = Jason.encode!(%{"code" => code, "msg" => message})
       struct = %{success: "NEVER!"}
 
-      patch(HTTPoison, :post, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :post, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(Exception, :new, struct)
 
       assert {:error, ^struct} = Trade.place_order(order, api_key, secret_key)
@@ -175,7 +185,7 @@ defmodule BingX.API.TradeTest do
 
   describe "BingX.API.Trade cancel_all_orders/2" do
     setup _context do
-      {:ok, endpoint: @hostname <> "/openApi/swap/v2/trade/allOpenOrders"}
+      {:ok, endpoint: @origin <> "/openApi/swap/v2/trade/allOpenOrders"}
     end
 
     test "should make DELETE request", context do
@@ -275,6 +285,16 @@ defmodule BingX.API.TradeTest do
       assert ^result = Trade.cancel_all_orders(api_key, secret_key)
     end
 
+    test "should return the original error if request is not 200", context do
+      %{api_key: api_key, secret_key: secret_key} = context
+
+      result = {:error, %HTTPoison.Response{status_code: 301}}
+
+      patch(HTTPoison, :delete, result)
+
+      assert ^result = Trade.cancel_all_orders(api_key, secret_key)
+    end
+
     test "should wrap the successful response in CancelAllOrdersResponse", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
@@ -282,7 +302,7 @@ defmodule BingX.API.TradeTest do
       body = Jason.encode!(%{"code" => 0, "data" => data})
       struct = %{success: "ALWAYS!"}
 
-      patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(CancelAllOrdersResponse, :new, struct)
 
       assert {:ok, ^struct} = Trade.cancel_all_orders(api_key, secret_key)
@@ -298,7 +318,7 @@ defmodule BingX.API.TradeTest do
       body = Jason.encode!(%{"code" => code, "msg" => message})
       struct = %{success: "NEVER!"}
 
-      patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(Exception, :new, struct)
 
       assert {:error, ^struct} = Trade.cancel_all_orders(api_key, secret_key)
