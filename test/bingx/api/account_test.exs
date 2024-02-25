@@ -14,7 +14,7 @@ defmodule BingX.API.AccountTest do
   alias BingX.API.{QueryParams, Headers, Account, Exception}
   alias BingX.API.Account.BalanceResponse
 
-  @hostname Application.compile_env!(:bingx, :hostname)
+  @origin Application.compile_env!(:bingx, :origin)
 
   setup_all do
     {
@@ -25,7 +25,7 @@ defmodule BingX.API.AccountTest do
 
   describe "BingX.API.Account get_balance/2" do
     setup _context do
-      {:ok, endpoint: @hostname <> "/openApi/swap/v2/user/balance"}
+      {:ok, endpoint: @origin <> "/openApi/swap/v2/user/balance"}
     end
 
     test "should make GET request", context do
@@ -124,6 +124,16 @@ defmodule BingX.API.AccountTest do
       assert ^result = Account.get_balance(api_key, secret_key)
     end
 
+    test "should return the original error if request is not 200", context do
+      %{api_key: api_key, secret_key: secret_key} = context
+
+      result = {:error, %HTTPoison.Response{status_code: 301}}
+
+      patch(HTTPoison, :get, result)
+
+      assert ^result = Account.get_balance(api_key, secret_key)
+    end
+
     test "should wrap the successful response in BalanceResponse", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
@@ -131,7 +141,7 @@ defmodule BingX.API.AccountTest do
       body = Jason.encode!(%{"code" => 0, "data" => %{"balance" => data}})
       struct = %{success: "ALWAYS!"}
 
-      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(BalanceResponse, :new, struct)
 
       assert {:ok, ^struct} = Account.get_balance(api_key, secret_key)
@@ -147,7 +157,7 @@ defmodule BingX.API.AccountTest do
       body = Jason.encode!(%{"code" => code, "msg" => message})
       struct = %{success: "NEVER!"}
 
-      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body}})
+      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(Exception, :new, struct)
 
       assert {:error, ^struct} = Account.get_balance(api_key, secret_key)
