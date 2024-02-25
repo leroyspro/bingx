@@ -3,13 +3,13 @@ defmodule BingX.API.Account.BalanceResponseTest do
 
   alias BingX.API.Account.BalanceResponse
 
-  describe "BingX.API.Trade.BalanceResponse new/1" do
+  describe "BingX.API.Account.BalanceResponse new/1" do
     test "should return empty struct without params" do
       assert %BalanceResponse{} = BalanceResponse.new(%{})
     end
   end
 
-  describe "BingX.API.Trade.BalanceResponse new/1 (transforming)" do
+  describe "BingX.API.Account.BalanceResponse new/1 (transforming)" do
     test "should retreive asset" do
       assert %BalanceResponse{asset: "BTC-USDT"} = BalanceResponse.new(%{"asset" => "BTC-USDT"})
     end
@@ -40,7 +40,7 @@ defmodule BingX.API.Account.BalanceResponseTest do
 
   end
 
-  describe "BingX.API.Trade.BalanceResponse new/1 (omitting)" do
+  describe "BingX.API.Account.BalanceResponse new/1 (omitting)" do
     test "should omit unexpected balance value",
       do: build_omit_assert(:float, :balance, "balance")
 
