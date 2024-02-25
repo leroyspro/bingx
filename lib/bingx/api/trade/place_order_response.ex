@@ -39,7 +39,7 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
           :price_rate => float()
         }
 
-  @spec new(map()) :: BalanceResponse.t()
+  @spec new(map()) :: PlaceOrderResponse.t()
   def new(data) do
     %__MODULE__{
       order_id: get_and_transform(data, "orderId", &to_string/1),

@@ -85,7 +85,7 @@ defmodule BingX.API.QueryParamsTest do
       result = QueryParams.append_signature(params, secret_key)
       url_encoded_params = URI.encode_query(params)
 
-      assert_called_once(QueryParams.signature(url_encoded_params, secret_key))
+      assert_called_once(QueryParams.signature(^url_encoded_params, ^secret_key))
     end
 
     test "should append correct signature", context do
