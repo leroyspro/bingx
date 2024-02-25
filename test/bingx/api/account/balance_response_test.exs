@@ -1,4 +1,4 @@
-defmodule BingX.API.Trade.BalanceResponseTest do
+defmodule BingX.API.Account.BalanceResponseTest do
   use ExUnit.Case
 
   alias BingX.API.Account.BalanceResponse
