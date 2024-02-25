@@ -10,34 +10,33 @@ defmodule BingX.API.Account.BalanceResponseTest do
   end
 
   describe "BingX.API.Account.BalanceResponse new/1 (transforming)" do
-    test "should retreive asset" do
+    test "should retrieve asset" do
       assert %BalanceResponse{asset: "BTC-USDT"} = BalanceResponse.new(%{"asset" => "BTC-USDT"})
     end
 
-    test "should retreive and transform balance into float",
+    test "should retrieve and transform balance into float",
       do: build_transform_assert(:float, :balance, "balance")
 
-    test "should retreive and transform equity into float",
+    test "should retrieve and transform equity into float",
       do: build_transform_assert(:float, :equity, "equity")
 
-    test "should retreive and transform available margin into flaot",
+    test "should retrieve and transform available margin into flaot",
       do: build_transform_assert(:float, :available_margin, "availableMargin")
 
-    test "should retreive and transform freezed margin into float",
+    test "should retrieve and transform freezed margin into float",
       do: build_transform_assert(:float, :freezed_margin, "freezedMargin")
 
-    test "should retreive and transform realized profit into float",
+    test "should retrieve and transform realised profit into float",
       do: build_transform_assert(:float, :realized_profit, "realisedProfit")
 
-    test "should retreive and transform unrealized profit into float",
+    test "should retrieve and transform unrealized profit into float",
       do: build_transform_assert(:float, :unrealized_profit, "unrealizedProfit")
 
-    test "should retreive and transform used margin into float",
+    test "should retrieve and transform used margin into float",
       do: build_transform_assert(:float, :used_margin, "usedMargin")
 
-    test "should retreive and transform user id into binary",
+    test "should retrieve and transform user id into binary",
       do: build_transform_assert(:binary, :user_id, "userId")
-
   end
 
   describe "BingX.API.Account.BalanceResponse new/1 (omitting)" do
@@ -54,7 +53,7 @@ defmodule BingX.API.Account.BalanceResponseTest do
       do: build_omit_assert(:float, :freezed_margin, "freezedMargin")
 
     test "should omit unexpected realized profit value",
-      do: build_omit_assert(:float, :realized_profit, "realizedProfit")
+      do: build_omit_assert(:float, :realized_profit, "realisedProfit")
 
     test "should omit unexpected unrealized profit value",
       do: build_omit_assert(:float, :unrealized_profit, "unrealizedProfit")
@@ -67,6 +66,7 @@ defmodule BingX.API.Account.BalanceResponseTest do
     assert %BalanceResponse{} = %{^exp_key => 24.00001} = BalanceResponse.new(%{orig_key => "24.00001"})
     assert %BalanceResponse{} = %{^exp_key => +0.0} = BalanceResponse.new(%{orig_key => "0.00000"})
     assert %BalanceResponse{} = %{^exp_key => 15.0} = BalanceResponse.new(%{orig_key => "15"})
+    assert %BalanceResponse{} = %{^exp_key => 1.0} = BalanceResponse.new(%{orig_key => 1.0})
   end
 
   defp build_transform_assert(:binary, exp_key, orig_key) do
@@ -77,6 +77,7 @@ defmodule BingX.API.Account.BalanceResponseTest do
   end
 
   defp build_omit_assert(:float, exp_key, orig_key) do
+    assert %BalanceResponse{} = %{^exp_key => 1.0} = BalanceResponse.new(%{orig_key => 1.0})
     assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(%{orig_key => "null"})
     assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(%{orig_key => ""})
     assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(%{orig_key => nil})
