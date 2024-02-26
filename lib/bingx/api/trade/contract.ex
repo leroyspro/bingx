@@ -1,5 +1,6 @@
 defmodule BingX.API.Trade.Contract do
   alias BingX.Order
+  alias BingX.API.Interpretators
 
   def from_order(%Order{} = order) do
     order
@@ -16,12 +17,11 @@ defmodule BingX.API.Trade.Contract do
 
   defp transform_values(stream) do
     Stream.map(stream, fn
-      {k, v}
-      when k in [:side, :type, :working_type, :position_side] ->
-        {k, v |> Atom.to_string() |> String.upcase()}
-
-      x ->
-        x
+      {:side, v} -> {:side, Interpretators.to_external_order_side(v)}
+      {:type, v} -> {:type, Interpretators.to_external_order_type(v)}
+      {:position_side, v} -> {:position_side, Interpretators.to_external_position_side(v)}
+      {:working_type, v} -> {:working_type, Interpretators.to_external_working_type(v)}
+      x -> x
     end)
   end
 
