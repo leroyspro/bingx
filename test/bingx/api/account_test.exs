@@ -74,9 +74,7 @@ defmodule BingX.API.AccountTest do
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once(
-        HTTPoison.get(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window})
-      )
+      assert_called_once(HTTPoison.get(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window}))
 
       assert_called_once(QueryParams.append_receive_window(_))
     end

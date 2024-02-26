@@ -87,9 +87,7 @@ defmodule BingX.API.TradeTest do
 
       Trade.place_order(order, api_key, secret_key)
 
-      assert_called_once(
-        HTTPoison.post(_url, _body, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window})
-      )
+      assert_called_once(HTTPoison.post(_url, _body, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window}))
 
       assert_called_once(QueryParams.append_receive_window(_params))
     end
@@ -104,9 +102,7 @@ defmodule BingX.API.TradeTest do
 
       Trade.place_order(order, api_key, secret_key)
 
-      assert_called_once(
-        HTTPoison.post(_url, _body, _headers, params: %{"TIMESTAMP" => ^timestamp})
-      )
+      assert_called_once(HTTPoison.post(_url, _body, _headers, params: %{"TIMESTAMP" => ^timestamp}))
 
       assert_called_once(QueryParams.append_timestamp(_params))
     end
@@ -124,9 +120,7 @@ defmodule BingX.API.TradeTest do
 
       Trade.place_order(order, api_key, secret_key)
 
-      assert_called_once(
-        HTTPoison.post(_url, _body, _headers, params: %{"SIGNATURE" => ^signature})
-      )
+      assert_called_once(HTTPoison.post(_url, _body, _headers, params: %{"SIGNATURE" => ^signature}))
 
       assert_called_once(QueryParams.append_signature(_, ^secret_key))
     end
@@ -237,9 +231,7 @@ defmodule BingX.API.TradeTest do
 
       Trade.cancel_all_orders(api_key, secret_key)
 
-      assert_called_once(
-        HTTPoison.delete(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window})
-      )
+      assert_called_once(HTTPoison.delete(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window}))
 
       assert_called_once(QueryParams.append_receive_window(_))
     end

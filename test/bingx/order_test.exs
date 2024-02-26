@@ -1,6 +1,5 @@
 defmodule BingX.API.OrderTest do
-  use ExUnit.Case
-  use Patch
+  use ExUnit.Case, async: true
 
   alias BingX.Order
 
@@ -11,28 +10,29 @@ defmodule BingX.API.OrderTest do
 
     test "should create struct with all params" do
       assert %Order{
-        :type => :market,
-        :order_id => "123214124312",
-        :symbol => "BTC-USDT",
-        :side => :sell,
-        :position_side => :short,
-        :price => 324.11,
-        :stop_price => 321,
-        :quantity => 0.1,
-        :client_order_id => "supra",
-        :working_type => :contract_price
-      } = Order.new(%{
-        :type => :market,
-        :order_id => "123214124312",
-        :symbol => "BTC-USDT",
-        :side => :sell,
-        :position_side => :short,
-        :price => 324.11,
-        :stop_price => 321,
-        :quantity => 0.1,
-        :client_order_id => "supra",
-        :working_type => :contract_price
-      })
+               :type => :market,
+               :order_id => "123214124312",
+               :symbol => "BTC-USDT",
+               :side => :sell,
+               :position_side => :short,
+               :price => 324.11,
+               :stop_price => 321,
+               :quantity => 0.1,
+               :client_order_id => "supra",
+               :working_type => :contract_price
+             } =
+               Order.new(%{
+                 :type => :market,
+                 :order_id => "123214124312",
+                 :symbol => "BTC-USDT",
+                 :side => :sell,
+                 :position_side => :short,
+                 :price => 324.11,
+                 :stop_price => 321,
+                 :quantity => 0.1,
+                 :client_order_id => "supra",
+                 :working_type => :contract_price
+               })
     end
 
     test "should validate :working_type key" do

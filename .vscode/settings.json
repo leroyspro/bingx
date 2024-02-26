@@ -2,6 +2,6 @@
   "elixirLS.projectDir": "./",
   "elixirLS.mixTarget": "./",
   "editor.rulers": [
-    100
-  ]
+    120
+  ],
 }
