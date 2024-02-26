@@ -147,7 +147,7 @@ defmodule BingX.API.InterpretatorsTest do
       assert "25" = Interpretators.interp_as_binary("25")
       assert "" = Interpretators.interp_as_binary("")
     end
-    
+
     test "should transform numbers as binaries" do
       assert "25.01" = Interpretators.interp_as_binary(25.01)
       assert "25" = Interpretators.interp_as_binary(25)
@@ -170,4 +170,3 @@ defmodule BingX.API.InterpretatorsTest do
     end
   end
 end
-
