@@ -29,6 +29,7 @@ defmodule BingX.API.Trade.Contract do
     Stream.map(stream, fn
       {:position_side, v} -> {"positionSide", v}
       {:client_order_id, v} -> {"clientOrderID", v}
+      {:order_id, v} -> {"orderId", v}
       {:stop_price, v} -> {"stopPrice", v}
       {:working_type, v} -> {"workingType", v}
       {k, v} -> {Atom.to_string(k), v}

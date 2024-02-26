@@ -13,6 +13,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def to_internal_order_type(_), do: nil
 
   def to_external_order_type(:market), do: "MARKET"
@@ -80,6 +81,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def to_internal_working_type(_), do: nil
 
   def to_external_working_type(:index_price), do: "INDEX_PRICE"

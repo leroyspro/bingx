@@ -1,8 +1,8 @@
 defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
   import BingX.Helpers
-  import BingX.API.Interpretators 
+  import BingX.API.Interpretators
 
-  defstruct [ 
+  defstruct [
     :order_id,
     :symbol,
     :side,
