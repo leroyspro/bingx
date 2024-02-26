@@ -1,9 +1,6 @@
 defmodule BingX.API.Interpretators do
   alias BingX.Helpers
 
-  def to_internal_order_id(x) when is_number(x), do: to_string(x)
-  def to_internal_order_id(_), do: nil
-
   def to_internal_order_type(x) when is_binary(x) do
     case Helpers.upcase(x) do
       "MARKET" -> :market
@@ -16,7 +13,6 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
-
   def to_internal_order_type(_), do: nil
 
   def to_external_order_type(:market), do: "MARKET"
@@ -31,6 +27,10 @@ defmodule BingX.API.Interpretators do
     case Helpers.upcase(x) do
       "NEW" -> :placed
       "TRIGGERED" -> :triggered
+      "FILLED" -> :filled
+      "PARTIALLY_FILLED" -> :partially_filled
+      "CANCELED" -> :canceled
+      "EXPIRED" -> :expired
       _ -> nil
     end
   end
@@ -39,6 +39,10 @@ defmodule BingX.API.Interpretators do
 
   def to_external_order_status(:placed), do: "NEW"
   def to_external_order_status(:triggered), do: "TRIGGERED"
+  def to_external_order_status(:filled), do: "FILLED"
+  def to_external_order_status(:partially_filled), do: "PARTIALLY_FILLED"
+  def to_external_order_status(:canceled), do: "CANCELED"
+  def to_external_order_status(:expired), do: "EXPIRED"
 
   def to_internal_position_side(x) when is_binary(x) do
     case Helpers.upcase(x) do
@@ -48,6 +52,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def to_internal_position_side(_), do: nil
 
   def to_external_position_side(:long), do: "LONG"
@@ -61,6 +66,7 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+
   def to_internal_order_side(_), do: nil
 
   def to_external_order_side(:sell), do: "SELL"
@@ -74,21 +80,24 @@ defmodule BingX.API.Interpretators do
       _ -> nil
     end
   end
+  def to_internal_working_type(_), do: nil
 
   def to_external_working_type(:index_price), do: "INDEX_PRICE"
   def to_external_working_type(:mark_price), do: "MARK_PRICE"
   def to_external_working_type(:contract_price), do: "CONTRACT_PRICE"
 
   def interp_as_float(x) when is_number(x), do: x + 0.0
+
   def interp_as_float(x) when is_binary(x) do
     case Float.parse(x) do
       :error -> nil
       {x, _} -> x
     end
   end
+
   def interp_as_float(_), do: nil
 
-  def interp_as_binary(x, options \\ [empty?:  true])
+  def interp_as_binary(x, options \\ [empty?: true])
   def interp_as_binary("", empty?: false), do: nil
   def interp_as_binary(x, _options) when is_binary(x), do: x
   def interp_as_binary(x, _options), do: to_string(x)

@@ -23,10 +23,10 @@ defmodule BingX.API.Trade.PlaceOrderResponse do
   @spec new(map()) :: %__MODULE__{}
   def new(data) do
     %__MODULE__{
-      order_id: get_and_transform(data, "orderId", &to_internal_order_id/1),
-      client_order_id: get_and_transform(data, "clientOrderID", &to_string/1),
+      order_id: get_and_transform(data, "orderId", &interp_as_binary(&1, empty?: false)),
+      client_order_id: get_and_transform(data, "clientOrderID", &interp_as_binary(&1, empty?: false)),
       type: get_and_transform(data, "type", &to_internal_order_type/1),
-      symbol: Map.get(data, "symbol"),
+      symbol: get_and_transform(data, "symbol", &interp_as_binary(&1, empty?: false)),
       side: get_and_transform(data, "side", &to_internal_order_side/1),
       position_side: get_and_transform(data, "positionSide", &to_internal_position_side/1),
       price: get_and_transform(data, "price", &interp_as_float/1),

@@ -32,7 +32,7 @@ defmodule BingX.API.Trade.CancelAllOrdersResponse.Succeeded do
 
   def new(data) do
     %__MODULE__{
-      order_id: get_and_transform(data, "orderId", &to_internal_order_id/1),
+      order_id: get_and_transform(data, "orderId", &interp_as_binary(&1, empty?: false)),
       symbol: get_and_transform(data, "symbol", &interp_as_binary(&1, empty?: false)),
       side: get_and_transform(data, "side", &to_internal_order_side/1),
       position_side: get_and_transform(data, "positionSide", &to_internal_position_side/1),
