@@ -8,7 +8,10 @@ defmodule BingX.API.Account do
 
   @spec get_balance(String.t(), String.t()) :: {:ok, Map} | {:error, term()}
   def get_balance(api_key, secret_key) when is_binary(api_key) and is_binary(secret_key) do
-    with {:ok, %{body: body, status_code: 200}} <- do_get_balance(api_key, secret_key) do
+    with(
+      {:ok, %{body: body, status_code: 200}} <-
+        do_get_balance(api_key, secret_key)
+    ) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
       case data do
