@@ -40,11 +40,11 @@ defmodule BingX.API.Trade do
     HTTPoison.post(url, body, headers, params: params)
   end
 
-  def cancel_order(params, api_key, secret_key)
+  def cancel_order(%Order{} = order, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, %{body: body, status_code: 200}} <-
-        do_cancel_order(params, api_key, secret_key)
+        do_cancel_order(order, api_key, secret_key)
     ) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
@@ -58,16 +58,13 @@ defmodule BingX.API.Trade do
     end
   end
 
-  defp do_cancel_order(params, api_key, secret_key) do
+  defp do_cancel_order(order, api_key, secret_key) do
     url = url_base() <> "/order"
     headers = Headers.append_api_key(Map.new(), api_key)
 
-    symbol =
-      params[:symbol] ||
-        raise ArgumentError, "expected :symbol param to be given"
-
-    order_id = params[:order_id] || ""
-    client_order_id = params[:client_order_id] || ""
+    symbol = order.symbol || raise ArgumentError, "expected :symbol param to be given"
+    order_id = order.order_id || ""
+    client_order_id = order.client_order_id || ""
 
     params =
       %{
@@ -82,11 +79,11 @@ defmodule BingX.API.Trade do
     HTTPoison.delete(url, headers, params: params)
   end
 
-  def cancel_all_orders(params, api_key, secret_key)
+  def cancel_all_orders(symbol, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, %{body: body, status_code: 200}} <-
-        do_cancel_all_orders(params, api_key, secret_key)
+        do_cancel_all_orders(symbol, api_key, secret_key)
     ) do
       {:ok, data} = Jason.decode(body, keys: :strings)
 
@@ -100,13 +97,9 @@ defmodule BingX.API.Trade do
     end
   end
 
-  defp do_cancel_all_orders(params, api_key, secret_key) do
+  defp do_cancel_all_orders(symbol, api_key, secret_key) do
     url = url_base() <> "/allOpenOrders"
     headers = Headers.append_api_key(Map.new(), api_key)
-
-    symbol =
-      params[:symbol] ||
-        raise ArgumentError, "expected :symbol param to be given"
 
     params =
       %{"symbol" => symbol}
