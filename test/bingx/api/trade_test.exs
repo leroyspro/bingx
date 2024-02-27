@@ -177,7 +177,7 @@ defmodule BingX.API.TradeTest do
     end
   end
 
-  describe "BingX.API.Trade cancel_all_orders/2" do
+  describe "BingX.API.Trade cancel_all_orders/3" do
     setup _context do
       {:ok, endpoint: @origin <> "/openApi/swap/v2/trade/allOpenOrders"}
     end
@@ -187,7 +187,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(HTTPoison.delete(_endpoint, _headers, _options))
     end
@@ -197,7 +198,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(HTTPoison.delete(^endpoint, _headers, _options))
     end
@@ -210,10 +212,34 @@ defmodule BingX.API.TradeTest do
       patch(Headers, :append_api_key, headers)
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(Headers.append_api_key(_, ^api_key))
       assert_called_once(HTTPoison.delete(_url, ^headers, _options))
+    end
+
+    test "should request with symbol in query params", context do
+      %{api_key: api_key, secret_key: secret_key} = context
+
+      symbol = "BTC-USDT"
+
+      patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
+
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
+
+      assert_called_once(HTTPoison.delete(_url, _headers, params: %{"symbol" => ^symbol}))
+    end
+
+    test "should raise error for missed symbol param", context do
+      %{api_key: api_key, secret_key: secret_key} = context
+
+      patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
+
+      assert_raise ArgumentError, 
+        "expected :symbol param to be given", 
+        fn -> Trade.cancel_all_orders(%{}, api_key, secret_key) end
     end
 
     test "should request with receive window in query params", context do
@@ -229,7 +255,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(HTTPoison.delete(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window}))
 
@@ -244,7 +271,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(HTTPoison.delete(_url, _headers, params: %{"TIMESTAMP" => ^timestamp}))
       assert_called_once(QueryParams.append_timestamp(_params))
@@ -261,7 +289,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, {:error, %HTTPoison.Error{reason: :timeout}})
 
-      Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(HTTPoison.delete(_url, _headers, params: %{"SIGNATURE" => ^signature}))
       assert_called_once(QueryParams.append_signature(_params, ^secret_key))
@@ -274,7 +303,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, result)
 
-      assert ^result = Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      Trade.cancel_all_orders(params, api_key, secret_key)
     end
 
     test "should return the original error if request is not 200", context do
@@ -284,7 +314,8 @@ defmodule BingX.API.TradeTest do
 
       patch(HTTPoison, :delete, result)
 
-      assert ^result = Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      assert ^result = Trade.cancel_all_orders(params, api_key, secret_key)
     end
 
     test "should wrap the successful response in CancelAllOrdersResponse", context do
@@ -297,7 +328,8 @@ defmodule BingX.API.TradeTest do
       patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(CancelAllOrdersResponse, :new, struct)
 
-      assert {:ok, ^struct} = Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      assert {:ok, ^struct} = Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(CancelAllOrdersResponse.new(^data))
     end
@@ -313,7 +345,8 @@ defmodule BingX.API.TradeTest do
       patch(HTTPoison, :delete, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
       patch(Exception, :new, struct)
 
-      assert {:error, ^struct} = Trade.cancel_all_orders(api_key, secret_key)
+      params = %{symbol: "BTC-USDT"}
+      assert {:error, ^struct} = Trade.cancel_all_orders(params, api_key, secret_key)
 
       assert_called_once(Exception.new(^code, ^message))
     end
