@@ -43,7 +43,7 @@ defmodule BingX.API.ContractTest do
       price = 12312.2131
       assert %{"price" => ^price} = Contract.from_order(%Order{price: price})
     end
-    
+
     test "should transform stop price properly" do
       stop_price = 12312.2131
       assert %{"stopPrice" => ^stop_price} = Contract.from_order(%Order{stop_price: stop_price})
@@ -55,7 +55,7 @@ defmodule BingX.API.ContractTest do
     end
 
     test "should transform client order id properly" do
-      client_order_id = 12312321
+      client_order_id = 12_312_321
       assert %{"clientOrderID" => ^client_order_id} = Contract.from_order(%Order{client_order_id: client_order_id})
     end
 
@@ -72,28 +72,29 @@ defmodule BingX.API.ContractTest do
       patch(Interpretators, :to_external_order_type, "ORDER_TYPE")
 
       assert %{
-        "type" => "ORDER_TYPE",
-        "orderId" => "ORDER_ID",
-        "symbol" => "SYMBOL",
-        "side" => "ORDER_SIDE",
-        "positionSide" => "POSITION_SIDE",
-        "price" => "PRICE",
-        "stopPrice" => "STOP_PRICE",
-        "quantity" => "QUANTITY",
-        "clientOrderID" => "CLIENT_ORDER_ID",
-        "workingType" => "WORKING_TYPE"
-      } = Contract.from_order(%Order{
-        type: :order_type,
-        side: :order_side,
-        position_side: :position_side,
-        working_type: :working_type,
-        order_id: "ORDER_ID",
-        symbol: "SYMBOL",
-        price: "PRICE",
-        stop_price: "STOP_PRICE",
-        quantity: "QUANTITY",
-        client_order_id: "CLIENT_ORDER_ID"
-      })
+               "type" => "ORDER_TYPE",
+               "orderId" => "ORDER_ID",
+               "symbol" => "SYMBOL",
+               "side" => "ORDER_SIDE",
+               "positionSide" => "POSITION_SIDE",
+               "price" => "PRICE",
+               "stopPrice" => "STOP_PRICE",
+               "quantity" => "QUANTITY",
+               "clientOrderID" => "CLIENT_ORDER_ID",
+               "workingType" => "WORKING_TYPE"
+             } =
+               Contract.from_order(%Order{
+                 type: :order_type,
+                 side: :order_side,
+                 position_side: :position_side,
+                 working_type: :working_type,
+                 order_id: "ORDER_ID",
+                 symbol: "SYMBOL",
+                 price: "PRICE",
+                 stop_price: "STOP_PRICE",
+                 quantity: "QUANTITY",
+                 client_order_id: "CLIENT_ORDER_ID"
+               })
 
       assert_called_once(Interpretators.to_external_working_type(:working_type))
       assert_called_once(Interpretators.to_external_position_side(:position_side))

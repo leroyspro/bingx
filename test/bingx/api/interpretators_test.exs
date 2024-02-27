@@ -56,7 +56,7 @@ defmodule BingX.API.InterpretatorsTest do
       assert "TRIGGERED" = Interpretators.to_external_order_status(:triggered)
       assert "FILLED" = Interpretators.to_external_order_status(:filled)
       assert "PARTIALLY_FILLED" = Interpretators.to_external_order_status(:partially_filled)
-      assert "CANCELED" = Interpretators.to_external_order_status(:canceled)
+      assert "CANCELLED" = Interpretators.to_external_order_status(:canceled)
       assert "EXPIRED" = Interpretators.to_external_order_status(:expired)
     end
   end
