@@ -1,0 +1,7 @@
+{
+  "elixirLS.projectDir": "./",
+  "elixirLS.mixTarget": "./",
+  "editor.rulers": [
+    120
+  ],
+}

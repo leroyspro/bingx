@@ -1,4 +1,4 @@
-defmodule Bingx.MixProject do
+defmodule BingX.MixProject do
   use Mix.Project
 
   def project do
@@ -9,7 +9,8 @@ defmodule Bingx.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       consolidate_protocols: Mix.env() != :dev,
-      aliases: aliases(),
+      description: description(),
+      package: package(),
       deps: deps(),
       name: "GenETS",
       source_url: "https://gitlab.com/leroyspro/bingx"
@@ -42,7 +43,9 @@ defmodule Bingx.MixProject do
 
   defp deps() do
     [
-      
+      {:httpoison, "~> 2.2"},
+      {:jason, "~> 1.4"},
+      {:patch, "~> 0.13.0", only: [:test]}
     ]
   end
 end
