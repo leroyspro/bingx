@@ -39,7 +39,7 @@ defmodule BingX.API.InterpretatorsTest do
       assert :triggered = Interpretators.to_internal_order_status("TriGGERED")
       assert :filled = Interpretators.to_internal_order_status("FillEd")
       assert :partially_filled = Interpretators.to_internal_order_status("PArtiALLY_FillEd")
-      assert :canceled = Interpretators.to_internal_order_status("CANCElED")
+      assert :canceled = Interpretators.to_internal_order_status("CANCEllED")
       assert :expired = Interpretators.to_internal_order_status("EXPIred")
     end
 
