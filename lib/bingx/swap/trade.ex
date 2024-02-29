@@ -1,41 +1,168 @@
 defmodule BingX.Swap.Trade do
-  alias BingX.Exception
-
+  alias BingX.Response
+  alias BingX.Swap.Trade.Contract
+  alias BingX.Helpers
+  alias BingX.Request.{Headers, QueryParams}
   alias BingX.Swap.Order
 
   alias BingX.Swap.Trade.{
-    Contract,
     PlaceOrderResponse,
-    CancelAllOrdersResponse,
+    PlaceOrdersResponse,
+    CancelAllOrdersResponse, CancelOrdersResponse,
     CancelOrderResponse
   }
 
-  alias BingX.Request.{Headers, QueryParams}
+  # Interface
+  # =========
 
-  @origin Application.compile_env!(:bingx, :origin)
-
-  def url_base, do: @origin <> "/openApi/swap/v2/trade"
-
+  @spec place_order(order :: Order.t(), api_key :: binary(), secret_key :: binary()) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, %BingX.Swap.Trade.PlaceOrderResponse{}}
   def place_order(%Order{} = order, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
-      {:ok, %{body: body, status_code: 200}} <-
-        do_place_order(order, api_key, secret_key)
+      {:ok, resp} <- do_place_order(order, api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
     ) do
-      {:ok, data} = Jason.decode(body, keys: :strings)
-
-      case data do
-        %{"code" => 0, "data" => %{"order" => payload}} ->
-          {:ok, PlaceOrderResponse.new(payload)}
-
-        %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(code, message)}
-      end
+      {:ok, PlaceOrderResponse.new(content)}
     end
   end
 
+  @spec place_orders(orders :: list(Order.t()), api_key :: binary(), secret_key :: binary()) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, map()}
+  def place_orders(orders, api_key, secret_key)
+      when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, PlaceOrdersResponse.new(content)}
+    end
+  end
+
+  @spec cancel_order_by_id(symbol :: binary(), order_id :: binary(), api_key :: binary(), secret_key :: binary()) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, %CancelOrderResponse{}}
+  def cancel_order_by_id(symbol, order_id, api_key, secret_key)
+      when is_binary(api_key) and is_binary(secret_key) do
+
+    with(
+      {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, CancelOrderResponse.new(content)}
+    end
+  end
+
+  @spec cancel_order_by_client_id(symbol :: binary(), client_id :: binary(), api_key :: binary(), secret_key :: binary()) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, %CancelOrderResponse{}}
+  def cancel_order_by_client_id(symbol, client_id, api_key, secret_key)
+      when is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, CancelOrderResponse.new(content)}
+    end
+  end
+
+  @spec cancel_orders_by_ids(
+          symbol :: binary(),
+          order_ids :: list(),
+          api_key :: binary(),
+          secret_key :: binary()
+        ) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, %CancelOrderResponse{}}
+  def cancel_orders_by_ids(symbol, order_ids, api_key, secret_key)
+      when is_binary(symbol) and
+             is_list(order_ids) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, CancelOrdersResponse.new(content)}
+    end
+  end
+
+  @spec cancel_orders_by_client_ids(
+          symbol :: binary(),
+          client_order_ids :: list(),
+          api_key :: binary(),
+          secret_key :: binary()
+        ) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, %CancelOrderResponse{}}
+  def cancel_orders_by_client_ids(symbol, client_order_ids, api_key, secret_key)
+      when is_binary(symbol) and
+             is_list(client_order_ids) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, CancelOrdersResponse.new(content)}
+    end
+  end
+
+  @spec cancel_all_orders(any(), binary(), binary()) ::
+          {:error,
+           {:bad_decode, binary()}
+           | {:unexpected_status_code, integer()}
+           | %BingX.Exception{}
+           | %HTTPoison.Error{}}
+          | {:ok, BingX.Swap.Trade.CancelAllOrdersResponse.t()}
+  def cancel_all_orders(symbol, api_key, secret_key)
+      when is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
+      {:ok, body} <- Response.extract_body(resp),
+      {:ok, content} <- Response.extract_content(body)
+    ) do
+      {:ok, CancelAllOrdersResponse.new(content)}
+    end
+  end
+
+  # Helpers
+  # =======
+
   defp do_place_order(order, api_key, secret_key) do
-    url = url_base() <> "/order"
+    url = base_path() <> "/order"
     body = ""
     headers = Headers.append_api_key(Map.new(), api_key)
 
@@ -49,31 +176,29 @@ defmodule BingX.Swap.Trade do
     HTTPoison.post(url, body, headers, params: params)
   end
 
-  def cancel_order(%Order{} = order, api_key, secret_key)
-      when is_binary(api_key) and is_binary(secret_key) do
-    with(
-      {:ok, %{body: body, status_code: 200}} <-
-        do_cancel_order(order, api_key, secret_key)
-    ) do
-      {:ok, data} = Jason.decode(body, keys: :strings)
-
-      case data do
-        %{"code" => 0, "data" => %{"order" => payload}} ->
-          {:ok, CancelOrderResponse.new(payload)}
-
-        %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(code, message)}
-      end
-    end
-  end
-
-  defp do_cancel_order(order, api_key, secret_key) do
-    url = url_base() <> "/order"
+  defp do_place_orders(orders, api_key, secret_key) do
+    url = base_path() <> "/batchOrders"
+    body = ""
     headers = Headers.append_api_key(Map.new(), api_key)
 
-    symbol = order.symbol || raise ArgumentError, "expected :symbol param to be given"
-    order_id = order.order_id || ""
-    client_order_id = order.client_order_id || ""
+    batch_orders =
+      orders
+      |> Enum.map(&Contract.from_order/1)
+      |> Enum.map(&Jason.encode!/1)
+      |> Helpers.to_string()
+
+    params =
+      %{ "batchOrders" => batch_orders }
+      |> QueryParams.append_receive_window()
+      |> QueryParams.append_timestamp()
+      |> QueryParams.append_signature(secret_key)
+
+    HTTPoison.post(url, body, headers, params: params)
+  end
+
+  defp do_cancel_order(symbol, order_id, client_order_id, api_key, secret_key) do
+    url = base_path() <> "/order"
+    headers = Headers.append_api_key(Map.new(), api_key)
 
     params =
       %{
@@ -88,26 +213,27 @@ defmodule BingX.Swap.Trade do
     HTTPoison.delete(url, headers, params: params)
   end
 
-  def cancel_all_orders(symbol, api_key, secret_key)
-      when is_binary(api_key) and is_binary(secret_key) do
-    with(
-      {:ok, %{body: body, status_code: 200}} <-
-        do_cancel_all_orders(symbol, api_key, secret_key)
-    ) do
-      {:ok, data} = Jason.decode(body, keys: :strings)
+  defp do_cancel_orders(symbol, order_ids, client_order_ids, api_key, secret_key) do
+    url = base_path() <> "/batchOrders"
+    headers = Headers.append_api_key(Map.new(), api_key)
+    order_ids_raw = Helpers.to_string(order_ids)
+    client_order_ids_raw = Helpers.to_string(client_order_ids)
 
-      case data do
-        %{"code" => 0, "data" => payload} ->
-          {:ok, CancelAllOrdersResponse.new(payload)}
+    params =
+      %{
+        "symbol" => symbol,
+        "orderIdList" => order_ids_raw,
+        "clientOrderIDList" => client_order_ids_raw
+      }
+      |> QueryParams.append_receive_window()
+      |> QueryParams.append_timestamp()
+      |> QueryParams.append_signature(secret_key)
 
-        %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(code, message)}
-      end
-    end
+    HTTPoison.delete(url, headers, params: params)
   end
 
   defp do_cancel_all_orders(symbol, api_key, secret_key) do
-    url = url_base() <> "/allOpenOrders"
+    url = base_path() <> "/allOpenOrders"
     headers = Headers.append_api_key(Map.new(), api_key)
 
     params =
@@ -118,4 +244,6 @@ defmodule BingX.Swap.Trade do
 
     HTTPoison.delete(url, headers, params: params)
   end
+
+  defp base_path, do: Application.get_env(:bingx, :origin) <> "/openApi/swap/v2/trade"
 end

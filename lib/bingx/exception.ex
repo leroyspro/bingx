@@ -10,6 +10,7 @@ defmodule BingX.Exception do
   def new(code, "") do
     %__MODULE__{message: "No error description message provided", code: code}
   end
+
   def new(code, message) do
     %__MODULE__{message: message, code: code}
   end

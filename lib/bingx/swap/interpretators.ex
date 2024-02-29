@@ -102,5 +102,11 @@ defmodule BingX.Swap.Interpretators do
   def interp_as_binary(x, options \\ [empty?: true])
   def interp_as_binary("", empty?: false), do: nil
   def interp_as_binary(x, _options) when is_binary(x), do: x
-  def interp_as_binary(x, _options), do: to_string(x)
+  def interp_as_binary(x, _options), do: Helpers.to_string(x)
+
+  def interp_as_boolean(x, options \\ [empty?: true])
+  def interp_as_boolean("", empty?: false), do: nil
+  def interp_as_boolean(x, _options) when is_boolean(x), do: x
+  def interp_as_boolean(_x, _options), do: nil
+
 end

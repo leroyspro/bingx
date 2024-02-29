@@ -4,4 +4,5 @@
   "editor.rulers": [
     120
   ],
+  "editor.formatOnSave": false
 }

@@ -1,5 +1,6 @@
 defmodule BingX.Request.QueryParams do
   import BingX.Helpers
+  alias BingX.Helpers
 
   alias :crypto, as: Crypto
 
@@ -14,7 +15,12 @@ defmodule BingX.Request.QueryParams do
   def append_signature(%{} = params, secret_key) do
     signature =
       params
-      |> URI.encode_query()
+      |> Enum.map(fn
+        {k, v} when is_list(v) -> k <> "=" <> Helpers.to_string(v)
+        {k, v} when is_binary(v) -> k <> "=" <> v
+        {k, v} -> k <> "=" <> inspect(v)
+      end)
+      |> Enum.join("&")
       |> signature(secret_key)
 
     Map.merge(params, %{"signature" => signature})

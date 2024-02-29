@@ -29,7 +29,7 @@ defmodule BingX.Swap.Account.BalanceResponse do
         }
 
   @spec new(map()) :: BalanceResponse.t()
-  def new(data) do
+  def new(%{"balance" => data}) do
     %__MODULE__{
       asset: get_and_transform(data, "asset", &interp_as_binary(&1, empty?: false)),
       available_margin: get_and_transform(data, "availableMargin", &interp_as_float/1),

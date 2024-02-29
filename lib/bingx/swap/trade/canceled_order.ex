@@ -56,7 +56,7 @@ defmodule BingX.Swap.Trade.CanceledOrder do
       average_price: get_and_transform(data, "avgPrice", &interp_as_float/1),
       position_id: Map.get(data, "positionID"),
       profit: get_and_transform(data, "profit", &interp_as_float/1),
-      reduce_only?: Map.get(data, "reduceOnly"),
+      reduce_only?: get_and_transform(data, "reduceOnly", &interp_as_boolean(&1, empty: false)),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
       take_profit: Map.get(data, "takeProfit"),
