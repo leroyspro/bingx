@@ -36,6 +36,7 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_place_order(order, api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -55,6 +56,7 @@ defmodule BingX.Swap.Trade do
       when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -75,6 +77,7 @@ defmodule BingX.Swap.Trade do
 
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -94,6 +97,7 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -121,6 +125,7 @@ defmodule BingX.Swap.Trade do
              is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -148,6 +153,7 @@ defmodule BingX.Swap.Trade do
              is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)
@@ -167,6 +173,7 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
+      :ok <- Response.validate(resp, only: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body),
       {:ok, content} <- Response.extract_content(data)

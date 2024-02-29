@@ -1,12 +1,17 @@
 defmodule BingX.Response do
   alias BingX.Exception
 
-  def extract_body(%HTTPoison.Response{body: body, status_code: 200}) do
-    {:ok, body}
+  def validate(%HTTPoison.Response{status_code: status_code}, only: exp_status_code) 
+    when status_code === exp_status_code do
+    :ok
   end
 
-  def extract_body(%HTTPoison.Response{body: _body, status_code: status_code}) do
+  def validate(%HTTPoison.Response{status_code: status_code}) do
     {:error, {:unexpected_status_code, status_code}}
+  end
+
+  def extract_body(%HTTPoison.Response{body: body}) do
+    {:ok, body}
   end
 
   def decode_body(raw_body) do
