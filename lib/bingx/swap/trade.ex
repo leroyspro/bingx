@@ -37,7 +37,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_place_order(order, api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, PlaceOrderResponse.new(content)}
     end
@@ -55,7 +56,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, PlaceOrdersResponse.new(content)}
     end
@@ -74,7 +76,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, CancelOrderResponse.new(content)}
     end
@@ -92,7 +95,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, CancelOrderResponse.new(content)}
     end
@@ -118,7 +122,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, CancelOrdersResponse.new(content)}
     end
@@ -144,7 +149,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, CancelOrdersResponse.new(content)}
     end
@@ -162,7 +168,8 @@ defmodule BingX.Swap.Trade do
     with(
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, CancelAllOrdersResponse.new(content)}
     end

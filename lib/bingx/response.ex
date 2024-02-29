@@ -9,18 +9,20 @@ defmodule BingX.Response do
     {:error, {:unexpected_status_code, status_code}}
   end
 
-  def extract_content(raw_body) do
-    with {:ok, data} <- Jason.decode(raw_body) do
-      case data do
-        %{"code" => 0, "data" => content} ->
-          {:ok, content}
+  def decode_body(raw_body) do
+    case Jason.decode(raw_body) do
+      {:ok, data} -> {:ok, data}
+      {:error, _reason} -> {:error, {:bad_decode, raw_body}}
+    end
+  end
 
-        %{"code" => code, "msg" => message} ->
-          {:error, Exception.new(code, message)}
-      end
-    else
-      {:error, _reason} ->
-        {:error, {:bad_decode, raw_body}}
+  def extract_content(data) when is_map(data) do
+    case data do
+      %{"code" => 0, "data" => content} ->
+        {:ok, content}
+
+      %{"code" => code, "msg" => message} ->
+        {:error, Exception.new(code, message)}
     end
   end
 end

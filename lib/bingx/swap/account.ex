@@ -15,7 +15,8 @@ defmodule BingX.Swap.Account do
     with(
       {:ok, resp} <- do_get_balance(api_key, secret_key),
       {:ok, body} <- Response.extract_body(resp),
-      {:ok, content} <- Response.extract_content(body)
+      {:ok, data} <- Response.decode_body(body),
+      {:ok, content} <- Response.extract_content(data)
     ) do
       {:ok, BalanceResponse.new(content)}
     end
