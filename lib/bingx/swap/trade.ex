@@ -2,7 +2,7 @@ defmodule BingX.Swap.Trade do
   alias BingX.Response
   alias BingX.Swap.Trade.Contract
   alias BingX.Helpers
-  alias BingX.Request.{Headers, QueryParams}
+  alias BingX.Request
   alias BingX.Swap.Order
 
   alias BingX.Swap.Trade.{
@@ -11,6 +11,16 @@ defmodule BingX.Swap.Trade do
     CancelAllOrdersResponse, CancelOrdersResponse,
     CancelOrderResponse
   }
+
+  @api_scope "/openApi/swap/v2/trade"
+
+  @cancel_order_path @api_scope <> "/order"
+  @place_order_path @api_scope <> "/order"
+
+  @place_orders_path @api_scope <> "/batchOrders"
+  @cancel_orders_path @api_scope <> "/batchOrders"
+
+  @cancel_all_orders_path @api_scope <> "/allOpenOrders"
 
   # Interface
   # =========
@@ -162,88 +172,59 @@ defmodule BingX.Swap.Trade do
   # =======
 
   defp do_place_order(order, api_key, secret_key) do
-    url = base_path() <> "/order"
-    body = ""
-    headers = Headers.append_api_key(Map.new(), api_key)
+    params = Contract.from_order(order)
+    url = Request.build_url(@place_order_path, params, sign: secret_key)
+    headers = Request.auth_headers(api_key)
 
-    params =
-      order
-      |> Contract.from_order()
-      |> QueryParams.append_receive_window()
-      |> QueryParams.append_timestamp()
-      |> QueryParams.append_signature(secret_key)
-
-    HTTPoison.post(url, body, headers, params: params)
+    HTTPoison.post(url, "", headers)
   end
 
   defp do_place_orders(orders, api_key, secret_key) do
-    url = base_path() <> "/batchOrders"
-    body = ""
-    headers = Headers.append_api_key(Map.new(), api_key)
-
-    batch_orders =
+    raw_orders =
       orders
       |> Enum.map(&Contract.from_order/1)
       |> Enum.map(&Jason.encode!/1)
       |> Helpers.to_string()
 
-    params =
-      %{ "batchOrders" => batch_orders }
-      |> QueryParams.append_receive_window()
-      |> QueryParams.append_timestamp()
-      |> QueryParams.append_signature(secret_key)
+    params = %{"batchOrders" => raw_orders}
 
-    HTTPoison.post(url, body, headers, params: params)
+    url = Request.build_url(@place_orders_path, params, sign: secret_key)
+    headers = Request.auth_headers(api_key)
+
+    HTTPoison.post(url, "", headers)
   end
 
   defp do_cancel_order(symbol, order_id, client_order_id, api_key, secret_key) do
-    url = base_path() <> "/order"
-    headers = Headers.append_api_key(Map.new(), api_key)
+    params = %{
+      "symbol" => symbol,
+      "orderId" => order_id,
+      "clientOrderID" => client_order_id
+    }
 
-    params =
-      %{
-        "symbol" => symbol,
-        "orderId" => order_id,
-        "clientOrderID" => client_order_id
-      }
-      |> QueryParams.append_receive_window()
-      |> QueryParams.append_timestamp()
-      |> QueryParams.append_signature(secret_key)
+    url = Request.build_url(@cancel_order_path, params, sign: secret_key)
+    headers = Request.auth_headers(api_key)
 
-    HTTPoison.delete(url, headers, params: params)
+    HTTPoison.delete(url, headers)
   end
 
   defp do_cancel_orders(symbol, order_ids, client_order_ids, api_key, secret_key) do
-    url = base_path() <> "/batchOrders"
-    headers = Headers.append_api_key(Map.new(), api_key)
-    order_ids_raw = Helpers.to_string(order_ids)
-    client_order_ids_raw = Helpers.to_string(client_order_ids)
+    params = %{
+      "symbol" => symbol,
+      "orderIdList" => Helpers.to_string(order_ids),
+      "clientOrderIDList" => Helpers.to_string(client_order_ids)
+    }
 
-    params =
-      %{
-        "symbol" => symbol,
-        "orderIdList" => order_ids_raw,
-        "clientOrderIDList" => client_order_ids_raw
-      }
-      |> QueryParams.append_receive_window()
-      |> QueryParams.append_timestamp()
-      |> QueryParams.append_signature(secret_key)
+    url = Request.build_url(@cancel_orders_path, params, sign: secret_key)
+    headers = Request.auth_headers(api_key)
 
-    HTTPoison.delete(url, headers, params: params)
+    HTTPoison.delete(url, headers)
   end
 
   defp do_cancel_all_orders(symbol, api_key, secret_key) do
-    url = base_path() <> "/allOpenOrders"
-    headers = Headers.append_api_key(Map.new(), api_key)
+    params = %{"symbol" => symbol}
+    url = Request.build_url(@cancel_all_orders_path, params, sign: secret_key)
+    headers = Request.auth_headers(api_key)
 
-    params =
-      %{"symbol" => symbol}
-      |> QueryParams.append_receive_window()
-      |> QueryParams.append_timestamp()
-      |> QueryParams.append_signature(secret_key)
-
-    HTTPoison.delete(url, headers, params: params)
+    HTTPoison.delete(url, headers)
   end
-
-  defp base_path, do: Application.get_env(:bingx, :origin) <> "/openApi/swap/v2/trade"
 end
