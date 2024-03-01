@@ -10,7 +10,7 @@ defmodule BingX.HTTP.Client do
 
     with {:ok, resp} <- do_request(method, url, body, headers) do
       {:ok, adapt_response(resp)}
-    else 
+    else
       {:error, err} -> {:error, :http_error, adapt_error(err)}
     end
   end

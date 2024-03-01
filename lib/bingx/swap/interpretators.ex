@@ -108,5 +108,4 @@ defmodule BingX.Swap.Interpretators do
   def interp_as_boolean("", empty?: false), do: nil
   def interp_as_boolean(x, _options) when is_boolean(x), do: x
   def interp_as_boolean(_x, _options), do: nil
-
 end

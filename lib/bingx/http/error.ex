@@ -1,3 +1,3 @@
 defmodule BingX.HTTP.Error do
-  defexception [:message] 
+  defexception [:message]
 end

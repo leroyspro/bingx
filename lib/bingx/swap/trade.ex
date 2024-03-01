@@ -9,7 +9,8 @@ defmodule BingX.Swap.Trade do
   alias BingX.Swap.Trade.{
     PlaceOrderResponse,
     PlaceOrdersResponse,
-    CancelAllOrdersResponse, CancelOrdersResponse,
+    CancelAllOrdersResponse,
+    CancelOrdersResponse,
     CancelOrderResponse
   }
 
@@ -28,7 +29,6 @@ defmodule BingX.Swap.Trade do
 
   def place_order(%Order{} = order, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-
     with(
       {:ok, resp} <- do_place_order(order, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
@@ -39,7 +39,6 @@ defmodule BingX.Swap.Trade do
 
   def place_orders(orders, api_key, secret_key)
       when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
-
     with(
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
@@ -50,7 +49,6 @@ defmodule BingX.Swap.Trade do
 
   def cancel_order_by_id(symbol, order_id, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
@@ -88,7 +86,6 @@ defmodule BingX.Swap.Trade do
              is_list(client_order_ids) and
              is_binary(api_key) and
              is_binary(secret_key) do
-
     with(
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
@@ -99,7 +96,6 @@ defmodule BingX.Swap.Trade do
 
   def cancel_all_orders(symbol, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
-
     with(
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)

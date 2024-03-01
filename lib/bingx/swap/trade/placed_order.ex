@@ -44,7 +44,7 @@ defmodule BingX.Swap.Trade.PlacedOrder do
       reduce_only?: get_and_transform(data, "reduceOnly", &interp_as_boolean(&1, empty: false)),
       price_rate: get_and_transform(data, "priceRate", &interp_as_float/1),
       activation_price: get_and_transform(data, "activationPrice", &interp_as_float/1),
-      close_position?: get_and_transform(data, "closePosition", &interp_as_boolean(&1, empty: false)),
+      close_position?: get_and_transform(data, "closePosition", &interp_as_boolean(&1, empty: false))
     }
 
     struct(module, params)
