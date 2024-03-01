@@ -12,7 +12,7 @@ defmodule BingX.Swap.Trade.CancelOrdersResponse do
   def new(%{"success" => succeeded, "failed" => failed}) do
     %__MODULE__{
       succeeded: transform_succeeded(succeeded),
-      failed: failed
+      failed: failed || []
     }
   end
 

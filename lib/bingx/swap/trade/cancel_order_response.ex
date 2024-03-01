@@ -4,5 +4,5 @@ defmodule BingX.Swap.Trade.CancelOrderResponse do
   defstruct CanceledOrder.fields()
 
   @spec new(map()) :: map()
-  def new(data), do: CanceledOrder.cast(data, as: __MODULE__)
+  def new(%{"order" => data}), do: CanceledOrder.cast(data, as: __MODULE__)
 end

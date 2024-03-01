@@ -1,5 +1,5 @@
-defmodule BingX.Request do
-  alias BingX.Request.{QueryParams, Headers}
+defmodule BingX.HTTP.Request do
+  alias BingX.HTTP.Request.{QueryParams, Headers}
 
   @origin Application.compile_env!(:bingx, :origin)
 

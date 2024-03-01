@@ -1,5 +1,7 @@
 defmodule BingX.Account.Security do
-  alias BingX.{Request, Response}
+  import BingX.HTTP.Client, only: [signed_request: 4]
+  
+  alias BingX.HTTP.Response
   alias BingX.Account.Security.GenListenKeyResponse
 
   @api_scope "/openApi/user/auth"
@@ -9,7 +11,7 @@ defmodule BingX.Account.Security do
   def gen_listen_key(api_key, secret_key) do
     with(
       {:ok, resp} <- do_gen_listen_key(api_key, secret_key),
-      :ok <- Response.validate(resp, only: 200),
+      :ok <- Response.validate(resp, code: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body)
     ) do
@@ -17,26 +19,20 @@ defmodule BingX.Account.Security do
     end
   end
 
-  defp do_gen_listen_key(api_key, secret_key) do
-    url = Request.build_url(@gen_listen_key_path, sign: secret_key)
-    headers = Request.auth_headers(api_key)
-
-    HTTPoison.post(url, "", headers)
-  end
-
   def extend_listen_key(api_key, secret_key) do
     with(
       {:ok, resp} <- do_extend_listen_key(api_key, secret_key),
-      :ok <- Response.validate(resp, only: 200)
+      :ok <- Response.validate(resp, code: 200)
     ) do
       :ok
     end
   end
 
-  defp do_extend_listen_key(api_key, secret_key) do
-    url = Request.build_url(@extend_listen_key_path, sign: secret_key)
-    headers = Request.auth_headers(api_key)
+  defp do_gen_listen_key(api_key, secret_key) do
+    signed_request(:post, @gen_listen_key_path, api_key, secret_key)
+  end
 
-    HTTPoison.post(url, "", headers)
+  defp do_extend_listen_key(api_key, secret_key) do
+    signed_request(:post, @extend_listen_key_path, api_key, secret_key)
   end
 end

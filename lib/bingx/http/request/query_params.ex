@@ -1,4 +1,4 @@
-defmodule BingX.Request.QueryParams do
+defmodule BingX.HTTP.Request.QueryParams do
   import BingX.Helpers
   alias BingX.Helpers
 
