@@ -1,6 +1,6 @@
-defmodule BingX.Account.Secure do
+defmodule BingX.Account.Security do
   alias BingX.{Request, Response}
-  alias BingX.Account.Secure.GenListenKeyResponse
+  alias BingX.Account.Security.GenListenKeyResponse
 
   @api_scope "/openApi/user/auth"
   @gen_listen_key_path @api_scope <> "/userDataStream"
