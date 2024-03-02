@@ -11,3 +11,4 @@ erl_crash.dump
 db
 .env
 /priv
+.stignore
