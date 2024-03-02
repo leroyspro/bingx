@@ -44,17 +44,26 @@ defmodule BingX.Socket do
 
   @impl WebSockex
   def handle_frame({:binary, frame}, state) do
-    data = Zlib.gunzip(frame)
+    try do
+      data = Zlib.gunzip(frame)
 
-    case data do
-      "Ping" ->
-        {:reply, {:text, "Pong"}, state}
+      case data do
+        "Ping" ->
+          {:reply, {:text, "Pong"}, state}
 
-      data ->
-        send_event(data, state.consumer)
+        data ->
+          send_event(data, state.consumer)
+
+          {:ok, state}
+      end
+
+    rescue
+      err ->
+        Logger.error "Could not process inbound BingX event message due to raised error: #{inspect(err)}"
 
         {:ok, state}
     end
+
   end
 
   @impl WebSockex
