@@ -1,6 +1,8 @@
 defmodule BingX.Swap.Market.MarkPriceSocket do
   @moduledoc """
   This module provides interface to build generic service consuming swap mark price update events from a specific market.
+
+  BingX last price socket API: https://bingx-api.github.io/docs/#/en-us/swapV2/socket/market.html#Subscribe%20to%20latest%20mark%20price%20changes
   """
 
   alias BingX.Swap.Market.PriceSocket

@@ -1,6 +1,8 @@
 defmodule BingX.Swap.Account do
   @moduledoc """
   This module provides functions making requests for swap account API methods using abstractions on known internal interfaces.
+
+  BingX swap account API: https://bingx-api.github.io/docs/#/en-us/swapV2/account-api.html#Get%20Perpetual%20Swap%20Account%20Asset%20Information
   """
 
   import BingX.HTTP.Client, only: [signed_request: 4]

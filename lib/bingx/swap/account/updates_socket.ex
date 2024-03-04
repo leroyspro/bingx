@@ -1,6 +1,8 @@
 defmodule BingX.Swap.Account.UpdatesSocket do
   @moduledoc """
   This module provides interface to build generic service consuming swap account update events.
+
+  BingX last price socket API: https://bingx-api.github.io/docs/#/en-us/swapV2/socket/account.html#Account%20balance%20and%20position%20update%20push
   """
 
   alias BingX.HTTP.Request.QueryParams

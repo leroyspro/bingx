@@ -1,6 +1,8 @@
 defmodule BingX.Swap.Trade do
   @moduledoc """
   This module provides functions making requests for swap trade API methods using abstractions on known internal interfaces.
+
+  BingX swap trade API: https://bingx-api.github.io/docs/#/en-us/swapV2/trade-api.html#Trade%20order%20test
   """
 
   import BingX.HTTP.Client, only: [signed_request: 5]
