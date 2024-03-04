@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Account.UpdatesSocket do
+  @moduledoc """
+  This module provides interface to build generic service consuming swap account update events.
+  """
+
   alias BingX.HTTP.Request.QueryParams
   alias BingX.Socket
 

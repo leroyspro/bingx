@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Order do
+  @moduledoc """
+  This module provides definition for the swap order sturct using in the swap domain.
+  """
+
   alias __MODULE__
 
   import BingX.Swap.Order.Helpers
@@ -40,6 +44,10 @@ defmodule BingX.Swap.Order do
   @type client_order_id() :: binary()
   @type working_type() :: :mark_price | :index_price | :contract_price
 
+  @doc """
+  Creates `BingX.Swap.Order` struct using the provided parameters.
+  Note that it only performs validation for the specified values, leaving `nil` for the rest.
+  """
   @spec new(map()) :: Order.t()
   def new(params) when is_map(params) do
     params =

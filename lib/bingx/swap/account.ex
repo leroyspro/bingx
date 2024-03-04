@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Account do
+  @moduledoc """
+  This module provides functions making requests for swap account API methods using abstractions on known internal interfaces.
+  """
+
   import BingX.HTTP.Client, only: [signed_request: 4]
 
   alias BingX.Swap.Responses.Balance

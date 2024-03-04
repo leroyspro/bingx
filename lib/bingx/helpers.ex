@@ -1,4 +1,8 @@
 defmodule BingX.Helpers do
+  @moduledoc """
+  This module provides global scope helper functions used in the library.
+  """
+  
   @spec timestamp() :: integer()
   def timestamp, do: :os.system_time(:millisecond)
 

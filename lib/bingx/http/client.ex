@@ -1,4 +1,8 @@
 defmodule BingX.HTTP.Client do
+  @moduledoc """
+  This module provides functions to make requests to BingX API with enhanced interface.
+  """
+
   alias BingX.HTTP.{Request, Response, Error}
 
   def signed_request(method, path, api_key, secret_key, options \\ []) do

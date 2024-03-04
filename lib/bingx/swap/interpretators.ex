@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Interpretators do
+  @moduledoc """
+  This module provides interpreters (adapters) to perform conversions from local terminology to BingX API terminology, and vice versa. 
+  """
+
   alias BingX.Helpers
 
   def to_internal_order_type(x) when is_binary(x) do

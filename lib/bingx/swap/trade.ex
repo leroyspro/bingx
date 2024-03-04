@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Trade do
+  @moduledoc """
+  This module provides functions making requests for swap trade API methods using abstractions on known internal interfaces.
+  """
+
   import BingX.HTTP.Client, only: [signed_request: 5]
 
   alias BingX.HTTP.Response
@@ -27,6 +31,9 @@ defmodule BingX.Swap.Trade do
   # Interface
   # =========
 
+  @doc """
+  Requests to place an order using order data with account credentials.
+  """
   def place_order(%Order{} = order, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
@@ -37,6 +44,9 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Requests to place bunch of orders using list of order data with account credentials.
+  """
   def place_orders(orders, api_key, secret_key)
       when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
     with(
@@ -47,17 +57,22 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Requests to cancel an order by its market (symbol) and unique ID with account credentials.
+  """
   def cancel_order_by_id(symbol, order_id, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      dbg()
       {:ok, CancelOrder.new(content)}
     end
   end
 
+  @doc """
+  Requests to cancel an order by its market (symbol) and client order ID with account credentials.
+  """
   def cancel_order_by_client_id(symbol, client_id, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
@@ -68,6 +83,9 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Requests to cancel bunch of orders by their market (symbol) and theirs order IDs with account credentials.
+  """
   def cancel_orders_by_ids(symbol, order_ids, api_key, secret_key)
       when is_binary(symbol) and
              is_list(order_ids) and
@@ -81,6 +99,9 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Requests to cancel bunch of orders by their market (symbol) and theirs client order IDs with account credentials.
+  """
   def cancel_orders_by_client_ids(symbol, client_order_ids, api_key, secret_key)
       when is_binary(symbol) and
              is_list(client_order_ids) and
@@ -94,6 +115,9 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Requests to cancel all orders by their market (symbol) with account credentials.
+  """
   def cancel_all_orders(symbol, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
