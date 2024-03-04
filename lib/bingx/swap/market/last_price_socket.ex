@@ -1,13 +1,8 @@
 defmodule BingX.Swap.Market.LastPriceSocket do
-  alias BingX.Swap.Market.PriceSocket
+  use BingX.Swap.Market.PriceSocket, type: :last
 
-  @behaviour BingX.Socket
-
-  def start_link(params) do
-    PriceSocket.start_link(%{
-      type: :last, 
-      symbol: Map.get(params, :symbol),
-      consumer: Map.get(params, :consumer)
-    })
+  def handle_event(event, state) do
+    Logger.info "Got Last Price BingX event: #{inspect(event)}"
+    {:ok, state}
   end
 end

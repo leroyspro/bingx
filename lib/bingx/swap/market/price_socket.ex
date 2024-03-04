@@ -1,59 +1,48 @@
 defmodule BingX.Swap.Market.PriceSocket do
-  alias BingX.Socket
+  defmacro __using__(opts) do
+    type = Keyword.get(opts, :type) || raise "expected :type param to be given"
 
-  @behaviour BingX.Socket
-  @url "wss://open-api-swap.bingx.com/swap-market"
+    quote do
+      use BingX.Socket.Base
 
-  # Interface
-  # =========
+      require Logger
 
-  @impl true
-  def start_link(params) do
-    %{
-      type: type, 
-      symbol: symbol, 
-      consumer: consumer
-    } = validate_params(params)
+      alias BingX.Socket
+        
+      @url "wss://open-api-swap.bingx.com/swap-market"
 
-    {:ok, pid} = Socket.start_link(%{url: @url, consumer: consumer})
+      def start_link(params) do
+        %{symbol: symbol} = validate_params(params)
 
-    channel = Jason.encode!(%{
-      "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",
-      "reqType" => "sub",
-      "dataType" => "#{symbol}@#{type}Price"
-    })
+        {:ok, pid} = Socket.start_link(@url, __MODULE__, :state)
 
-    Socket.subscribe(pid, channel)
+        channel = Jason.encode!(%{
+          "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",
+          "reqType" => "sub",
+          "dataType" => "#{symbol}@#{unquote(type)}Price"
+        })
 
-    {:ok, pid}
-  end
+        Socket.subscribe(pid, channel)
 
-  # Helpers
-  # =======
+        {:ok, pid}
+      end
 
-  defp validate_params(params) do
-    %{
-      type: validate_param(params, :type),
-      symbol: validate_param(params, :symbol),
-      consumer: validate_param(params, :consumer)
-    }
-  end
+      def handle_event(event, state) do
+        raise "handle_event/2 not implemented"
+      end
 
-  defp validate_param(%{type: x}, :type) when is_binary(x) or is_atom(x), do: x
+      # Helpers
+      # =======
 
-  defp validate_param(_params, :type) do
-    raise ArgumentError, "expected :type param to be given and one of [:mark, :last]"
-  end
+      defp validate_params(params) do
+        %{symbol: validate_param(params, :symbol)}
+      end
 
-  defp validate_param(%{symbol: x}, :symbol) when is_binary(x), do: x
+      defp validate_param(%{symbol: x}, :symbol) when is_binary(x), do: x
 
-  defp validate_param(_params, :symbol) do
-    raise ArgumentError, "expected :symbol param to be given and type of binary"
-  end
-
-  defp validate_param(%{consumer: x}, :consumer) when is_pid(x), do: x
-
-  defp validate_param(_params, :consumer) do
-    raise ArgumentError, "expected :consumer param to be given and type of pid"
+      defp validate_param(_params, :symbol) do
+        raise ArgumentError, "expected :symbol param to be given and type of binary"
+      end
+    end
   end
 end

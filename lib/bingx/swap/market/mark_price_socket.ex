@@ -1,13 +1,8 @@
 defmodule BingX.Swap.Market.MarkPriceSocket do
-  alias BingX.Swap.Market.PriceSocket
+  use BingX.Swap.Market.PriceSocket, type: :mark
 
-  @behaviour BingX.Socket
-
-  def start_link(params) do
-    PriceSocket.start_link(%{
-      type: :mark, 
-      symbol: Map.get(params, :symbol),
-      consumer: Map.get(params, :consumer)
-    })
+  def handle_event(event, state) do
+    Logger.info "Got Mark Price BingX event: #{inspect(event)}"
+    {:ok, state}
   end
 end
