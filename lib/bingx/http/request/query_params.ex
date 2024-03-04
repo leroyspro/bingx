@@ -26,8 +26,8 @@ defmodule BingX.HTTP.Request.QueryParams do
     Map.merge(params, %{"signature" => signature})
   end
 
-  def append_listen_key(%{} = params, listen_key) do
-    Map.merge(params, %{"listenKey" => listen_key})
+  def append_listen_key(url, listen_key) when is_binary(url) and is_binary(listen_key) do
+    url <> "?listenKey=" <> listen_key
   end
 
   defp signature(raw, key) when is_binary(raw) and is_binary(key) do

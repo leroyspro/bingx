@@ -6,7 +6,7 @@ defmodule BingX.Swap.Market.PriceSocket do
   def start_link(params, module, state) do
     %{symbol: symbol, type: type} = validate_params(params)
 
-    {:ok, pid} = Socket.start_link(@url, module, state, debug: [:trace])
+    {:ok, pid} = Socket.start_link(@url, module, state)
 
     channel = Jason.encode!(%{
       "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",

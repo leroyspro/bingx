@@ -1,13 +1,21 @@
 defmodule BingX.Swap.Market.LastPriceSocket do
   alias BingX.Swap.Market.PriceSocket
+  alias BingX.Swap.Market.Price
 
   defmacro __using__(_opts \\ []) do
     quote do
       use BingX.Socket.Base
 
       def handle_event(event, state) do
+        event
+        |> Price.new()
+        |> handle_update(state)
+      end
+
+      def handle_update(price, state) do
         require Logger
-        Logger.info "Got Last Price BingX event: #{inspect(event)}"
+        Logger.info "Got price update: #{inspect(price)}"
+
         {:ok, state}
       end
 
