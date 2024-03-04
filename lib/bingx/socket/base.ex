@@ -25,13 +25,11 @@ defmodule BingX.Socket.Base do
         require Logger
         Logger.error "Socket disconnected from BingX, details: #{inspect(details)}"
 
-        {:ok, state}
+        {:reconnect, state}
       end
 
       @impl WebSockex
       def handle_frame({:binary, frame}, state) do
-        require Logger
-
         try do
           data = Zlib.gunzip(frame)
 
@@ -40,16 +38,14 @@ defmodule BingX.Socket.Base do
               {:reply, {:text, "Pong"}, state}
 
             data ->
-              # TODO: Make enhanced interface for the handle_event return values
-              {:ok, state} = 
-                data
-                |> Jason.decode!()
-                |> handle_event(state)
-
-              {:ok, state}
+              data
+              |> Jason.decode!()
+              |> handle_event(state)
           end
         rescue
           err ->
+            require Logger
+
             Logger.error """
               Could not process inbound BingX event message due to raised error: #{inspect(err)}.
               It is unusual and unexpected error which MUST NOT persist. 
