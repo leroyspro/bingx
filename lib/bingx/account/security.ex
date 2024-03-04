@@ -2,7 +2,7 @@ defmodule BingX.Account.Security do
   import BingX.HTTP.Client, only: [signed_request: 4]
 
   alias BingX.HTTP.Response
-  alias BingX.Account.Security.GenListenKeyResponse
+  alias BingX.Account.Responses.GenListenKey
 
   @api_scope "/openApi/user/auth"
   @gen_listen_key_path @api_scope <> "/userDataStream"
@@ -16,7 +16,7 @@ defmodule BingX.Account.Security do
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body)
     ) do
-      {:ok, GenListenKeyResponse.new(data)}
+      {:ok, GenListenKey.new(data)}
     end
   end
 

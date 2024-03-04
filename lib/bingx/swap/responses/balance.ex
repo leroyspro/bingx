@@ -1,8 +1,6 @@
-defmodule BingX.Swap.Account.BalanceResponse do
+defmodule BingX.Swap.Responses.Balance do
   import BingX.Helpers, only: [get_and_transform: 3]
   import BingX.Swap.Interpretators
-
-  alias __MODULE__
 
   defstruct [
     :asset,
@@ -28,7 +26,7 @@ defmodule BingX.Swap.Account.BalanceResponse do
           :user_id => binary()
         }
 
-  @spec new(map()) :: BalanceResponse.t()
+  @spec new(map()) :: Balance.t()
   def new(%{"balance" => data}) do
     %__MODULE__{
       asset: get_and_transform(data, "asset", &interp_as_binary(&1, empty?: false)),

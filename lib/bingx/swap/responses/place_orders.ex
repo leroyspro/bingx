@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Trade.PlaceOrdersResponse do
+defmodule BingX.Swap.Responses.PlaceOrders do
   alias BingX.Swap.Trade.PlacedOrder
 
   @enforce_keys [:orders]
