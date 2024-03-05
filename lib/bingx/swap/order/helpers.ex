@@ -6,13 +6,6 @@ defmodule BingX.Swap.Order.Helpers do
   @types [:market, :trigger_market]
   @working_types [:index_price, :mark_price, :contract_price]
 
-  def validate!(key, value) do
-    case validate(key, value) do
-      {:ok, value} -> value
-      {:error, reason} -> raise ArgumentError, reason
-    end
-  end
-
   @spec validate(:order_id, any()) :: {:ok, Order.order_id()} | {:error, binary()}
   def validate(:order_id, x) when is_binary(x), do: {:ok, x}
 
