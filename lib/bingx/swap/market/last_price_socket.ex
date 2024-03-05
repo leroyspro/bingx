@@ -25,7 +25,8 @@ defmodule BingX.Swap.Market.LastPriceSocket do
         {:ok, state}
       end
 
-      defoverridable handle_event: 2
+      defoverridable handle_event: 2,
+                     handle_update: 2
     end
   end
 
