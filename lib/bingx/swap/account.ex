@@ -7,7 +7,7 @@ defmodule BingX.Swap.Account do
 
   import BingX.HTTP.Client, only: [signed_request: 4]
 
-  alias BingX.Swap.Responses.Balance
+  alias BingX.Swap.BalanceResponse
   alias BingX.HTTP.Response
 
   @api_scope "/openApi/swap/v2/user"
@@ -23,7 +23,7 @@ defmodule BingX.Swap.Account do
       {:ok, resp} <- do_get_balance(api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, Balance.new(content)}
+      {:ok, BalanceResponse.new(content)}
     end
   end
 

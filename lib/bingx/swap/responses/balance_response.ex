@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Responses.Balance do
+defmodule BingX.Swap.BalanceResponse do
   import BingX.Helpers, only: [get_and_transform: 3]
   import BingX.Swap.Interpretators
 

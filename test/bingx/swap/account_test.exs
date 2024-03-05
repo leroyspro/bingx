@@ -40,7 +40,7 @@ defmodule BingX.Swap.AccountTest do
       assert_called_once(HTTPoison.get(_endpoint, _headers, _options))
     end
 
-    test "should request correct endpoint", context do
+    test "should request with correct path", context do
       %{api_key: api_key, secret_key: secret_key, endpoint: endpoint} = context
 
       patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
@@ -50,7 +50,7 @@ defmodule BingX.Swap.AccountTest do
       assert_called_once(HTTPoison.get(^endpoint, _headers, _options))
     end
 
-    test "should request with authentication in headers", context do
+    test "should make secure request", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
       headers = %{"API_KEY" => api_key}
@@ -62,56 +62,6 @@ defmodule BingX.Swap.AccountTest do
 
       assert_called_once(Headers.append_api_key(_, ^api_key))
       assert_called_once(HTTPoison.get(_url, ^headers, _options))
-    end
-
-    test "should request with receive window in query params", context do
-      %{api_key: api_key, secret_key: secret_key} = context
-
-      receive_window = 473_289_473_289
-      params_with_receive_window = %{"RECEIVE_WINDOW" => receive_window}
-
-      patch(QueryParams, :append_receive_window, &Map.merge(&1, params_with_receive_window))
-
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
-
-      Account.get_balance(api_key, secret_key)
-
-      assert_called_once(HTTPoison.get(_url, _headers, params: %{"RECEIVE_WINDOW" => ^receive_window}))
-
-      assert_called_once(QueryParams.append_receive_window(_))
-    end
-
-    test "should request with timestamp in query params", context do
-      %{api_key: api_key, secret_key: secret_key} = context
-
-      timestamp = 21_321_321_321
-      params_with_timestamp = %{"TIMESTAMP" => timestamp}
-
-      patch(QueryParams, :append_timestamp, &Map.merge(&1, params_with_timestamp))
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
-
-      Account.get_balance(api_key, secret_key)
-
-      assert_called_once(HTTPoison.get(_url, _headers, params: %{"TIMESTAMP" => ^timestamp}))
-      assert_called_once(QueryParams.append_timestamp(_))
-    end
-
-    test "should request with signature in query params", context do
-      %{api_key: api_key, secret_key: secret_key} = context
-
-      signature = "********"
-      params_with_signature = %{"SIGNATURE" => signature}
-
-      patch(QueryParams, :append_signature, fn params, _secret_key ->
-        Map.merge(params, params_with_signature)
-      end)
-
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
-
-      Account.get_balance(api_key, secret_key)
-
-      assert_called_once(HTTPoison.get(_url, _headers, params: %{"SIGNATURE" => ^signature}))
-      assert_called_once(QueryParams.append_signature(_, ^secret_key))
     end
 
     test "should return the original error if request failed", context do

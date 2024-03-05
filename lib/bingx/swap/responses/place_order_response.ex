@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Responses.PlaceOrder do
+defmodule BingX.Swap.PlaceOrderResponse do
   alias BingX.Swap.Trade.PlacedOrder
 
   defstruct PlacedOrder.fields()

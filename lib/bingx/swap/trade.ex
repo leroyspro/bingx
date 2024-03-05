@@ -12,12 +12,12 @@ defmodule BingX.Swap.Trade do
   alias BingX.Helpers
   alias BingX.Swap.Order
 
-  alias BingX.Swap.Responses.{
-    PlaceOrder,
-    PlaceOrders,
-    CancelOrder,
-    CancelOrders,
-    CancelAllOrders
+  alias BingX.Swap.{
+    PlaceOrderResponse,
+    PlaceOrdersResponse,
+    CancelOrderResponse,
+    CancelOrdersResponse,
+    CancelAllOrdersResponse
   }
 
   @api_scope "/openApi/swap/v2/trade"
@@ -42,7 +42,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_place_order(order, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, PlaceOrder.new(content)}
+      {:ok, PlaceOrderResponse.new(content)}
     end
   end
 
@@ -55,7 +55,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, PlaceOrders.new(content)}
+      {:ok, PlaceOrdersResponse.new(content)}
     end
   end
 
@@ -68,7 +68,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, CancelOrder.new(content)}
+      {:ok, CancelOrderResponse.new(content)}
     end
   end
 
@@ -81,7 +81,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, CancelOrder.new(content)}
+      {:ok, CancelOrderResponse.new(content)}
     end
   end
 
@@ -97,7 +97,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, CancelOrders.new(content)}
+      {:ok, CancelOrdersResponse.new(content)}
     end
   end
 
@@ -113,7 +113,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, CancelOrders.new(content)}
+      {:ok, CancelOrdersResponse.new(content)}
     end
   end
 
@@ -126,7 +126,7 @@ defmodule BingX.Swap.Trade do
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
       {:ok, content} <- Response.extract_validated_content(resp)
     ) do
-      {:ok, CancelAllOrders.new(content)}
+      {:ok, CancelAllOrdersResponse.new(content)}
     end
   end
 

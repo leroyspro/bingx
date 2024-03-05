@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Responses.CancelAllOrders do
+defmodule BingX.Swap.CancelAllOrdersResponse do
   alias BingX.Swap.Trade.CanceledOrder
 
   defstruct [:failed, :succeeded]

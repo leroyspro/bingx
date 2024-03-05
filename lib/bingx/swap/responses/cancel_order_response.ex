@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Responses.CancelOrder do
+defmodule BingX.Swap.CancelOrderResponse do
   alias BingX.Swap.Trade.CanceledOrder
 
   defstruct CanceledOrder.fields()

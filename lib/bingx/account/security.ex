@@ -6,21 +6,21 @@ defmodule BingX.Account.Security do
   import BingX.HTTP.Client, only: [signed_request: 4]
 
   alias BingX.HTTP.Response
-  alias BingX.Account.Responses.GenListenKey
+  alias BingX.Account.GenerateListenKeyResponse
 
   @api_scope "/openApi/user/auth"
-  @gen_listen_key_path @api_scope <> "/userDataStream"
+  @generate_listen_key_path @api_scope <> "/userDataStream"
   @extend_listen_key_path @api_scope <> "/userDataStream"
 
-  def gen_listen_key(api_key, secret_key)
+  def generate_listen_key(api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
-      {:ok, resp} <- do_gen_listen_key(api_key, secret_key),
+      {:ok, resp} <- do_generate_listen_key(api_key, secret_key),
       :ok <- Response.validate(resp, code: 200),
       {:ok, body} <- Response.extract_body(resp),
       {:ok, data} <- Response.decode_body(body)
     ) do
-      {:ok, GenListenKey.new(data)}
+      {:ok, GenerateListenKeyResponse.new(data)}
     end
   end
 
@@ -34,8 +34,8 @@ defmodule BingX.Account.Security do
     end
   end
 
-  defp do_gen_listen_key(api_key, secret_key) do
-    signed_request(:post, @gen_listen_key_path, api_key, secret_key)
+  defp do_generate_listen_key(api_key, secret_key) do
+    signed_request(:post, @generate_listen_key_path, api_key, secret_key)
   end
 
   defp do_extend_listen_key(api_key, secret_key) do
