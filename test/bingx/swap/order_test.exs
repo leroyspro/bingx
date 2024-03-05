@@ -4,106 +4,216 @@ defmodule BingX.Swap.OrderTest do
   alias BingX.Swap.Order
 
   describe "BingX.Order new/1" do
-    test "should create struct without params" do
-      assert %Order{} = Order.new(%{})
+
+    ## should create a struct without params
+    # should create a struct with all params
+    # should validate :type key to be one of :market or :trigger_market if provided
+    # should validate :order_id key to be binary() if provided
+    # should validate :client_order_id key to be binary() if provided
+    # should validate :symbol key to be binary() if provided
+    # should validate :side key to be one of :sell or :buy if provided
+    # should validate :position_side key to be one of :short, :long or :both if provided
+    # should validate :quantity key to be number() if provided
+    # should validate :price key to be number() if provided
+    # should validate :stop_price key to be number() if provided
+    # should validate :working_type key to be one of :index_price, :mark_price or :contract_price if provided
+
+    test "should create a struct without params" do
+      assert {:ok, %Order{}} = Order.new(%{})
     end
 
-    test "should create struct with all params" do
-      assert %Order{
+    test "should create a struct with all params" do
+      assert {:ok, %Order{
                :type => :market,
                :order_id => "123214124312",
+               :client_order_id => "supra",
                :symbol => "BTC-USDT",
                :side => :sell,
                :position_side => :short,
+               :quantity => 0.1,
                :price => 324.11,
                :stop_price => 321,
-               :quantity => 0.1,
-               :client_order_id => "supra",
                :working_type => :contract_price
-             } =
+             }} =
                Order.new(%{
                  :type => :market,
                  :order_id => "123214124312",
+                 :client_order_id => "supra",
                  :symbol => "BTC-USDT",
                  :side => :sell,
                  :position_side => :short,
+                 :quantity => 0.1,
                  :price => 324.11,
                  :stop_price => 321,
-                 :quantity => 0.1,
-                 :client_order_id => "supra",
                  :working_type => :contract_price
                })
     end
 
-    test "should validate :working_type key" do
-      assert %Order{working_type: :mark_price} = Order.new(%{working_type: :mark_price})
-      assert %Order{working_type: :index_price} = Order.new(%{working_type: :index_price})
-      assert %Order{working_type: :contract_price} = Order.new(%{working_type: :contract_price})
+    test "should validate :type key to be one of :market or :trigger_market if provided",
+      do: build_error_assert(:type, :oneof, [:market, :trigger_market])
 
-      assert_raise ArgumentError,
-                   "expected :working_type to be one of [:index_price, :mark_price, :contract_price], got: :unknown",
-                   fn -> Order.new(%{working_type: :unknown}) end
+    test "should validate :order_id key to be binary() if provided",
+      do: build_error_assert(:order_id, :binary)
+
+    test "should validate :client_order_id key to be binary() if provided",
+      do: build_error_assert(:client_order_id, :binary)
+
+    test "should validate :symbol key to be binary() if provided",
+      do: build_error_assert(:symbol, :binary)
+
+    test "should validate :side key to be one of :sell or :buy if provided",
+      do: build_error_assert(:side, :oneof, [:buy, :sell])
+
+    test "should validate :position_side key to be one of :short, :long or :both if provided",
+      do: build_error_assert(:position_side, :oneof, [:short, :long, :both])
+
+    test "should validate :quantity key to be number() if provided",
+      do: build_error_assert(:quantity, :number)
+
+    test "should validate :price key to be number() if provided",
+      do: build_error_assert(:price, :number)
+
+    test "should validate :stop_price key to be number() if provided",
+      do: build_error_assert(:stop_price, :number)
+
+    test "should validate :working_type key to be one of :index_price, :mark_price or :contract_price if provided",
+      do: build_error_assert(:working_type, :oneof, [:index_price, :mark_price, :contract_price])
+
+    # Asserts
+    # =======
+
+    def build_error_assert(key, :binary) do
+      {:ok, struct} = Order.new(%{key => "hellow"})
+      do_key_presence_assert(struct, key)
+
+      message = make_error_message(key, :binary, :unknown)
+      assert {:error, ^message} = Order.new(%{key => :unknown})
     end
 
-    test "should validate :type key" do
-      assert %Order{type: :trigger_market} = Order.new(%{type: :trigger_market})
+    def build_error_assert(key, :number) do
+      {:ok, struct} = Order.new(%{key => 120_480_000})
+      do_key_presence_assert(struct, key)
 
-      assert_raise ArgumentError,
-                   "expected :type to be one of [:market, :trigger_market], got: :unknown",
-                   fn -> Order.new(%{type: :unknown}) end
+      message = make_error_message(key, :number, :unknown)
+      assert {:error, ^message} = Order.new(%{key => :unknown})
     end
 
-    test "should validate :side key" do
-      assert %Order{side: :buy} = Order.new(%{side: :buy})
-      assert %Order{side: :sell} = Order.new(%{side: :sell})
+    def build_error_assert(key, :oneof, valid_values) do
+      Enum.map(valid_values, fn val ->
+        assert %Order{} = %{^key => ^val} = Order.new!(%{key => val})
+      end)
 
-      assert_raise ArgumentError,
-                   "expected :side to be one of [:buy, :sell], got: :unknown",
-                   fn -> Order.new(%{side: :unknown}) end
+      message = make_error_message(key, :oneof, valid_values, :unknown)
+      assert {:error, ^message} = Order.new(%{key => :unknown})
+    end
+  end
+
+  describe "BingX.Order new!/1" do
+
+    test "should create a struct without params" do
+      assert %Order{} = Order.new!(%{})
     end
 
-    test "should validate :position_side key" do
-      assert %Order{position_side: :long} = Order.new(%{position_side: :long})
-      assert %Order{position_side: :short} = Order.new(%{position_side: :short})
-      assert %Order{position_side: :both} = Order.new(%{position_side: :both})
-
-      assert_raise ArgumentError,
-                   "expected :position_side to be one of [:short, :long, :both], got: :unknown",
-                   fn -> Order.new(%{position_side: :unknown}) end
+    test "should create a struct with all params" do
+      assert %Order{
+               :type => :market,
+               :order_id => "123214124312",
+               :client_order_id => "supra",
+               :symbol => "BTC-USDT",
+               :side => :sell,
+               :position_side => :short,
+               :quantity => 0.1,
+               :price => 324.11,
+               :stop_price => 321,
+               :working_type => :contract_price
+             } =
+               Order.new!(%{
+                 :type => :market,
+                 :order_id => "123214124312",
+                 :client_order_id => "supra",
+                 :symbol => "BTC-USDT",
+                 :side => :sell,
+                 :position_side => :short,
+                 :quantity => 0.1,
+                 :price => 324.11,
+                 :stop_price => 321,
+                 :working_type => :contract_price
+               })
     end
 
-    test "should validate :order_id key", do: build_assert(:order_id, :binary)
+    test "should validate :type key to be one of :market or :trigger_market if provided",
+      do: build_raised_error_assert(:type, :oneof, [:market, :trigger_market])
 
-    test "should validate :client_order_id key", do: build_assert(:client_order_id, :binary)
+    test "should validate :order_id key to be binary() if provided",
+      do: build_raised_error_assert(:order_id, :binary)
 
-    test "should validate :symbol key", do: build_assert(:symbol, :binary)
+    test "should validate :client_order_id key to be binary() if provided",
+      do: build_raised_error_assert(:client_order_id, :binary)
 
-    test "should validate :price key", do: build_assert(:price, :number)
+    test "should validate :symbol key to be binary() if provided",
+      do: build_raised_error_assert(:symbol, :binary)
 
-    test "should validate :stop_price key", do: build_assert(:stop_price, :number)
+    test "should validate :side key to be one of :sell or :buy if provided",
+      do: build_raised_error_assert(:side, :oneof, [:buy, :sell])
 
-    test "should validate :quantity key", do: build_assert(:quantity, :number)
+    test "should validate :position_side key to be one of :short, :long or :both if provided",
+      do: build_raised_error_assert(:position_side, :oneof, [:short, :long, :both])
 
-    def build_assert(key, :number) do
-      struct = Order.new(%{key => 3_423_432})
+    test "should validate :quantity key to be number() if provided",
+      do: build_raised_error_assert(:quantity, :number)
 
-      assert %Order{} = struct
-      assert Map.has_key?(struct, key)
+    test "should validate :price key to be number() if provided",
+      do: build_raised_error_assert(:price, :number)
 
-      assert_raise ArgumentError,
-                   "expected #{inspect(key)} to be type of number, got: :unknown",
-                   fn -> Order.new(%{key => :unknown}) end
+    test "should validate :stop_price key to be number() if provided",
+      do: build_raised_error_assert(:stop_price, :number)
+
+    test "should validate :working_type key to be one of :index_price, :mark_price or :contract_price if provided",
+      do: build_raised_error_assert(:working_type, :oneof, [:index_price, :mark_price, :contract_price])
+
+    # Asserts
+    # =======
+
+    def build_raised_error_assert(key, :binary) do
+      struct = Order.new!(%{key => "wazuuuuup"})
+      do_key_presence_assert(struct, key)
+
+      message = make_error_message(key, :binary, :unknown)
+      assert_raise ArgumentError, message, fn -> Order.new!(%{key => :unknown}) end
     end
 
-    def build_assert(key, :binary) do
-      struct = Order.new(%{key => "uiow"})
+    def build_raised_error_assert(key, :number) do
+      struct = Order.new!(%{key => 120_540_000})
+      do_key_presence_assert(struct, key)
 
-      assert %Order{} = struct
-      assert Map.has_key?(struct, key)
-
-      assert_raise ArgumentError,
-                   "expected #{inspect(key)} to be type of binary, got: :unknown",
-                   fn -> Order.new(%{key => :unknown}) end
+      message = make_error_message(key, :number, :unknown)
+      assert_raise ArgumentError, message, fn -> Order.new!(%{key => :unknown}) end
     end
+
+    def build_raised_error_assert(key, :oneof, valid_values) do
+      Enum.map(valid_values, fn val ->
+        assert %Order{} = %{^key => ^val} = Order.new!(%{key => val})
+      end)
+
+      message = make_error_message(key, :oneof, valid_values, :unknown)
+      assert_raise ArgumentError, message, fn -> Order.new!(%{key => :unknown}) end
+    end
+  end
+
+  def do_key_presence_assert(struct, key) do
+    assert %Order{} = struct
+    assert Map.has_key?(struct, key)
+  end
+
+  def make_error_message(key, :binary, value) do
+    "expected #{inspect(key)} to be type of binary, got: #{inspect(value)}"
+  end
+
+  def make_error_message(key, :number, value) do
+    "expected #{inspect(key)} to be type of number, got: #{inspect(value)}"
+  end
+
+  def make_error_message(key, :oneof, valid_values, value) do
+    "expected #{inspect(key)} to be one of #{inspect(valid_values)}, got: #{inspect(value)}"
   end
 end
