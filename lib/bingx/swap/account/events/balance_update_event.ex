@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Account.Events.AccountUpdate do
+defmodule BingX.Swap.Account.BalanceUpdateEvent do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Account.Events.OrderUpdate do
+defmodule BingX.Swap.Account.OrderTradeEvent do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

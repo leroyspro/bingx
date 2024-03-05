@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Account.Events.ConfigUpdate do
+defmodule BingX.Swap.Account.ConfigUpdateEvent do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

@@ -6,7 +6,8 @@ defmodule BingX.Swap.Market.LastPriceSocket do
   """
 
   alias BingX.Swap.Market.PriceSocket
-  alias BingX.Swap.Market.Events.PriceUpdate
+  alias BingX.Swap.Market.PriceUpdateEvent
+
 
   defmacro __using__(_opts \\ []) do
     quote do
@@ -14,7 +15,7 @@ defmodule BingX.Swap.Market.LastPriceSocket do
 
       def handle_event(event, state) do
         event
-        |> PriceUpdate.new()
+        |> PriceUpdateEvent.new()
         |> handle_update(state)
       end
 

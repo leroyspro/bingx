@@ -7,7 +7,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
   alias BingX.HTTP.Request.QueryParams
   alias BingX.Socket
-  alias BingX.Swap.Account.Events.{AccountUpdate, OrderUpdate, ConfigUpdate}
+  alias BingX.Swap.Account.{BalanceUpdateEvent, OrderTradeEvent, ConfigUpdateEvent}
 
   @url "wss://open-api-swap.bingx.com/swap-market"
 
@@ -16,15 +16,15 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       use BingX.Socket.Base
 
       def handle_event(%{"e" => "ACCOUNT_CONFIG_UPDATE"} = event, state) do
-        handle_update({:config, ConfigUpdate.new(event)}, state)
+        handle_update({:config, ConfigUpdateEvent.new(event)}, state)
       end
 
       def handle_event(%{"e" => "ORDER_TRADE_UPDATE"} = event, state) do
-        handle_update({:order, OrderUpdate.new(event)}, state)
+        handle_update({:order, OrderTradeEvent.new(event)}, state)
       end
 
       def handle_event(%{"e" => "ACCOUNT_UPDATE"} = event, state) do
-        handle_update({:account, AccountUpdate.new(event)}, state)
+        handle_update({:account, BalanceUpdateEvent.new(event)}, state)
       end
 
       def handle_event(event, state) do
