@@ -22,8 +22,8 @@ defmodule BingX.Swap.Trade do
 
   @api_scope "/openApi/swap/v2/trade"
 
-  @cancel_order_path @api_scope <> "/order"
   @place_order_path @api_scope <> "/order"
+  @cancel_order_path @api_scope <> "/order"
 
   @place_orders_path @api_scope <> "/batchOrders"
   @cancel_orders_path @api_scope <> "/batchOrders"

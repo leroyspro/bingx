@@ -30,6 +30,8 @@ defmodule BingX.Socket.Base do
 
       @impl WebSockex
       def handle_frame({:binary, frame}, state) do
+        require Logger
+
         try do
           data = Zlib.gunzip(frame)
 
@@ -44,11 +46,9 @@ defmodule BingX.Socket.Base do
           end
         rescue
           err ->
-            require Logger
-
             Logger.error """
               Could not process inbound BingX event message due to raised error: #{inspect(err)}.
-              It is unusual and unexpected error which MUST NOT persist. 
+              It is unusual and unexpected error which MUST NOT persist.
             """
 
             {:ok, state}

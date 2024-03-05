@@ -1,9 +1,19 @@
 defmodule BingX.Swap.Interpretators do
   @moduledoc """
-  This module provides interpreters (adapters) to perform conversions from local terminology to BingX API terminology, and vice versa. 
+  This module provides interpreters (adapters) to perform conversions from local terminology to BingX API terminology, and vice versa.
   """
 
   alias BingX.Helpers
+
+
+  def to_internal_margin_mode(x) when is_binary(x) do
+    case Helpers.upcase(x) do
+      "ISOLATED" -> :isolated
+      "CROSS" -> :cross
+      _ -> nil
+    end
+  end
+  def to_internal_margin_mode(_), do: nil
 
   def to_internal_order_type(x) when is_binary(x) do
     case Helpers.upcase(x) do
@@ -17,7 +27,6 @@ defmodule BingX.Swap.Interpretators do
       _ -> nil
     end
   end
-
   def to_internal_order_type(_), do: nil
 
   def to_external_order_type(:market), do: "MARKET"
@@ -27,6 +36,19 @@ defmodule BingX.Swap.Interpretators do
   def to_external_order_type(:limit), do: "LIMIT"
   def to_external_order_type(:stop_loss_market), do: "STOP_MARKET"
   def to_external_order_type(:take_profit_market), do: "TAKE_PROFIT_MARKET"
+
+  def to_internal_order_execution_type(x) when is_binary(x) do
+    case Helpers.upcase(x) do
+      "NEW" -> :placed
+      "CANCELLED" -> :canceled
+      "CALCULATED" -> :calculated
+      "EXPIRED" -> :expired
+      "TRADE" -> :trade
+      _ -> nil
+    end
+  end
+
+  def to_internal_order_execution_type(_), do: nil
 
   def to_internal_order_status(x) when is_binary(x) do
     case Helpers.upcase(x) do

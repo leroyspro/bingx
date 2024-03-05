@@ -1,5 +1,5 @@
-defmodule BingX.Swap.Market.Price do
-  import BingX.Helpers, only: [get_and_transform: 3]
+defmodule BingX.Swap.Market.Events.PriceUpdate do
+  import BingX.Helpers, only: [get_and_transform: 3, downcase: 1]
   import BingX.Swap.Interpretators
 
   defstruct [
@@ -19,7 +19,9 @@ defmodule BingX.Swap.Market.Price do
   end
 
   defp extract_event_type(x) when is_binary(x) do
-    String.slice(x, (byte_size(x) - 9)..(byte_size(x) - 6))
+    x
+    |> String.slice((byte_size(x) - 9)..(byte_size(x) - 6))
+    |> downcase()
     |> case do
       "last" -> :last
       "mark" -> :mark

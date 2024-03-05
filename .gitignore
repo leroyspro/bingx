@@ -12,3 +12,4 @@ db
 .env
 /priv
 .stignore
+.DS_Store
