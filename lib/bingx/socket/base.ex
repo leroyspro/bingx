@@ -17,6 +17,9 @@ defmodule BingX.Socket.Base do
 
       @impl WebSockex
       def handle_connect(conn, state) do
+        require Logger
+        Logger.debug "Socket established connection with BingX successfully"
+
         {:ok, state}
       end
 
