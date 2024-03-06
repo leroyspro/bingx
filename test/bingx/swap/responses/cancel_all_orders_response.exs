@@ -5,9 +5,29 @@ defmodule BingX.Swap.CancelAllOrdersResponseTest do
   alias BingX.Swap.CancelAllOrdersResponse
   alias BingX.Swap.Trade.CanceledOrder
 
+  @fields [:failed, :succeeded]
+
   describe "BingX.Swap.CancelAllOrdersResponse new/1" do
     test "should return empty struct without params" do
       assert %CancelAllOrdersResponse{} = CancelAllOrdersResponse.new(%{})
+    end
+
+    test "should have sufficient number of fields" do
+      assert (
+        %CancelAllOrdersResponse{} 
+        |> Map.from_struct()
+        |> Map.keys()
+        |> length() === length(@fields)
+      )
+    end
+
+    test "should have specific fields" do
+      assert (
+        %CancelAllOrdersResponse{}
+        |> Map.from_struct()
+        |> Map.keys()
+        |> Enum.map(fn k -> assert k in @fields end)
+      )
     end
   end
 

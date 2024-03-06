@@ -3,9 +3,39 @@ defmodule BingX.Swap.BalanceResponseTest do
 
   alias BingX.Swap.BalanceResponse
 
+  @fields [
+    :asset,
+    :balance,
+    :available_margin,
+    :equity,
+    :freezed_margin,
+    :realized_profit,
+    :unrealized_profit,
+    :used_margin,
+    :user_id
+  ]
+
   describe "BingX.Swap.BalanceResponse new/1" do
     test "should return empty struct without params" do
       assert %BalanceResponse{} = BalanceResponse.new(%{})
+    end
+
+    test "should have sufficient number of fields" do
+      assert (
+        %BalanceResponse{} 
+        |> Map.from_struct()
+        |> Map.keys()
+        |> length() === length(@fields)
+      )
+    end
+
+    test "should have specific fields" do
+      assert (
+        %BalanceResponse{}
+        |> Map.from_struct()
+        |> Map.keys()
+        |> Enum.map(fn k -> assert k in @fields end)
+      )
     end
   end
 
