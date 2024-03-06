@@ -1,4 +1,4 @@
-defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
+defmodule BingX.Swap.TradeTest.CancelOrdersByClientIDs do
   @moduledoc """
   This is module is used to test BingX.API.Trade module.
 
@@ -32,13 +32,13 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
     }
   end
 
-  describe "BingX.API.Trade cancel_orders_by_ids/4" do
+  describe "BingX.API.Trade cancel_orders_by_client_ids/4" do
     test "should make DELETE request", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
       patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(Client.signed_request(:delete, _path, _api_key, _secret_key, _options))
     end
@@ -48,7 +48,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
 
       patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(Client.signed_request(_method, ^path, _api_key, _secret_key, _options))
     end
@@ -58,7 +58,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
 
       patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(Client.signed_request(_method, _path, ^api_key, ^secret_key, _options))
     end
@@ -68,7 +68,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
 
       patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(
         Client.signed_request(
@@ -78,7 +78,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
           _secret_key,
           params: %{
             "symbol" => "BTC-USDT",
-            "orderIdList" => "[1,2]"
+            "clientOrderIDList" => "[1,2]"
           }
         )
       )
@@ -91,7 +91,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
 
       patch(Client, :signed_request, error)
 
-      assert ^error = Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      assert ^error = Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
     end
 
     test "should extract and validate response content", context do
@@ -105,7 +105,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
       patch(Response, :get_response_payload, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
-      Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(Response.get_response_payload(^response))
     end
@@ -121,7 +121,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
       patch(Response, :get_response_payload, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
-      assert {:ok, ^struct} = Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      assert {:ok, ^struct} = Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(CancelOrdersResponse.new(^content))
       assert_called_once(Response.get_response_payload(^response))
@@ -136,7 +136,7 @@ defmodule BingX.Swap.TradeTest.CancelOrdersByIDs do
       patch(Response, :get_response_payload, error)
       patch(Client, :signed_request, {:ok, response})
 
-      assert ^error = Trade.cancel_orders_by_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
+      assert ^error = Trade.cancel_orders_by_client_ids("BTC-USDT", ["1", "2"], api_key, secret_key)
 
       assert_called_once(Response.get_response_payload(^response))
     end
