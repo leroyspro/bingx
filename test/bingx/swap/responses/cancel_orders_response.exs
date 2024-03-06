@@ -2,7 +2,7 @@ defmodule BingX.Swap.CancelOrdersResponseTest do
   use ExUnit.Case
   use Patch
 
-  import BingX.Support.Struct
+  import BingX.TestHelpers
 
   alias BingX.Swap.CancelOrdersResponse
   alias BingX.Swap.Trade.CanceledOrder

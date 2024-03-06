@@ -2,7 +2,7 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
   use ExUnit.Case
   use Patch
 
-  import BingX.Support.Struct
+  import BingX.TestHelpers
 
   alias BingX.Swap.PlaceOrdersResponse
   alias BingX.Swap.Trade.PlacedOrder

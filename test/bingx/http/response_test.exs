@@ -2,7 +2,7 @@ defmodule BingX.HTTP.ResponseTest do
   use ExUnit.Case
   use Patch
 
-  import BingX.Support.Struct
+  import BingX.TestHelpers
 
   alias BingX.HTTP.Response
 
