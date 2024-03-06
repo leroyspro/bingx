@@ -56,9 +56,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
         |> Enum.map(fn k -> assert k in @fields end)
       )
     end
-  end
 
-  describe "BingX.Swap.CancelOrderResponse new/1 (transforming)" do
     test "should be tolerant to wrong interface" do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{"x" => "x"})
     end
