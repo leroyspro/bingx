@@ -1,6 +1,6 @@
 defmodule BingX.Swap.TradeTest.PlaceOrders do
   @moduledoc """
-  Module to test BingX.API.Trade.
+  This is module is used to test BingX.API.Trade module.
 
   ## ATTENTION
   Patch **every** network request to the real world!

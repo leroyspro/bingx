@@ -1,6 +1,6 @@
 defmodule BingX.Swap.TradeTest.PlaceOrder do
   @moduledoc """
-  Module to test BingX.API.Trade.
+  This is module is used to test BingX.API.Trade module.
 
   ## ATTENTION
   Patch **every** network request to the real world!
@@ -10,7 +10,6 @@ defmodule BingX.Swap.TradeTest.PlaceOrder do
   use ExUnit.Case
   use Patch
 
-  alias BingX.Exception
   alias BingX.Swap.{PlaceOrderResponse, Trade, Order}
   alias BingX.HTTP.{Client, Response, Error}
   alias BingX.Swap.Trade.Contract

@@ -17,7 +17,6 @@ defmodule BingX.Swap.TradeTest.CancelOrderById do
   setup_all do
     {
       :ok,
-      order: order,
       api_key: "API_KEY_FOR_TEST", 
       secret_key: "SECRET_KEY_FOR_TEST",
       path: "/openApi/swap/v2/trade/order"
@@ -65,7 +64,6 @@ defmodule BingX.Swap.TradeTest.CancelOrderById do
 
       Trade.cancel_order_by_id(symbol, order_id, api_key, secret_key)
 
-      assert_called_once(Contract.from_order(^order))
       assert_called_once(
         Client.signed_request(
           _method, 
