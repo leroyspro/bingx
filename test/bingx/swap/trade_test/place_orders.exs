@@ -53,7 +53,7 @@ defmodule BingX.Swap.TradeTest.PlaceOrders do
     }
   end
 
-  describe "BingX.API.Trade place_orders/3" do
+  describe "BingX.Swap.Trade place_orders/3" do
     test "should make POST request", context do
       %{api_key: api_key, secret_key: secret_key, orders: orders} = context
 

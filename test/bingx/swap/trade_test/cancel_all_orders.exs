@@ -23,7 +23,7 @@ defmodule BingX.Swap.TradeTest.CancelAllOrders do
     }
   end
 
-  describe "BingX.API.Trade cancel_all_orders/3" do
+  describe "BingX.Swap.Trade cancel_all_orders/3" do
     test "should make DELETE request", context do
       %{api_key: api_key, secret_key: secret_key} = context
 

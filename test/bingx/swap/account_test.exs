@@ -1,118 +1,113 @@
 defmodule BingX.Swap.AccountTest do
   @moduledoc """
-  Module to test BingX.API.Account.
+  This is module is used to test BingX.API.Trade module.
 
   ## ATTENTION
-
-  Do patch **every** network request to real world!
-  These tests are used only to verify internal logic of the module, not others.
+  Patch **every** network request to the real world!
+  These tests are used only to verify internal logic of the module, nothing else.
   """
 
   use ExUnit.Case
   use Patch
 
-  alias BingX.Exception
-  alias BingX.Request.{QueryParams, Headers}
-  alias BingX.Swap.Account
-  alias BingX.Swap.Account.BalanceResponse
-
-  @origin Application.compile_env!(:bingx, :origin)
+  alias BingX.Swap.{GetBalanceResponse, Account}
+  alias BingX.HTTP.{Client, Response, Error}
 
   setup_all do
     {
       :ok,
-      api_key: "API_KEY_FOR_TEST", secret_key: "SECRET_KEY_FOR_TEST"
+      api_key: "API_KEY_FOR_TEST",
+      secret_key: "SECRET_KEY_FOR_TEST",
+      path: "/openApi/swap/v2/user/balance"
     }
   end
 
-  describe "BingX.API.Account get_balance/2" do
-    setup _context do
-      {:ok, endpoint: @origin <> "/openApi/swap/v2/user/balance"}
-    end
-
+  describe "BingX.Swap.Account get_balance/2" do
     test "should make GET request", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
+      patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once(HTTPoison.get(_endpoint, _headers, _options))
+      assert_called_once(Client.signed_request(:get, _path, _api_key, _secret_key))
     end
 
-    test "should request with correct path", context do
-      %{api_key: api_key, secret_key: secret_key, endpoint: endpoint} = context
+    test "should request correct endpoint", context do
+      %{api_key: api_key, secret_key: secret_key, path: path} = context
 
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
+      patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once(HTTPoison.get(^endpoint, _headers, _options))
+      assert_called_once(Client.signed_request(_method, ^path, _api_key, _secret_key))
     end
 
-    test "should make secure request", context do
+    test "should make secure request using provided credentials", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      headers = %{"API_KEY" => api_key}
-
-      patch(Headers, :append_api_key, headers)
-      patch(HTTPoison, :get, {:error, %HTTPoison.Error{reason: :timeout}})
+      patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
 
       Account.get_balance(api_key, secret_key)
 
-      assert_called_once(Headers.append_api_key(_, ^api_key))
-      assert_called_once(HTTPoison.get(_url, ^headers, _options))
+      assert_called_once(Client.signed_request(_method, _path, ^api_key, ^secret_key))
     end
 
-    test "should return the original error if request failed", context do
+    test "should extract and validate response content", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      result = {:error, %HTTPoison.Error{reason: :timeout}}
+      content = "X"
+      response = %Response{body: %{"balance" => content}}
+      struct = %{"A" => :B}
 
-      patch(HTTPoison, :get, result)
+      patch(GetBalanceResponse, :new, struct)
+      patch(Response, :get_response_payload, {:ok, content})
+      patch(Client, :signed_request, {:ok, response})
 
-      assert ^result = Account.get_balance(api_key, secret_key)
+      Account.get_balance(api_key, secret_key)
+
+      assert_called_once(Response.get_response_payload(^response))
     end
 
-    test "should return the original error if request is not 200", context do
+    test "should wrap the success content into GetBalanceResponse struct", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      result = {:error, %HTTPoison.Response{status_code: 301}}
+      content = "X"
+      response = %Response{body: %{"balance" => content}}
+      struct = %{"A" => :B}
 
-      patch(HTTPoison, :get, result)
-
-      assert ^result = Account.get_balance(api_key, secret_key)
-    end
-
-    test "should wrap the successful response in BalanceResponse", context do
-      %{api_key: api_key, secret_key: secret_key} = context
-
-      data = %{"success" => "ALWAYS!"}
-      body = Jason.encode!(%{"code" => 0, "data" => %{"balance" => data}})
-      struct = %{success: "ALWAYS!"}
-
-      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
-      patch(BalanceResponse, :new, struct)
+      patch(GetBalanceResponse, :new, struct)
+      patch(Response, :get_response_payload, {:ok, content})
+      patch(Client, :signed_request, {:ok, response})
 
       assert {:ok, ^struct} = Account.get_balance(api_key, secret_key)
 
-      assert_called_once(BalanceResponse.new(^data))
+      assert_called_once(GetBalanceResponse.new(^content))
+      assert_called_once(Response.get_response_payload(^response))
     end
 
-    test "should wrap the unsuccessful response in Exception", context do
+    test "should return the original content error", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
-      code = 1001
-      message = "Too funny"
-      body = Jason.encode!(%{"code" => code, "msg" => message})
-      struct = %{success: "NEVER!"}
+      error = {:error, :content_error, "yep"}
+      response = %Response{body: %{"data" => "a"}}
 
-      patch(HTTPoison, :get, {:ok, %HTTPoison.Response{body: body, status_code: 200}})
-      patch(Exception, :new, struct)
+      patch(Response, :get_response_payload, error)
+      patch(Client, :signed_request, {:ok, response})
 
-      assert {:error, ^struct} = Account.get_balance(api_key, secret_key)
+      assert ^error = Account.get_balance(api_key, secret_key)
 
-      assert_called_once(Exception.new(^code, ^message))
+      assert_called_once(Response.get_response_payload(^response))
+    end
+
+    test "should return the original request http error", context do
+      %{api_key: api_key, secret_key: secret_key} = context
+
+      error = {:error, :http_error, %Error{message: :timeout}}
+
+      patch(Client, :signed_request, error)
+
+      assert ^error = Account.get_balance(api_key, secret_key)
     end
   end
 end
