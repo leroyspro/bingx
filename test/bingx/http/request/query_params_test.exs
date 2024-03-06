@@ -6,7 +6,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
   alias :crypto, as: Crypto
   alias BingX.Helpers
 
-  describe "BingX.API.QueryParams append_receive_window/1" do
+  describe "BingX.HTTP.Request.QueryParams append_receive_window/1" do
     setup _context do
       {:ok, default: 5000}
     end
@@ -25,7 +25,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     end
   end
 
-  describe "BingX.API.QueryParams append_receive_window/2" do
+  describe "BingX.HTTP.Request.QueryParams append_receive_window/2" do
     test "should append a custom value", _context do
       custom = 21312
       assert %{"recvWindow" => custom} = QueryParams.append_receive_window(%{}, custom)
@@ -39,7 +39,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     end
   end
 
-  describe "BingX.API.QueryParams append_timestamp/1" do
+  describe "BingX.HTTP.Request.QueryParams append_timestamp/1" do
     test "should append a valid timestamp" do
       timestamp = 129_312_331_231
 
@@ -56,7 +56,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     end
   end
 
-  describe "BingX.API.QueryParams append_signature/2" do
+  describe "BingX.HTTP.Request.QueryParams append_signature/2" do
     setup _context do
       {:ok, secret_key: "TEST_SECRET_KEY"}
     end

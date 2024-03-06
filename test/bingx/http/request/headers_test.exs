@@ -3,7 +3,7 @@ defmodule BingX.HTTP.Request.HeadersTest do
 
   alias BingX.HTTP.Request.Headers
 
-  describe "BingX.API.Headers append_api_key/1" do
+  describe "BingX.HTTP.Request.Headers append_api_key/1" do
     setup _context do
       {:ok, api_key: "DSJFLKSDJFLKDSJLKFJDSKL"}
     end
