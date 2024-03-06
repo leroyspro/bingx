@@ -34,9 +34,7 @@ defmodule BingX.Swap.Order.Helpers do
   def validate(:position_side, x) when x in @position_sides, do: {:ok, x}
 
   def validate(:position_side, x) do
-    reason =
-      "expected :position_side to be one of #{inspect(@position_sides)}, got: #{inspect(x)}"
-
+    reason = "expected :position_side to be one of #{inspect(@position_sides)}, got: #{inspect(x)}"
     {:error, reason}
   end
 
@@ -80,8 +78,7 @@ defmodule BingX.Swap.Order.Helpers do
   def validate(:working_type, x) when x in @working_types, do: {:ok, x}
 
   def validate(:working_type, x) do
-    reason =
-      "expected :working_type to be one of #{inspect(@working_types)}, got: #{inspect(x)}"
+    reason = "expected :working_type to be one of #{inspect(@working_types)}, got: #{inspect(x)}"
 
     {:error, reason}
   end

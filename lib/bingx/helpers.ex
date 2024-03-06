@@ -29,5 +29,7 @@ defmodule BingX.Helpers do
     "[" <> content <> "]"
   end
 
+  def to_string(x) when is_map(x), do: Jason.encode!(x)
+
   defdelegate to_string(x), to: Kernel, as: :to_string
 end

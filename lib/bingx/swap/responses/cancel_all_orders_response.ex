@@ -9,7 +9,10 @@ defmodule BingX.Swap.CancelAllOrdersResponse do
         }
 
   @spec new(map()) :: t()
-  def new(%{"success" => succeeded, "failed" => failed}) do
+  def new(data) do
+    succeeded = Map.get(data, "success", [])
+    failed = Map.get(data, "failed", [])
+
     %__MODULE__{
       succeeded: transform_succeeded(succeeded),
       failed: failed || []

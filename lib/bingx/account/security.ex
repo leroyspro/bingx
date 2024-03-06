@@ -16,19 +16,17 @@ defmodule BingX.Account.Security do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_generate_listen_key(api_key, secret_key),
-      :ok <- Response.validate(resp, code: 200),
-      {:ok, body} <- Response.extract_body(resp),
-      {:ok, data} <- Response.decode_body(body)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, GenerateListenKeyResponse.new(data)}
+      {:ok, GenerateListenKeyResponse.new(payload)}
     end
   end
 
   def extend_listen_key(api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
     with(
-      {:ok, resp} <- do_extend_listen_key(api_key, secret_key),
-      :ok <- Response.validate(resp, code: 200)
+      {:ok, response} <- do_extend_listen_key(api_key, secret_key),
+      {:ok, _response} <- Response.validate(response, code: 200)
     ) do
       :ok
     end

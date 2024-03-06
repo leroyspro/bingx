@@ -16,12 +16,12 @@ defmodule BingX.HTTP.Request.QueryParams do
     signature =
       params
       |> Enum.map(fn
-        {k, v} when is_list(v) -> k <> "=" <> Helpers.to_string(v)
         {k, v} when is_binary(v) -> k <> "=" <> v
-        {k, v} -> k <> "=" <> inspect(v)
+        {k, v} -> k <> "=" <> Helpers.to_string(v)
       end)
       |> Enum.join("&")
       |> signature(secret_key)
+      |> dbg()
 
     Map.merge(params, %{"signature" => signature})
   end

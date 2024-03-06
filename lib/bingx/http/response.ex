@@ -5,44 +5,47 @@ defmodule BingX.HTTP.Response do
 
   def validate(_resp, options \\ [{:code, 200}])
 
-  def validate(%__MODULE__{status_code: status_code} = resp, code: exp_status_code) do
+  def validate(%__MODULE__{status_code: status_code} = response, code: exp_status_code) do
     if status_code === exp_status_code do
-      :ok
+      {:ok, response}
     else
-      {:error, :response_error, resp}
+      {:error, :response_error, response}
     end
   end
 
-  def extract_body(%__MODULE__{body: body}), do: {:ok, body}
+  def get_response_body(%__MODULE__{body: body}), do: {:ok, body}
 
-  def decode_body(body) do
-    case Jason.decode(body) do
-      {:ok, data} ->
-        {:ok, data}
+  def get_body_content(body) do
+    case Jason.decode(body || "") do
+      {:ok, content} ->
+        {:ok, content}
 
       {:error, _reason} ->
         {:error, :content_error, body}
     end
   end
 
-  def extract_content(data) when is_map(data) do
-    case data do
-      %{"code" => 0, "data" => content} ->
-        {:ok, content}
+  def get_content_payload(content) when is_map(content) do
+    case content do
+      %{"code" => 0, "data" => payload} ->
+        {:ok, payload}
 
       %{"code" => code, "msg" => message} ->
-        {:error, :bignx_error, Exception.new(code, message)}
+        {:error, :bingx_error, Exception.new(code, message)}
+
+      payload ->
+        {:ok, payload}
     end
   end
 
-  def extract_validated_content(%__MODULE__{} = resp) do
+  def get_response_payload(%__MODULE__{} = response) do
     with(
-      :ok <- validate(resp, code: 200),
-      {:ok, body} <- extract_body(resp),
-      {:ok, data} <- decode_body(body),
-      {:ok, content} <- extract_content(data)
+      {:ok, response} <- validate(response, code: 200),
+      {:ok, body} <- get_response_body(response),
+      {:ok, content} <- get_body_content(body),
+      {:ok, payload} <- get_content_payload(content)
     ) do
-      {:ok, content}
+      {:ok, payload}
     end
   end
 end

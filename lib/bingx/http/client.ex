@@ -12,9 +12,8 @@ defmodule BingX.HTTP.Client do
     url = Request.build_url(path, params, sign: secret_key)
     headers = Request.auth_headers(api_key)
 
-    with {:ok, resp} <- do_request(method, url, body, headers) do
-      {:ok, adapt_response(resp)}
-    else
+    case do_request(method, url, body, headers) do
+      {:ok, resp} -> {:ok, adapt_response(resp)}
       {:error, err} -> {:error, :http_error, adapt_error(err)}
     end
   end

@@ -4,8 +4,8 @@ defmodule BingX.Swap.BalanceResponse do
 
   defstruct [
     :asset,
-    :available_margin,
     :balance,
+    :available_margin,
     :equity,
     :freezed_margin,
     :realized_profit,
@@ -27,7 +27,9 @@ defmodule BingX.Swap.BalanceResponse do
         }
 
   @spec new(map()) :: Balance.t()
-  def new(%{"balance" => data}) do
+  def new(data) do
+    data = Map.get(data, "balance", %{})
+
     %__MODULE__{
       asset: get_and_transform(data, "asset", &interp_as_binary(&1, empty?: false)),
       available_margin: get_and_transform(data, "availableMargin", &interp_as_float/1),

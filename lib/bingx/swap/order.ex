@@ -10,40 +10,40 @@ defmodule BingX.Swap.Order do
   @fields [
     :type,
     :order_id,
+    :client_order_id,
     :symbol,
     :side,
     :position_side,
+    :quantity,
     :price,
     :stop_price,
-    :quantity,
-    :client_order_id,
     :working_type
   ]
 
   defstruct @fields
 
   @type t() :: %Order{
+          :type => type() | nil,
           :order_id => order_id() | nil,
+          :client_order_id => client_order_id() | nil,
           :symbol => symbol() | nil,
           :side => side() | nil,
           :position_side => position_side() | nil,
-          :type => type() | nil,
-          :price => price() | nil,
           :quantity => quantity() | nil,
+          :price => price() | nil,
           :stop_price => stop_price() | nil,
-          :client_order_id => client_order_id() | nil,
           :working_type => working_type() | nil
         }
 
+  @type type() :: :trigger_market
+  @type order_id() :: binary()
+  @type client_order_id() :: binary()
   @type symbol() :: binary()
   @type side() :: :buy | :sell
   @type position_side() :: :long | :short | :both
-  @type type() :: :trigger_market
-  @type price() :: number()
   @type quantity() :: number()
+  @type price() :: number()
   @type stop_price() :: number()
-  @type order_id() :: binary()
-  @type client_order_id() :: binary()
   @type working_type() :: :mark_price | :index_price | :contract_price
 
   @doc """
@@ -67,11 +67,7 @@ defmodule BingX.Swap.Order do
   end
 
   defp validate_params(params) do
-    Enum.reduce_while(params, %{}, &validate_param/2)
-  end
-
-  defp validate_param(kv, acc) when is_map(acc) do 
-    validate_param(kv, {:ok, acc})
+    Enum.reduce_while(params, {:ok, %{}}, &validate_param/2)
   end
 
   defp validate_param({k, v} = kv, {:ok, acc}) when k in @fields do

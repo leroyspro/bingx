@@ -3,6 +3,10 @@ defmodule BingX.Swap.PlaceOrderResponse do
 
   defstruct PlacedOrder.fields()
 
-  @spec new(map()) :: %__MODULE__{}
-  def new(%{"order" => data}), do: PlacedOrder.cast(data, as: __MODULE__)
+  @spec new(map()) :: map()
+  def new(data) do 
+    data = Map.get(data, "order", %{})
+
+    PlacedOrder.cast(data, as: __MODULE__)
+  end
 end
