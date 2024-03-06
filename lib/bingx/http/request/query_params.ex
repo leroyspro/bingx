@@ -21,7 +21,6 @@ defmodule BingX.HTTP.Request.QueryParams do
       end)
       |> Enum.join("&")
       |> signature(secret_key)
-      |> dbg()
 
     Map.merge(params, %{"signature" => signature})
   end
