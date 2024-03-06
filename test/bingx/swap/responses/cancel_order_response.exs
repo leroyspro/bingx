@@ -34,7 +34,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
     :update_time
   ]
 
-  describe "BingX.Swap.CancelAllOrdersResponse new/1" do
+  describe "BingX.Swap.CancelOrderResponse new/1" do
     test "should return empty struct without params" do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{})
     end
@@ -58,7 +58,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
     end
   end
 
-  describe "BingX.Swap.CancelAllOrdersResponse new/1 (transforming)" do
+  describe "BingX.Swap.CancelOrderResponse new/1 (transforming)" do
     test "should be tolerant to wrong interface" do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{"x" => "x"})
     end
