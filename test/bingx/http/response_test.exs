@@ -2,28 +2,14 @@ defmodule BingX.HTTP.ResponseTest do
   use ExUnit.Case
   use Patch
 
+  import BingX.Support.Struct
+
   alias BingX.HTTP.Response
 
   @fields [:status_code, :body, :headers, :request_url]
 
   describe "BingX.HTTP.Response struct" do
-    test "should have sufficient number of fields" do
-      assert (
-        %Response{} 
-        |> Map.from_struct()
-        |> Map.keys()
-        |> length() === length(@fields)
-      )
-    end
-
-    test "should have specific fields" do
-      assert (
-        %Response{}
-        |> Map.from_struct()
-        |> Map.keys()
-        |> Enum.map(fn k -> assert k in @fields end)
-      )
-    end
+    test_module_struct(Response, @fields)
   end
 
   describe "BingX.HTTP.Response validate/2" do

@@ -2,6 +2,8 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
   use ExUnit.Case
   use Patch
 
+  import BingX.Support.Struct
+
   alias BingX.Swap.PlaceOrdersResponse
   alias BingX.Swap.Trade.PlacedOrder
 
@@ -12,23 +14,7 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
       assert %PlaceOrdersResponse{} = PlaceOrdersResponse.new(%{})
     end
 
-    test "should have sufficient number of fields" do
-      assert (
-        %PlaceOrdersResponse{} 
-        |> Map.from_struct()
-        |> Map.keys()
-        |> length() === length(@fields)
-      )
-    end
-
-    test "should have specific fields" do
-      assert (
-        %PlaceOrdersResponse{}
-        |> Map.from_struct()
-        |> Map.keys()
-        |> Enum.map(fn k -> assert k in @fields end)
-      )
-    end
+    test_module_struct(PlaceOrdersResponse, @fields)
     
     test "should be tolerant to wrong interface" do
       assert %PlaceOrdersResponse{} = PlaceOrdersResponse.new(%{"x" => "x"})

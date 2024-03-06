@@ -1,6 +1,8 @@
 defmodule BingX.Swap.GetBalanceResponseTest do
   use ExUnit.Case, async: true
 
+  import BingX.Support.Struct
+
   alias BingX.Swap.GetBalanceResponse
 
   @fields [
@@ -20,23 +22,7 @@ defmodule BingX.Swap.GetBalanceResponseTest do
       assert %GetBalanceResponse{} = GetBalanceResponse.new(%{})
     end
 
-    test "should have sufficient number of fields" do
-      assert (
-        %GetBalanceResponse{} 
-        |> Map.from_struct()
-        |> Map.keys()
-        |> length() === length(@fields)
-      )
-    end
-
-    test "should have specific fields" do
-      assert (
-        %GetBalanceResponse{}
-        |> Map.from_struct()
-        |> Map.keys()
-        |> Enum.map(fn k -> assert k in @fields end)
-      )
-    end
+    test_module_struct(GetBalanceResponse, @fields)
   end
 
   describe "BingX.Swap.GetBalanceResponse new/1 (transforming)" do

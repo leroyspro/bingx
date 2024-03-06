@@ -2,6 +2,8 @@ defmodule BingX.Swap.CancelOrderResponseTest do
   use ExUnit.Case
   use Patch
 
+  import BingX.Support.Struct
+
   alias BingX.Swap.CancelOrderResponse
   alias BingX.Swap.Trade.CanceledOrder
 
@@ -39,23 +41,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{})
     end
 
-    test "should have sufficient number of fields" do
-      assert (
-        %CancelOrderResponse{} 
-        |> Map.from_struct()
-        |> Map.keys()
-        |> length() === length(@fields)
-      )
-    end
-
-    test "should have specific fields" do
-      assert (
-        %CancelOrderResponse{}
-        |> Map.from_struct()
-        |> Map.keys()
-        |> Enum.map(fn k -> assert k in @fields end)
-      )
-    end
+    test_module_struct(CancelOrderResponse, @fields)
 
     test "should be tolerant to wrong interface" do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{"x" => "x"})
