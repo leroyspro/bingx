@@ -3,6 +3,35 @@ defmodule BingX.Swap.InterpretatorsTest do
 
   alias BingX.Swap.Interpretators
 
+  describe "BingX.API.Interpretators to_internal_order_execution_type/1" do
+    test "should transform order types from internal to external API properly" do
+      assert :placed = Interpretators.to_internal_order_execution_type("NeW")
+      assert :canceled = Interpretators.to_internal_order_execution_type("CaNCELlED")
+      assert :calculated = Interpretators.to_internal_order_execution_type("CALCulateD")
+      assert :expired = Interpretators.to_internal_order_execution_type("ExPIRED")
+      assert :trade = Interpretators.to_internal_order_execution_type("TRAde")
+    end
+
+    test "should omit unexpected values" do
+      assert nil === Interpretators.to_internal_order_execution_type("")
+      assert nil === Interpretators.to_internal_order_execution_type("Unknown")
+      assert nil === Interpretators.to_internal_order_execution_type(0)
+    end
+  end
+
+  describe "BingX.API.Interpretators to_internal_margin_mode/1" do
+    test "should transform order types from external to internal API properly" do
+      assert :cross = Interpretators.to_internal_margin_mode("CrosS")
+      assert :isolated = Interpretators.to_internal_margin_mode("IsolAted")
+    end
+
+    test "should omit unexpected values" do
+      assert nil === Interpretators.to_internal_margin_mode("")
+      assert nil === Interpretators.to_internal_margin_mode("Unknown")
+      assert nil === Interpretators.to_internal_margin_mode(0)
+    end
+  end
+
   describe "BingX.API.Interpretators to_internal_order_type/1" do
     test "should transform order types from external to internal API properly" do
       assert :market = Interpretators.to_internal_order_type("MARkEt")
@@ -21,7 +50,7 @@ defmodule BingX.Swap.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_order_ty pe/1" do
+  describe "BingX.API.Interpretators to_external_order_type/1" do
     test "should transform order types from internal to external API properly" do
       assert "MARKET" = Interpretators.to_external_order_type(:market)
       assert "TRIGGER_MARKET" = Interpretators.to_external_order_type(:trigger_market)
