@@ -100,7 +100,7 @@ defmodule BingX.Swap.TradeTest.CancelOrderById do
       assert_called_once(Response.get_response_payload(^response))
     end
 
-    test "should wrap the content into PlaceOrderResponse struct", context do
+    test "should wrap the content into CancelOrderResponse struct", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
       content = "X"
