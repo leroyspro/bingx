@@ -1,7 +1,7 @@
-defmodule BingX.Swap.BalanceResponseTest do
+defmodule BingX.Swap.GetBalanceResponseTest do
   use ExUnit.Case, async: true
 
-  alias BingX.Swap.BalanceResponse
+  alias BingX.Swap.GetBalanceResponse
 
   @fields [
     :asset,
@@ -15,14 +15,14 @@ defmodule BingX.Swap.BalanceResponseTest do
     :user_id
   ]
 
-  describe "BingX.Swap.BalanceResponse new/1" do
+  describe "BingX.Swap.GetBalanceResponse new/1" do
     test "should return empty struct without params" do
-      assert %BalanceResponse{} = BalanceResponse.new(%{})
+      assert %GetBalanceResponse{} = GetBalanceResponse.new(%{})
     end
 
     test "should have sufficient number of fields" do
       assert (
-        %BalanceResponse{} 
+        %GetBalanceResponse{} 
         |> Map.from_struct()
         |> Map.keys()
         |> length() === length(@fields)
@@ -31,7 +31,7 @@ defmodule BingX.Swap.BalanceResponseTest do
 
     test "should have specific fields" do
       assert (
-        %BalanceResponse{}
+        %GetBalanceResponse{}
         |> Map.from_struct()
         |> Map.keys()
         |> Enum.map(fn k -> assert k in @fields end)
@@ -39,13 +39,13 @@ defmodule BingX.Swap.BalanceResponseTest do
     end
   end
 
-  describe "BingX.Swap.BalanceResponse new/1 (transforming)" do
+  describe "BingX.Swap.GetBalanceResponse new/1 (transforming)" do
     test "should retrieve asset" do
-      assert %BalanceResponse{asset: "BTC-USDT"} = BalanceResponse.new(wrap_data(%{"asset" => "BTC-USDT"}))
+      assert %GetBalanceResponse{asset: "BTC-USDT"} = GetBalanceResponse.new(wrap_data(%{"asset" => "BTC-USDT"}))
     end
 
     test "should be tolerant to wrong interface" do
-      assert %BalanceResponse{} = BalanceResponse.new(%{"x" => "x"})
+      assert %GetBalanceResponse{} = GetBalanceResponse.new(%{"x" => "x"})
     end
 
     test "should retrieve and transform balance into float if not empty",
@@ -73,7 +73,7 @@ defmodule BingX.Swap.BalanceResponseTest do
       do: build_transform_assert(:binary, :user_id, "userId")
   end
 
-  describe "BingX.API.Account.BalanceResponse new/1 (omitting)" do
+  describe "BingX.API.Account.GetBalanceResponse new/1 (omitting)" do
     test "should omit unexpected balance value",
       do: build_omit_assert(:float, :balance, "balance")
 
@@ -97,24 +97,24 @@ defmodule BingX.Swap.BalanceResponseTest do
   end
 
   defp build_transform_assert(:float, exp_key, orig_key) do
-    assert %BalanceResponse{} = %{^exp_key => 24.00001} = BalanceResponse.new(wrap_data(%{orig_key => "24.00001"}))
-    assert %BalanceResponse{} = %{^exp_key => +0.0} = BalanceResponse.new(wrap_data(%{orig_key => "0.00000"}))
-    assert %BalanceResponse{} = %{^exp_key => 15.0} = BalanceResponse.new(wrap_data(%{orig_key => "15"}))
-    assert %BalanceResponse{} = %{^exp_key => 1.0} = BalanceResponse.new(wrap_data(%{orig_key => 1.0}))
+    assert %GetBalanceResponse{} = %{^exp_key => 24.00001} = GetBalanceResponse.new(wrap_data(%{orig_key => "24.00001"}))
+    assert %GetBalanceResponse{} = %{^exp_key => +0.0} = GetBalanceResponse.new(wrap_data(%{orig_key => "0.00000"}))
+    assert %GetBalanceResponse{} = %{^exp_key => 15.0} = GetBalanceResponse.new(wrap_data(%{orig_key => "15"}))
+    assert %GetBalanceResponse{} = %{^exp_key => 1.0} = GetBalanceResponse.new(wrap_data(%{orig_key => 1.0}))
   end
 
   defp build_transform_assert(:binary, exp_key, orig_key) do
-    assert %BalanceResponse{} = %{^exp_key => "24000"} = BalanceResponse.new(wrap_data(%{orig_key => "24000"}))
-    assert %BalanceResponse{} = %{^exp_key => "uuid"} = BalanceResponse.new(wrap_data(%{orig_key => "uuid"}))
-    assert %BalanceResponse{} = %{^exp_key => "24.0"} = BalanceResponse.new(wrap_data(%{orig_key => 24.0}))
-    assert %BalanceResponse{} = %{^exp_key => "2121"} = BalanceResponse.new(wrap_data(%{orig_key => 2121}))
+    assert %GetBalanceResponse{} = %{^exp_key => "24000"} = GetBalanceResponse.new(wrap_data(%{orig_key => "24000"}))
+    assert %GetBalanceResponse{} = %{^exp_key => "uuid"} = GetBalanceResponse.new(wrap_data(%{orig_key => "uuid"}))
+    assert %GetBalanceResponse{} = %{^exp_key => "24.0"} = GetBalanceResponse.new(wrap_data(%{orig_key => 24.0}))
+    assert %GetBalanceResponse{} = %{^exp_key => "2121"} = GetBalanceResponse.new(wrap_data(%{orig_key => 2121}))
   end
 
   defp build_omit_assert(:float, exp_key, orig_key) do
-    assert %BalanceResponse{} = %{^exp_key => 1.0} = BalanceResponse.new(wrap_data(%{orig_key => 1.0}))
-    assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(wrap_data(%{orig_key => "null"}))
-    assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(wrap_data(%{orig_key => ""}))
-    assert %BalanceResponse{} = %{^exp_key => nil} = BalanceResponse.new(wrap_data(%{orig_key => nil}))
+    assert %GetBalanceResponse{} = %{^exp_key => 1.0} = GetBalanceResponse.new(wrap_data(%{orig_key => 1.0}))
+    assert %GetBalanceResponse{} = %{^exp_key => nil} = GetBalanceResponse.new(wrap_data(%{orig_key => "null"}))
+    assert %GetBalanceResponse{} = %{^exp_key => nil} = GetBalanceResponse.new(wrap_data(%{orig_key => ""}))
+    assert %GetBalanceResponse{} = %{^exp_key => nil} = GetBalanceResponse.new(wrap_data(%{orig_key => nil}))
   end
 
   defp wrap_data(data), do: %{"balance" => data}
