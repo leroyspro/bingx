@@ -28,7 +28,7 @@ defmodule BingX.Swap.TradeTest.PlaceOrder do
     {
       :ok,
       order: order,
-      api_key: "API_KEY_FOR_TEST", 
+      api_key: "API_KEY_FOR_TEST",
       secret_key: "SECRET_KEY_FOR_TEST",
       path: "/openApi/swap/v2/trade/order"
     }

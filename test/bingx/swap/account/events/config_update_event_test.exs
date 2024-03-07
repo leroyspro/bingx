@@ -29,6 +29,6 @@ defmodule BingX.Swap.Account.ConfigUpdateEventTest do
     test_response_key_interp(ConfigUpdateEvent, :new, [], :to_internal_margin_mode, ["ac", "mt"], :margin_mode)
     test_response_key_interp(ConfigUpdateEvent, :new, [], :interp_as_float, ["ac", "S"], :short_leverage)
     test_response_key_interp(ConfigUpdateEvent, :new, [], :interp_as_float, ["ac", "l"], :long_leverage)
-    test_response_key_interp(ConfigUpdateEvent, :new, [], ["E"], :timestamp)
+    test_response_key_interp(ConfigUpdateEvent, :new, [], "E", :timestamp)
   end
 end
