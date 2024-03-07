@@ -11,7 +11,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
   use Patch
 
   alias BingX.Account.{Security, GenerateListenKeyResponse}
-  alias BingX.HTTP.{Client, Request, Response, Error}
+  alias BingX.HTTP.{Client, Response, Error}
 
   setup_all do
     {
@@ -21,7 +21,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
     }
   end
 
-  describe "BingX.Account.Security generate_listen_key/2" do
+  describe "BingX.Account.Security generate_listen_key/1" do
     test "should make POST request", context do
       %{api_key: api_key} = context
 
@@ -29,7 +29,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
 
       Security.generate_listen_key(api_key)
 
-      assert_called_once(Client.authed_request(:post, _path, _api_key, _options))
+      assert_called_once(Client.authed_request(:post, _path, _api_key))
     end
 
     test "should request correct endpoint", context do
@@ -39,17 +39,17 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
 
       Security.generate_listen_key(api_key)
 
-      assert_called_once(Client.authed_request(_method, ^path, _api_key, _options))
+      assert_called_once(Client.authed_request(_method, ^path, _api_key))
     end
 
-    test "should add auth header to the request by provided api key", context do
+    test "should authenticate the request with provided api_key", context do
       %{api_key: api_key} = context
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
       Security.generate_listen_key(api_key)
 
-      assert_called_once(Client.authed_request(_method, _path, ^api_key, _options))
+      assert_called_once(Client.authed_request(_method, _path, ^api_key))
     end
 
     test "should extract and validate response content", context do
