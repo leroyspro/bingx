@@ -31,7 +31,7 @@ defmodule BingX.Swap.GetBalanceResponse do
     data = Map.get(data, "balance", %{})
 
     %__MODULE__{
-      asset: get_and_transform(data, "asset", &interp_as_binary(&1, empty?: false)),
+      asset: get_and_transform(data, "asset", &interp_as_non_empty_binary/1),
       available_margin: get_and_transform(data, "availableMargin", &interp_as_float/1),
       balance: get_and_transform(data, "balance", &interp_as_float/1),
       equity: get_and_transform(data, "equity", &interp_as_float/1),
@@ -39,7 +39,7 @@ defmodule BingX.Swap.GetBalanceResponse do
       realized_profit: get_and_transform(data, "realisedProfit", &interp_as_float/1),
       unrealized_profit: get_and_transform(data, "unrealizedProfit", &interp_as_float/1),
       used_margin: get_and_transform(data, "usedMargin", &interp_as_float/1),
-      user_id: get_and_transform(data, "userId", &interp_as_binary(&1, empty?: false))
+      user_id: get_and_transform(data, "userId", &interp_as_non_empty_binary/1)
     }
   end
 end

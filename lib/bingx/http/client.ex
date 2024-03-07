@@ -5,6 +5,16 @@ defmodule BingX.HTTP.Client do
 
   alias BingX.HTTP.{Request, Response, Error}
 
+  def authed_request(method, path, api_key, options \\ []) do
+    body = Keyword.get(options, :body, "")
+    params = Keyword.get(options, :params, %{})
+
+    url = Request.build_url(path, params)
+    headers = Request.auth_headers(api_key)
+
+    do_request(method, url, body, headers)
+  end
+
   def signed_request(method, path, api_key, secret_key, options \\ []) do
     body = Keyword.get(options, :body, "")
     params = Keyword.get(options, :params, %{})
@@ -12,15 +22,16 @@ defmodule BingX.HTTP.Client do
     url = Request.build_url(path, params, sign: secret_key)
     headers = Request.auth_headers(api_key)
 
-    case do_request(method, url, body, headers) do
-      {:ok, resp} -> {:ok, adapt_response(resp)}
-      {:error, err} -> {:error, :http_error, adapt_error(err)}
-    end
+    do_request(method, url, body, headers)
   end
 
   defp do_request(method, url, body, headers) do
     %HTTPoison.Request{method: method, url: url, headers: headers, body: body}
     |> HTTPoison.request()
+    |> case do
+      {:ok, resp} -> {:ok, adapt_response(resp)}
+      {:error, err} -> {:error, :http_error, adapt_error(err)}
+    end
   end
 
   defp adapt_response(%HTTPoison.Response{} = resp) do
