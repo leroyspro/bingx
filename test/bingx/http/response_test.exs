@@ -12,25 +12,34 @@ defmodule BingX.HTTP.ResponseTest do
     test_module_struct(Response, @fields)
   end
 
-  describe "BingX.HTTP.Response validate/2" do
+  describe "BingX.HTTP.Response validate_status/2" do
     test "should return error if status code does not match the expected one" do
       response = %Response{status_code: 200}
 
-      {:error, :response_error, ^response} = Response.validate(response, code: 202)
+      {:error, :response_error, ^response} = Response.validate_status(response, 202)
     end
 
     test "should return success if status code does match the expected one" do
       response = %Response{status_code: 200}
 
-      {:ok, ^response} = Response.validate(response, code: 200)
+      {:ok, ^response} = Response.validate_status(response, 200)
+    end
+  end
+
+  describe "BingX.HTTP.Response validate_statuses/2" do
+    test "should return error if status code is not in list of expected" do
+      response = %Response{status_code: 200}
+
+      {:error, :response_error, ^response} = Response.validate_statuses(response, [201, 204])
     end
 
-    test "should return success if status code does match the default one" do
-      response = %Response{status_code: 200}
-      {:ok, ^response} = Response.validate(response)
+    test "should return success if status code is present in list of expected" do
+      allowed_codes = [200, 204]
+      response_200 = %Response{status_code: 200}
+      response_204 = %Response{status_code: 204}
 
-      response = %Response{status_code: 201}
-      {:error, :response_error, ^response} = Response.validate(response)
+      {:ok, ^response_200} = Response.validate_statuses(response_200, allowed_codes)
+      {:ok, ^response_204} = Response.validate_statuses(response_204, allowed_codes)
     end
   end
 
@@ -68,7 +77,7 @@ defmodule BingX.HTTP.ResponseTest do
       message = "supra"
       code = 12321
 
-      assert {:error, :bingx_error, %BingX.Exception{message: ^message, code: ^code}} = 
+      assert {:error, :bingx_error, %BingX.Exception{message: ^message, code: ^code}} =
         Response.get_content_payload(%{"code" => code, "msg" => message})
     end
 
@@ -83,22 +92,22 @@ defmodule BingX.HTTP.ResponseTest do
     test "should validate response on 200 code" do
       response = %Response{status_code: 200}
 
-      patch(Response, :validate, {:ok, response})
-        
+      patch(Response, :validate_statuses, {:ok, response})
+
       Response.get_response_payload(response)
 
-      assert_called_once(Response.validate(^response, code: 200))
+      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should return validation error for response with not 200 code" do
-      error = {:error, :no_reason}
-      patch(Response, :validate, error)
-
       response = %Response{status_code: 203}
+      error = {:error, :no_reason}
+
+      patch(Response, :validate_statuses, error)
 
       assert ^error = Response.get_response_payload(response)
 
-      assert_called_once(Response.validate(^response, code: 200))
+      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should return error from the local body content extracter" do
@@ -109,7 +118,7 @@ defmodule BingX.HTTP.ResponseTest do
 
       assert ^error = Response.get_response_payload(response)
 
-      assert_called_once(Response.validate(^response, code: 200))
+      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should return error from the local content payload extracter" do
@@ -120,14 +129,14 @@ defmodule BingX.HTTP.ResponseTest do
 
       assert ^error = Response.get_response_payload(response)
 
-      assert_called_once(Response.validate(^response, code: 200))
+      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should get content payload via the local functions" do
       body = "BODYBODY"
       content = "CONTENT"
       payload = "PAYLOAD"
-      
+
       patch(Response, :get_body_content, {:ok, content})
       patch(Response, :get_content_payload, {:ok, payload})
 
@@ -139,15 +148,3 @@ defmodule BingX.HTTP.ResponseTest do
     end
   end
 end
-#
-#   def get_response_payload(%__MODULE__{} = resp) do
-#     with(
-#       :ok <- validate(resp, code: 200),
-#       {:ok, body} <- get_response_body(resp),
-#       {:ok, content} <- get_body_content(body),
-#       {:ok, payload} <- get_content_payload(content)
-#     ) do
-#       {:ok, payload}
-#     end
-#   end
-# end
