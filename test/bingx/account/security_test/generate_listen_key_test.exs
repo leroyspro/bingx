@@ -22,7 +22,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
   end
 
   describe "BingX.Account.Security generate_listen_key/1" do
-    test "should make POST request", context do
+    test "should make a POST request", context do
       %{api_key: api_key} = context
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
