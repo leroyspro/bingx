@@ -184,18 +184,17 @@ defmodule BingX.Swap.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators interp_as_binary/2" do
+  describe "BingX.API.Interpretators interp_as_non_empty_binary/1" do
     test "should return original binaries" do
-      assert "25" = Interpretators.interp_as_binary("25", empty?: true)
-      assert "___" = Interpretators.interp_as_binary("___", empty?: true)
-      assert "" = Interpretators.interp_as_binary("", empty?: true)
+      assert "25" = Interpretators.interp_as_non_empty_binary("25")
+      assert "___" = Interpretators.interp_as_non_empty_binary("___")
 
-      assert "25" = Interpretators.interp_as_binary("25", empty?: false)
-      assert "___" = Interpretators.interp_as_binary("___", empty?: false)
+      assert "25" = Interpretators.interp_as_non_empty_binary("25")
+      assert "___" = Interpretators.interp_as_non_empty_binary("___")
     end
 
     test "should return nil when passed not allowed empty binary" do
-      assert nil === Interpretators.interp_as_binary("", empty?: false)
+      assert nil === Interpretators.interp_as_non_empty_binary("")
     end
   end
 end
