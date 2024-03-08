@@ -32,43 +32,10 @@ defmodule BingX.Swap.GetBalanceResponseTest do
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_non_empty_binary, ["balance", "asset"], :asset)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "balance"], :balance)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "equity"], :equity)
-
-    test_response_key_interp(
-      GetBalanceResponse,
-      :new,
-      [],
-      :interp_as_float,
-      ["balance", "availableMargin"],
-      :available_margin
-    )
-
-    test_response_key_interp(
-      GetBalanceResponse,
-      :new,
-      [],
-      :interp_as_float,
-      ["balance", "freezedMargin"],
-      :freezed_margin
-    )
-
-    test_response_key_interp(
-      GetBalanceResponse,
-      :new,
-      [],
-      :interp_as_float,
-      ["balance", "realisedProfit"],
-      :realized_profit
-    )
-
-    test_response_key_interp(
-      GetBalanceResponse,
-      :new,
-      [],
-      :interp_as_float,
-      ["balance", "unrealizedProfit"],
-      :unrealized_profit
-    )
-
+    test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "availableMargin"], :available_margin)
+    test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "freezedMargin"], :freezed_margin)
+    test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "realisedProfit"], :realized_profit)
+    test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "unrealizedProfit"], :unrealized_profit)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "usedMargin"], :used_margin)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_non_empty_binary, ["balance", "userId"], :user_id)
   end
