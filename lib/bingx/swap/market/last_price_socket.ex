@@ -8,7 +8,6 @@ defmodule BingX.Swap.Market.LastPriceSocket do
   alias BingX.Swap.Market.PriceSocket
   alias BingX.Swap.Market.PriceUpdateEvent
 
-
   defmacro __using__(_opts \\ []) do
     quote do
       use BingX.Socket.Base
@@ -21,7 +20,7 @@ defmodule BingX.Swap.Market.LastPriceSocket do
 
       def handle_update(price, state) do
         require Logger
-        Logger.info "Got price update: #{inspect(price)}"
+        Logger.info("Got price update: #{inspect(price)}")
 
         {:ok, state}
       end
@@ -31,7 +30,7 @@ defmodule BingX.Swap.Market.LastPriceSocket do
     end
   end
 
-  def start_link(params, module, state) do 
+  def start_link(params, module, state) do
     params = Map.merge(params, %{type: :last})
 
     PriceSocket.start_link(params, module, state)

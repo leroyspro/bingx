@@ -19,14 +19,17 @@ defmodule BingX.Swap.Account.OrderTradeEvent do
     :accumulated_quantity
   ]
 
-  def new(%{"E" => timestamp, "o" => data}) do
+  def new(data) do
+    timestamp = Map.get(data, "E")
+    data = Map.get(data, "o", %{})
+
     %__MODULE__{
       timestamp: timestamp,
-      symbol: get_and_transform(data, "s", &interp_as_binary/1),
-      asset: get_and_transform(data, "N", &interp_as_binary/1),
+      symbol: get_and_transform(data, "s", &interp_as_non_empty_binary/1),
+      asset: get_and_transform(data, "N", &interp_as_non_empty_binary/1),
       status: get_and_transform(data, "X", &to_internal_order_status/1),
-      client_order_id: get_and_transform(data, "c", &interp_as_binary/1),
-      order_id: Map.get(data, "i"),
+      client_order_id: get_and_transform(data, "c", &interp_as_non_empty_binary/1),
+      order_id: get_and_transform(data, "i", &interp_as_non_empty_binary/1),
       side: get_and_transform(data, "S", &to_internal_order_side/1),
       type: get_and_transform(data, "o", &to_internal_order_type/1),
       execution_type: get_and_transform(data, "x", &to_internal_order_execution_type/1),

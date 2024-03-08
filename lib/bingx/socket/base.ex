@@ -18,7 +18,7 @@ defmodule BingX.Socket.Base do
       @impl WebSockex
       def handle_connect(conn, state) do
         require Logger
-        Logger.debug "Socket established connection with BingX successfully"
+        Logger.debug("Socket established connection with BingX successfully")
 
         {:ok, state}
       end
@@ -26,7 +26,7 @@ defmodule BingX.Socket.Base do
       @impl WebSockex
       def handle_disconnect(details, state) do
         require Logger
-        Logger.error "Socket disconnected from BingX, details: #{inspect(details)}"
+        Logger.error("Socket disconnected from BingX, details: #{inspect(details)}")
 
         {:reconnect, state}
       end
@@ -49,10 +49,10 @@ defmodule BingX.Socket.Base do
           end
         rescue
           err ->
-            Logger.error """
+            Logger.error("""
               Could not process inbound BingX event message due to raised error: #{inspect(err)}.
               It is unusual and unexpected error which MUST NOT persist.
-            """
+            """)
 
             {:ok, state}
         end
@@ -66,21 +66,21 @@ defmodule BingX.Socket.Base do
       @impl WebSockex
       def handle_frame(data, state) do
         require Logger
-        Logger.warning "Got unknown frame message: #{inspect(data)}"
+        Logger.warning("Got unknown frame message: #{inspect(data)}")
         {:ok, state}
       end
 
       @impl WebSockex
       def handle_cast(message, state) do
         require Logger
-        Logger.warning "Got unknown cast message: #{inspect(message)}"
+        Logger.warning("Got unknown cast message: #{inspect(message)}")
         {:ok, state}
       end
 
       @impl WebSockex
       def handle_info(message, state) do
         require Logger
-        Logger.warning "Got unknown info message: #{inspect(message)}"
+        Logger.warning("Got unknown info message: #{inspect(message)}")
         {:ok, state}
       end
 

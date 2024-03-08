@@ -3,10 +3,16 @@ defmodule BingX.HTTP.Response do
 
   defstruct [:status_code, :body, :headers, :request_url]
 
-  def validate(_resp, options \\ [{:code, 200}])
+  def validate_status(%__MODULE__{status_code: code} = response, exp_code) when is_number(exp_code) do
+    if code === exp_code do
+      {:ok, response}
+    else
+      {:error, :response_error, response}
+    end
+  end
 
-  def validate(%__MODULE__{status_code: status_code} = response, code: exp_status_code) do
-    if status_code === exp_status_code do
+  def validate_statuses(%__MODULE__{status_code: code} = response, exp_codes) when is_list(exp_codes) do
+    if code in exp_codes do
       {:ok, response}
     else
       {:error, :response_error, response}
@@ -25,7 +31,7 @@ defmodule BingX.HTTP.Response do
     end
   end
 
-  def get_content_payload(content) when is_map(content) do
+  def get_content_payload(content) do
     case content do
       %{"code" => 0, "data" => payload} ->
         {:ok, payload}
@@ -40,7 +46,7 @@ defmodule BingX.HTTP.Response do
 
   def get_response_payload(%__MODULE__{} = response) do
     with(
-      {:ok, response} <- validate(response, code: 200),
+      {:ok, response} <- validate_statuses(response, [200, 201, 204]),
       {:ok, body} <- get_response_body(response),
       {:ok, content} <- get_body_content(body),
       {:ok, payload} <- get_content_payload(content)

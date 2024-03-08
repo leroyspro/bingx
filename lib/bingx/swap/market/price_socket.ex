@@ -8,11 +8,12 @@ defmodule BingX.Swap.Market.PriceSocket do
 
     {:ok, pid} = Socket.start_link(@url, module, state)
 
-    channel = Jason.encode!(%{
-      "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",
-      "reqType" => "sub",
-      "dataType" => "#{symbol}@#{type}Price"
-    })
+    channel =
+      Jason.encode!(%{
+        "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",
+        "reqType" => "sub",
+        "dataType" => "#{symbol}@#{type}Price"
+      })
 
     Socket.subscribe(pid, channel)
 
@@ -24,7 +25,7 @@ defmodule BingX.Swap.Market.PriceSocket do
 
   defp validate_params(params) do
     %{
-      symbol: validate_param(params, :symbol), 
+      symbol: validate_param(params, :symbol),
       type: validate_param(params, :type)
     }
   end

@@ -10,13 +10,16 @@ defmodule BingX.Swap.Account.ConfigUpdateEvent do
     :long_leverage
   ]
 
-  def new(%{"E" => timestamp, "ac" => data}) do
+  def new(data) do
+    timestamp = Map.get(data, "E")
+    config = Map.get(data, "ac", %{})
+
     %__MODULE__{
       timestamp: timestamp,
-      symbol: Map.get(data, "s"),
-      margin_mode: get_and_transform(data, "mt", &to_internal_margin_mode/1),
-      short_leverage: get_and_transform(data, "S", &interp_as_float/1),
-      long_leverage: get_and_transform(data, "l", &interp_as_float/1)
+      symbol: get_and_transform(config, "s", &interp_as_non_empty_binary/1),
+      margin_mode: get_and_transform(config, "mt", &to_internal_margin_mode/1),
+      short_leverage: get_and_transform(config, "S", &interp_as_float/1),
+      long_leverage: get_and_transform(config, "l", &interp_as_float/1)
     }
   end
 end

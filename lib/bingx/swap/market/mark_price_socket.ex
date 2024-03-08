@@ -20,7 +20,7 @@ defmodule BingX.Swap.Market.MarkPriceSocket do
 
       def handle_update(price, state) do
         require Logger
-        Logger.info "Got price update: #{inspect(price)}"
+        Logger.info("Got price update: #{inspect(price)}")
 
         {:ok, state}
       end
@@ -30,7 +30,7 @@ defmodule BingX.Swap.Market.MarkPriceSocket do
     end
   end
 
-  def start_link(params, module, state) do 
+  def start_link(params, module, state) do
     params = Map.merge(params, %{type: :mark})
 
     PriceSocket.start_link(params, module, state)

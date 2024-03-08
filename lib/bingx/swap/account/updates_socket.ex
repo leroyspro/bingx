@@ -29,14 +29,14 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
       def handle_event(event, state) do
         require Logger
-        Logger.error "Got unknown event: #{inspect(event)}"
+        Logger.error("Got unknown event: #{inspect(event)}")
 
         {:ok, state}
       end
 
       def handle_update(event, state) do
         require Logger
-        Logger.debug "Skipping unprocessed event: #{inspect(event)}"
+        Logger.debug("Skipping unprocessed event: #{inspect(event)}")
 
         {:ok, state}
       end
