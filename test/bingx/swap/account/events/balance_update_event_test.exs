@@ -37,53 +37,53 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
     test_response_key_interp(BalanceUpdateEvent, :new, [], "E", :timestamp)
 
     test "should transform position updates into PositionUpdate structs" do
-      orig_update = %{"k" => "V"} 
+      orig_update = %{"k" => "V"}
       next_update = %{"X" => "B"}
-     
+
       patch(PositionUpdate, :new, next_update)
-  
+
       data = %{"a" => %{"P" => [orig_update]}}
       BalanceUpdateEvent.new(data)
-  
+
       assert_called_once(PositionUpdate.new(^orig_update))
     end
-  
+
     test "should provide position updates in PositionUpdate structs" do
-      orig_update = %{"k" => "V"} 
+      orig_update = %{"k" => "V"}
       next_update = %{"X" => "B"}
-     
+
       patch(PositionUpdate, :new, next_update)
-  
+
       data = %{"a" => %{"P" => [orig_update]}}
-  
+
       assert %BalanceUpdateEvent{position_updates: [^next_update]} = BalanceUpdateEvent.new(data)
     end
-  
+
     test "should be tolerant for incorrect position update data contract" do
       data = %{"a" => %{"P" => nil}}
       BalanceUpdateEvent.new(data)
     end
 
     test "should transform wallet updates into WalletUpdate structs" do
-      orig_update = %{"k" => "V"} 
+      orig_update = %{"k" => "V"}
       next_update = %{"X" => "B"}
-     
+
       patch(WalletUpdate, :new, next_update)
-  
+
       data = %{"a" => %{"B" => [orig_update]}}
       BalanceUpdateEvent.new(data)
-  
+
       assert_called_once(WalletUpdate.new(^orig_update))
     end
-  
+
     test "should provide wallet updates in WalletUpdate structs" do
-      orig_update = %{"k" => "V"} 
+      orig_update = %{"k" => "V"}
       next_update = %{"X" => "B"}
-     
+
       patch(WalletUpdate, :new, next_update)
-  
+
       data = %{"a" => %{"B" => [orig_update]}}
-  
+
       assert %BalanceUpdateEvent{wallet_updates: [^next_update]} = BalanceUpdateEvent.new(data)
     end
 

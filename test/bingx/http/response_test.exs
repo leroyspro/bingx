@@ -78,7 +78,7 @@ defmodule BingX.HTTP.ResponseTest do
       code = 12321
 
       assert {:error, :bingx_error, %BingX.Exception{message: ^message, code: ^code}} =
-        Response.get_content_payload(%{"code" => code, "msg" => message})
+               Response.get_content_payload(%{"code" => code, "msg" => message})
     end
 
     test "should return payload as it is if there is not response interface (extra case)" do
@@ -89,7 +89,7 @@ defmodule BingX.HTTP.ResponseTest do
   end
 
   describe "BingX.HTTP.Response get_response_payload/1" do
-    test "should validate response on 200 code" do
+    test "should validate response on successful status codes" do
       response = %Response{status_code: 200}
 
       patch(Response, :validate_statuses, {:ok, response})
@@ -106,8 +106,6 @@ defmodule BingX.HTTP.ResponseTest do
       patch(Response, :validate_statuses, error)
 
       assert ^error = Response.get_response_payload(response)
-
-      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should return error from the local body content extracter" do
@@ -117,8 +115,6 @@ defmodule BingX.HTTP.ResponseTest do
       response = %Response{status_code: 200}
 
       assert ^error = Response.get_response_payload(response)
-
-      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
     test "should return error from the local content payload extracter" do
@@ -128,23 +124,43 @@ defmodule BingX.HTTP.ResponseTest do
       response = %Response{status_code: 200, body: "{}"}
 
       assert ^error = Response.get_response_payload(response)
-
-      assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
 
-    test "should get content payload via the local functions" do
-      body = "BODYBODY"
+    test "should get body content properly" do
+      content = %{"a" => "B"}
+      body = Jason.encode!(content)
+
+      patch(Response, :get_body_content, {:ok, ""})
+
+      response = %Response{status_code: 200, body: body}
+
+      Response.get_response_payload(response)
+
+      assert_called_once(Response.get_body_content(^body))
+    end
+
+    test "should get content payload properly" do
       content = "CONTENT"
       payload = "PAYLOAD"
 
       patch(Response, :get_body_content, {:ok, content})
       patch(Response, :get_content_payload, {:ok, payload})
 
-      response = %Response{status_code: 200, body: body}
-      {:ok, ^payload} = Response.get_response_payload(response)
+      response = %Response{status_code: 200, body: "{}"}
+      Response.get_response_payload(response)
 
-      assert_called_once(Response.get_body_content(^body))
       assert_called_once(Response.get_content_payload(^content))
+    end
+
+    test "should return extracted content payload" do
+      content = "CONTENT"
+      payload = "PAYLOAD"
+
+      patch(Response, :get_body_content, {:ok, content})
+      patch(Response, :get_content_payload, {:ok, payload})
+
+      response = %Response{status_code: 200, body: "{}"}
+      assert {:ok, ^payload} = Response.get_response_payload(response)
     end
   end
 end

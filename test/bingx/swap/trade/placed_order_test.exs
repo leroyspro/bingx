@@ -29,7 +29,7 @@ defmodule BingX.Swap.Trade.PlacedOrderTest do
   defmodule Dummy do
     defstruct [:order_id, :type]
   end
- 
+
   describe "BingX.Swap.Trade.PlacedOrder cast/2" do
     test "should return empty struct without params" do
       assert %PlacedOrder{} = PlacedOrder.cast(%{}, as: PlacedOrder)
@@ -47,22 +47,65 @@ defmodule BingX.Swap.Trade.PlacedOrderTest do
     end
 
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_non_empty_binary, "orderId", :order_id)
-    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_non_empty_binary, "clientOrderID", :client_order_id)
+
+    test_response_key_interp(
+      PlacedOrder,
+      :cast,
+      [[as: PlacedOrder]],
+      :interp_as_non_empty_binary,
+      "clientOrderID",
+      :client_order_id
+    )
+
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "quantity", :quantity)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :to_internal_order_type, "type", :type)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_non_empty_binary, "symbol", :symbol)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :to_internal_order_side, "side", :side)
-    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :to_internal_position_side, "positionSide", :position_side)
+
+    test_response_key_interp(
+      PlacedOrder,
+      :cast,
+      [[as: PlacedOrder]],
+      :to_internal_position_side,
+      "positionSide",
+      :position_side
+    )
+
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "stopPrice", :stop_price)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "price", :price)
-    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :to_internal_working_type, "workingType", :working_type)
+
+    test_response_key_interp(
+      PlacedOrder,
+      :cast,
+      [[as: PlacedOrder]],
+      :to_internal_working_type,
+      "workingType",
+      :working_type
+    )
+
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_boolean, "reduceOnly", :reduce_only?)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], "stopLoss", :stop_loss)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], "takeProfit", :take_profit)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], "timeInForce", :time_in_force)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "priceRate", :price_rate)
-    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "activationPrice", :activation_price)
-    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_boolean, "closePosition", :close_position?)
+
+    test_response_key_interp(
+      PlacedOrder,
+      :cast,
+      [[as: PlacedOrder]],
+      :interp_as_float,
+      "activationPrice",
+      :activation_price
+    )
+
+    test_response_key_interp(
+      PlacedOrder,
+      :cast,
+      [[as: PlacedOrder]],
+      :interp_as_boolean,
+      "closePosition",
+      :close_position?
+    )
   end
 
   describe "BingX.Swap.Trade.PlacedOrder new/1" do
@@ -73,7 +116,7 @@ defmodule BingX.Swap.Trade.PlacedOrderTest do
       patch(PlacedOrder, :cast, n_data)
       assert ^n_data = PlacedOrder.new(data)
 
-      assert_called_once(PlacedOrder.cast(^data, [as: PlacedOrder]))
+      assert_called_once(PlacedOrder.cast(^data, as: PlacedOrder))
     end
   end
 end

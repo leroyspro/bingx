@@ -14,10 +14,10 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     test "should append a default value", context do
       %{default: default} = context
 
-      assert %{"recvWindow" => default} = QueryParams.append_receive_window(%{})
+      assert %{"recvWindow" => ^default} = QueryParams.append_receive_window(%{})
     end
 
-    test "should append only single param", context do
+    test "should append only single param" do
       params = %{"EXTRA" => 100}
       result = QueryParams.append_receive_window(params)
 
@@ -28,7 +28,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
   describe "BingX.HTTP.Request.QueryParams append_receive_window/2" do
     test "should append a custom value", _context do
       custom = 21312
-      assert %{"recvWindow" => custom} = QueryParams.append_receive_window(%{}, custom)
+      assert %{"recvWindow" => ^custom} = QueryParams.append_receive_window(%{}, custom)
     end
 
     test "should append only single param", _context do
@@ -45,7 +45,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
 
       patch(Helpers, :timestamp, timestamp)
 
-      assert %{"timestamp" => timestamp} = QueryParams.append_timestamp(%{})
+      assert %{"timestamp" => ^timestamp} = QueryParams.append_timestamp(%{})
     end
 
     test "should append only single param" do
@@ -90,7 +90,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     test "should encrypt with map value correctly", context do
       %{secret_key: secret_key} = context
 
-      params = %{"k" => %{"a"=>[1]}}
+      params = %{"k" => %{"a" => [1]}}
       query = "k={\"a\":[1]}"
 
       signature = encrypt(query, secret_key)

@@ -17,9 +17,7 @@ defmodule BingX.Swap.TradeTest.CancelAllOrders do
   setup_all do
     {
       :ok,
-      api_key: "API_KEY_FOR_TEST",
-      secret_key: "SECRET_KEY_FOR_TEST",
-      path: "/openApi/swap/v2/trade/allOpenOrders"
+      api_key: "API_KEY_FOR_TEST", secret_key: "SECRET_KEY_FOR_TEST", path: "/openApi/swap/v2/trade/allOpenOrders"
     }
   end
 
@@ -69,7 +67,8 @@ defmodule BingX.Swap.TradeTest.CancelAllOrders do
           _path,
           _api_key,
           _secret_key,
-          params: %{"symbol" => ^symbol})
+          params: %{"symbol" => ^symbol}
+        )
       )
     end
 

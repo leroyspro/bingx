@@ -5,27 +5,23 @@ defmodule BingX.TestHelpers do
   defmacro test_module_struct(module, fields) do
     quote do
       test "should have specific number of fields" do
-        assert (
-          struct(unquote(module), %{})
-          |> Map.from_struct()
-          |> Map.keys()
-          |> length() === length(unquote(fields))
-        )
+        assert struct(unquote(module), %{})
+               |> Map.from_struct()
+               |> Map.keys()
+               |> length() === length(unquote(fields))
       end
 
       test "should have only expected fields" do
-        assert (
-          struct(unquote(module), %{})
-          |> Map.from_struct()
-          |> Map.keys()
-          |> Enum.map(fn k -> assert k in unquote(fields) end)
-        )
+        assert struct(unquote(module), %{})
+               |> Map.from_struct()
+               |> Map.keys()
+               |> Enum.map(fn k -> assert k in unquote(fields) end)
       end
     end
   end
 
   defmacro test_response_key_interp(module, func, args, key_or_path, exp_key) do
-    key_path = is_list(key_or_path) && key_or_path || [key_or_path]
+    key_path = (is_list(key_or_path) && key_or_path) || [key_or_path]
     key_path_raw = Enum.join(key_path, " -> ")
 
     quote do
@@ -44,7 +40,7 @@ defmodule BingX.TestHelpers do
   end
 
   defmacro test_response_key_interp(module, func, args, interp, key_or_path, exp_key) do
-    key_path = is_list(key_or_path) && key_or_path || [key_or_path]
+    key_path = (is_list(key_or_path) && key_or_path) || [key_or_path]
     key_path_raw = Enum.join(key_path, " -> ")
 
     quote do
@@ -87,7 +83,7 @@ defmodule BingX.TestHelpers do
 
         patch(Interpretators, interp, "Y")
 
-        mod_struct = struct(module, [{exp_key, "Y"}]) 
+        mod_struct = struct(module, [{exp_key, "Y"}])
         data = Helpers.put_in(%{}, key_path, "X")
 
         assert ^mod_struct = apply(module, func, [data] ++ args)

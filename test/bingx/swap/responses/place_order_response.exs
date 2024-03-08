@@ -39,7 +39,7 @@ defmodule BingX.Swap.PlaceOrderResponseTest do
     end
 
     test "should retrieve data and cast it into PlacedOrder struct" do
-      order = %{a: "a"} 
+      order = %{a: "a"}
 
       struct = %{c: "c"}
       patch(PlacedOrder, :cast, struct)

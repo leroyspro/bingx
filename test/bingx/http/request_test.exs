@@ -17,7 +17,7 @@ defmodule BingX.HTTP.RequestTest do
         host: host,
         port: port
       } = origin_url
-      
+
       assert ^scheme = url.scheme
       assert ^host = url.host
       assert ^port = url.port
@@ -33,24 +33,24 @@ defmodule BingX.HTTP.RequestTest do
     test "should append timestamp into query params" do
       patch(QueryParams, :append_timestamp, %{"TIMESTAMP" => 1234})
 
-      params = 
-        Request.build_url() 
-        |> URI.new!() 
-        |> Map.get(:query) 
+      params =
+        Request.build_url()
+        |> URI.new!()
+        |> Map.get(:query)
         |> URI.decode_query()
 
       assert %{"TIMESTAMP" => "1234"} = params
 
       assert_called_once(QueryParams.append_timestamp(_params))
     end
-    
+
     test "should append receive window into query params" do
       patch(QueryParams, :append_receive_window, %{"RECV_WINDOW" => 1234})
 
-      params = 
-        Request.build_url() 
-        |> URI.new!() 
-        |> Map.get(:query) 
+      params =
+        Request.build_url()
+        |> URI.new!()
+        |> Map.get(:query)
         |> URI.decode_query()
 
       assert %{"RECV_WINDOW" => "1234"} = params
@@ -61,18 +61,18 @@ defmodule BingX.HTTP.RequestTest do
     test "should append signature only if the option specified" do
       patch(QueryParams, :append_signature, %{"SIGNATURE" => 1234})
 
-      params = 
+      params =
         Request.build_url("", %{}, sign: 1234)
-        |> URI.new!() 
-        |> Map.get(:query) 
+        |> URI.new!()
+        |> Map.get(:query)
         |> URI.decode_query()
 
       assert %{"SIGNATURE" => "1234"} = params
 
-      params = 
+      params =
         Request.build_url("", %{})
-        |> URI.new!() 
-        |> Map.get(:query) 
+        |> URI.new!()
+        |> Map.get(:query)
         |> URI.decode_query()
 
       refute Map.has_key?(params, "SIGNATURE")

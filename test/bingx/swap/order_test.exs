@@ -4,7 +4,6 @@ defmodule BingX.Swap.OrderTest do
   alias BingX.Swap.Order
 
   describe "BingX.Order new/1" do
-
     ## should create a struct without params
     # should create a struct with all params
     # should validate :type key to be one of :market or :trigger_market if provided
@@ -23,18 +22,19 @@ defmodule BingX.Swap.OrderTest do
     end
 
     test "should create a struct with all params" do
-      assert {:ok, %Order{
-               :type => :market,
-               :order_id => "123214124312",
-               :client_order_id => "supra",
-               :symbol => "BTC-USDT",
-               :side => :sell,
-               :position_side => :short,
-               :quantity => 0.1,
-               :price => 324.11,
-               :stop_price => 321,
-               :working_type => :contract_price
-             }} =
+      assert {:ok,
+              %Order{
+                :type => :market,
+                :order_id => "123214124312",
+                :client_order_id => "supra",
+                :symbol => "BTC-USDT",
+                :side => :sell,
+                :position_side => :short,
+                :quantity => 0.1,
+                :price => 324.11,
+                :stop_price => 321,
+                :working_type => :contract_price
+              }} =
                Order.new(%{
                  :type => :market,
                  :order_id => "123214124312",
@@ -109,7 +109,6 @@ defmodule BingX.Swap.OrderTest do
   end
 
   describe "BingX.Order new!/1" do
-
     test "should create a struct without params" do
       assert %Order{} = Order.new!(%{})
     end

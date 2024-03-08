@@ -11,14 +11,12 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
   use Patch
 
   alias BingX.Account.Security
-  alias BingX.HTTP.{Client, Request, Response, Error}
+  alias BingX.HTTP.{Client, Response, Error}
 
   setup_all do
     {
       :ok,
-      api_key: "API_KEY_FOR_TEST",
-      listen_key: "EXISTING_LISTEN_KEY_FOR_TEST",
-      path: "/openApi/user/auth/userDataStream"
+      api_key: "API_KEY_FOR_TEST", listen_key: "EXISTING_LISTEN_KEY_FOR_TEST", path: "/openApi/user/auth/userDataStream"
     }
   end
 
@@ -63,18 +61,15 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
       assert_called_once(Client.authed_request(_method, _path, _api_key, params: %{"listenKey" => ^listen_key}))
     end
 
-    test "should validate response status", context do
+    test "should validate response statuses", context do
       %{api_key: api_key, listen_key: listen_key} = context
 
-      content = ""
-      response = %Response{status_code: 200}
-
-      patch(Response, :validate_statuses, {:ok, content})
-      patch(Client, :authed_request, {:ok, response})
+      patch(Response, :validate_statuses, {:ok, ""})
+      patch(Client, :authed_request, {:ok, %Response{status_code: 200}})
 
       Security.extend_listen_key(listen_key, api_key)
 
-      assert_called_once(Response.validate_statuses(^response, [200, 204]))
+      assert_called_once(Response.validate_statuses(_response, [200, 204]))
     end
 
     test "should return the original request http error", context do

@@ -15,21 +15,21 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
     end
 
     test_module_struct(PlaceOrdersResponse, @fields)
-    
+
     test "should be tolerant to wrong interface" do
       assert %PlaceOrdersResponse{} = PlaceOrdersResponse.new(%{"x" => "x"})
     end
 
     test "should retrieve and transform succeeded orders into PlacedOrder struct" do
-      order_a = %{a: "a"} 
+      order_a = %{a: "a"}
       order_b = %{b: "b"}
       orders = [order_a, order_b]
 
       patch(PlacedOrder, :new, %{c: "c"})
 
       assert %PlaceOrdersResponse{
-        orders: [%{c: "c"}, %{c: "c"}]
-      } = PlaceOrdersResponse.new(%{"orders" => orders})
+               orders: [%{c: "c"}, %{c: "c"}]
+             } = PlaceOrdersResponse.new(%{"orders" => orders})
 
       assert_called_once(PlacedOrder.new(^order_a))
       assert_called_once(PlacedOrder.new(^order_b))

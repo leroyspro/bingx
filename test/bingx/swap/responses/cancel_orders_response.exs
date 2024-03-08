@@ -15,21 +15,21 @@ defmodule BingX.Swap.CancelOrdersResponseTest do
     end
 
     test_module_struct(CancelOrdersResponse, @fields)
-    
+
     test "should be tolerant to wrong interface" do
       assert %CancelOrdersResponse{} = CancelOrdersResponse.new(%{"x" => "x"})
     end
 
     test "should retrieve and transform succeeded orders into CanceledOrder struct" do
-      order_a = %{a: "a"} 
+      order_a = %{a: "a"}
       order_b = %{b: "b"}
       orders = [order_a, order_b]
 
       patch(CanceledOrder, :new, %{c: "c"})
 
       assert %CancelOrdersResponse{
-        succeeded: [%{c: "c"}, %{c: "c"}]
-      } = CancelOrdersResponse.new(%{"success" => orders})
+               succeeded: [%{c: "c"}, %{c: "c"}]
+             } = CancelOrdersResponse.new(%{"success" => orders})
 
       assert_called_once(CanceledOrder.new(^order_a))
       assert_called_once(CanceledOrder.new(^order_b))

@@ -16,9 +16,7 @@ defmodule BingX.Swap.AccountTest do
   setup_all do
     {
       :ok,
-      api_key: "API_KEY_FOR_TEST",
-      secret_key: "SECRET_KEY_FOR_TEST",
-      path: "/openApi/swap/v2/user/balance"
+      api_key: "API_KEY_FOR_TEST", secret_key: "SECRET_KEY_FOR_TEST", path: "/openApi/swap/v2/user/balance"
     }
   end
 

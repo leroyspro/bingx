@@ -16,8 +16,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
   setup_all do
     {
       :ok,
-      api_key: "API_KEY_FOR_TEST",
-      path: "/openApi/user/auth/userDataStream"
+      api_key: "API_KEY_FOR_TEST", path: "/openApi/user/auth/userDataStream"
     }
   end
 

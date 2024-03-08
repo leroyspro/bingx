@@ -4,16 +4,6 @@ defmodule BingX.HTTP.ClientTest do
 
   alias BingX.HTTP.{Request, Error, Response, Client}
 
-  # def signed_request(method, path, api_key, secret_key, options \\ []) do
-  #   body = Keyword.get(options, :body, "")
-  #   params = Keyword.get(options, :params, %{})
-  #
-  #   url = Request.build_url(path, params, sign: secret_key)
-  #   headers = Request.auth_headers(api_key)
-  #
-  #   do_request(method, url, body, headers)
-  # end
-
   setup_all do
     {:ok, api_key: "API_KEY", secret_key: "SECRET_KEY", path: "/fds", body: "VODS"}
   end
@@ -137,7 +127,7 @@ defmodule BingX.HTTP.ClientTest do
 
   describe "BingX.HTTP.Client authed_request/4" do
     test "should make request with provided method", context do
-      %{api_key: api_key, secret_key: secret_key, path: path} = context
+      %{api_key: api_key, path: path} = context
 
       patch(HTTPoison, :request, {:error, %HTTPoison.Error{reason: :timeout}})
 

@@ -41,13 +41,13 @@ defmodule BingX.Swap.TradeTest.PlaceOrders do
           stop_price: 51000,
           quantity: 0.0001,
           symbol: "BTC-XRP"
-        },
+        }
       ]
 
     {
       :ok,
       orders: orders,
-      api_key: "API_KEY_FOR_TEST", 
+      api_key: "API_KEY_FOR_TEST",
       secret_key: "SECRET_KEY_FOR_TEST",
       path: "/openApi/swap/v2/trade/batchOrders"
     }
@@ -98,7 +98,6 @@ defmodule BingX.Swap.TradeTest.PlaceOrders do
       for order <- orders do
         assert_called_once(Contract.from_order(^order))
       end
-
 
       assert_called_once(Client.signed_request(_method, _path, _api_key, _secret_key, ^options))
     end
