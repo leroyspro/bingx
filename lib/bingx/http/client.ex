@@ -3,7 +3,15 @@ defmodule BingX.HTTP.Client do
   This module provides functions to make requests to BingX API with enhanced interface.
   """
 
-  alias BingX.HTTP.{Request, Response, Error}
+  alias BingX.HTTP.Request
+
+  case Code.ensure_loaded(HTTPoison) do
+    {:module, _} ->
+      @http_adapter Application.compile_env(:bingx, :http_adapter, BingX.HTTP.Adapter.HTTPoison)
+
+    {:error, :nofile} ->
+      @http_adapter Application.compile_env!(:bingx, :http_adapter)
+  end
 
   def authed_request(method, path, api_key, options \\ []) do
     body = Keyword.get(options, :body, "")
@@ -12,7 +20,7 @@ defmodule BingX.HTTP.Client do
     url = Request.build_url(path, params)
     headers = Request.auth_headers(api_key)
 
-    do_request(method, url, body, headers)
+    @http_adapter.request(method, url, body, headers)
   end
 
   def signed_request(method, path, api_key, secret_key, options \\ []) do
@@ -22,26 +30,6 @@ defmodule BingX.HTTP.Client do
     url = Request.build_url(path, params, sign: secret_key)
     headers = Request.auth_headers(api_key)
 
-    do_request(method, url, body, headers)
+    @http_adapter.request(method, url, body, headers)
   end
-
-  defp do_request(method, url, body, headers) do
-    %HTTPoison.Request{method: method, url: url, headers: headers, body: body}
-    |> HTTPoison.request()
-    |> case do
-      {:ok, resp} -> {:ok, adapt_response(resp)}
-      {:error, err} -> {:error, :http_error, adapt_error(err)}
-    end
-  end
-
-  defp adapt_response(%HTTPoison.Response{} = resp) do
-    %Response{
-      status_code: resp.status_code,
-      body: resp.body,
-      headers: resp.headers,
-      request_url: resp.request_url
-    }
-  end
-
-  defp adapt_error(%HTTPoison.Error{} = err), do: %Error{message: err.reason}
 end

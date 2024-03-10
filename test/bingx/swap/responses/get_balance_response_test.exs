@@ -4,7 +4,7 @@ defmodule BingX.Swap.GetBalanceResponseTest do
 
   import BingX.TestHelpers
 
-  alias BingX.Swap.{GetBalanceResponse, Interpretators}
+  alias BingX.Swap.GetBalanceResponse
 
   @fields [
     :asset,

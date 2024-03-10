@@ -1,4 +1,4 @@
-defmodule BingX.Swap.TradeTest.PlaceOrders do
+defmodule BingX.Swap.TradeTest.PlaceOrdersTest do
   @moduledoc """
   This is module is used to test BingX.API.Trade module.
 

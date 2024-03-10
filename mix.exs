@@ -45,9 +45,9 @@ defmodule BingX.MixProject do
 
   defp deps() do
     [
-      {:httpoison, "~> 2.2"},
       {:jason, "~> 1.4"},
       {:websockex, "~> 0.4.3"},
+      {:httpoison, "~> 2.2", optional: true},
       {:patch, "~> 0.13.0", only: [:test]}
     ]
   end
