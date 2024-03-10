@@ -1,6 +1,8 @@
 defmodule BingX.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/leroyspro/bingx"
+
   def project do
     [
       app: :bingx,
@@ -12,8 +14,8 @@ defmodule BingX.MixProject do
       description: description(),
       package: package(),
       deps: deps(),
-      name: "GenETS",
-      source_url: "https://gitlab.com/leroyspro/bingx"
+      name: "BingX",
+      source_url: @source_url
     ]
   end
 
@@ -36,8 +38,8 @@ defmodule BingX.MixProject do
     [
       # These are the default files included in the package
       files: ~w(lib .formatter.exs mix.exs README* LICENSE*),
-      licenses: ["zlib License"],
-      links: %{"GitLab" => "https://gitlab.com/leroyspro/bingx"}
+      licenses: ["MIT License"],
+      links: %{"GitHub" => @source_url}
     ]
   end
 
