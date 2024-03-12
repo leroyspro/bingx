@@ -199,7 +199,6 @@ defmodule BingX.HTTP.ClientTest do
       assert_called_once(Request.auth_headers(^api_key))
     end
 
-
     test "should return original http request result", context do
       %{api_key: api_key, path: path} = context
 

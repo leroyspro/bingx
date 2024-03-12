@@ -10,9 +10,8 @@ defmodule BingX.Swap.TradeTest.CancelOrderByIDTest do
   use ExUnit.Case
   use Patch
 
-  alias BingX.Swap.{CancelOrderResponse, Trade, Order}
+  alias BingX.Swap.{CancelOrderResponse, Trade}
   alias BingX.HTTP.{Client, Response, Error}
-  alias BingX.Swap.Trade.Contract
 
   setup_all do
     {

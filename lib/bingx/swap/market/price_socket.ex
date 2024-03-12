@@ -1,44 +1,88 @@
 defmodule BingX.Swap.Market.PriceSocket do
+  @moduledoc """
+
+  defmodule BingX.Swap.Market.PriceSource do
+    use BingX.Swap.Market.PriceSocket
+
+    require Logger
+
+    alias BingX.Swap.Market.PriceSocket
+
+    def start_link do
+      PriceSocket.start_link(__MODULE__, :state)
+    end
+
+    @impl true
+    def handle_connect(state) do
+      PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
+
+      {:ok, state}
+    end
+
+    @impl true
+    def handle_event(:price, price, state) do
+      Logger.info("Handled price:")
+      Logger.info(inspect(price))
+
+      {:ok, state}
+    end
+  end
+  """
+
   alias BingX.Socket
+  alias BingX.Swap.Market.PriceUpdateEvent
 
   @url "wss://open-api-swap.bingx.com/swap-market"
 
-  def start_link(params, module, state) do
-    %{symbol: symbol, type: type} = validate_params(params)
+  @callback handle_event(type :: :price, event :: PriceEvent.t(), state :: any()) :: {:ok, any()} | {:close, any()}
 
-    {:ok, pid} = Socket.start_link(@url, module, state)
+  @doc false
+  defmacro __using__(opts \\ []) do
+    quote location: :keep, bind_quoted: [opts: opts] do
+      @behaviour BingX.Socket
+      @behaviour BingX.Swap.Market.PriceSocket
+
+      @doc false
+      def child_spec(arg) do
+        default = %{
+          id: __MODULE__,
+          start: {__MODULE__, :start_link, [arg]}
+        }
+
+        Supervisor.child_spec(default, unquote(Macro.escape(opts)))
+      end
+
+      @impl true
+      def handle_event(event, state) do
+        price = PriceUpdateEvent.new(event)
+        handle_event(:price, price, state)
+      end
+
+      def handle_event(type, event, state) do
+        raise "handle_event/3 not implemented"
+      end
+
+      defoverridable child_spec: 1,
+                     handle_event: 2,
+                     handle_event: 3
+    end
+  end
+
+  def start_link(module, state, options \\ []) do
+    Socket.start_link(@url, module, state, options)
+  end
+
+  def subscribe(pid \\ self(), params) do
+    %{symbol: symbol, type: type} = params
 
     channel =
-      Jason.encode!(%{
+      %{
         "id" => "24dd0e35-56a4-4f7a-af8a-394c7060909c",
         "reqType" => "sub",
         "dataType" => "#{symbol}@#{type}Price"
-      })
+      }
+      |> Jason.encode!()
 
-    Socket.subscribe(pid, channel)
-
-    {:ok, pid}
-  end
-
-  # Helpers
-  # =======
-
-  defp validate_params(params) do
-    %{
-      symbol: validate_param(params, :symbol),
-      type: validate_param(params, :type)
-    }
-  end
-
-  defp validate_param(%{symbol: x}, :symbol) when is_binary(x), do: x
-
-  defp validate_param(_params, :symbol) do
-    raise ArgumentError, "expected :symbol param to be given and type of binary"
-  end
-
-  defp validate_param(%{type: x}, :type) when is_binary(x) or is_atom(x), do: x
-
-  defp validate_param(_params, :type) do
-    raise ArgumentError, "expected :type param to be given and type one of binary or atom"
+    BingX.Socket.send(pid, channel)
   end
 end

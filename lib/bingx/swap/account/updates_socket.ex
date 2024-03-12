@@ -11,59 +11,60 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
   @url "wss://open-api-swap.bingx.com/swap-market"
 
-  defmacro __using__(_opts \\ []) do
-    quote do
-      use BingX.Socket.Base
+  @callback handle_event(type :: :config, event :: %ConfigUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
+  @callback handle_event(type :: :balance, event :: %BalanceUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
+  @callback handle_event(type :: :order, event :: %OrderTradeEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
 
+  defmacro __using__(opts \\ []) do
+    quote location: :keep, bind_quoted: [opts: opts] do
+      @behaviour BingX.Socket
+      @behaviour BingX.Swap.Account.UpdatesSocket
+
+      @doc false
+      def child_spec(arg) do
+        default = %{
+          id: __MODULE__,
+          start: {__MODULE__, :start_link, [arg]}
+        }
+
+        Supervisor.child_spec(default, unquote(Macro.escape(opts)))
+      end
+
+      @impl true
       def handle_event(%{"e" => "ACCOUNT_CONFIG_UPDATE"} = event, state) do
-        handle_update({:config, ConfigUpdateEvent.new(event)}, state)
+        handle_event(:config, ConfigUpdateEvent.new(event), state)
       end
 
+      @impl true
       def handle_event(%{"e" => "ORDER_TRADE_UPDATE"} = event, state) do
-        handle_update({:order, OrderTradeEvent.new(event)}, state)
+        handle_event(:order, OrderTradeEvent.new(event), state)
       end
 
+      @impl true
       def handle_event(%{"e" => "ACCOUNT_UPDATE"} = event, state) do
-        handle_update({:account, BalanceUpdateEvent.new(event)}, state)
+        handle_event(:balance, BalanceUpdateEvent.new(event), state)
       end
 
+      @impl true
       def handle_event(event, state) do
         require Logger
-        Logger.error("Got unknown event: #{inspect(event)}")
+        Logger.info("Got unknown event: #{inspect(event)}")
 
         {:ok, state}
       end
 
-      def handle_update(event, state) do
-        require Logger
-        Logger.debug("Skipping unprocessed event: #{inspect(event)}")
-
-        {:ok, state}
+      @impl true
+      def handle_event(type, event, state) do
+        raise "handle_event/3 not implemented"
       end
 
-      defoverridable handle_event: 2,
-                     handle_update: 2
+      defoverridable child_spec: 1, handle_event: 2, handle_event: 3
     end
   end
 
-  def start_link(params, module, state) do
-    %{listen_key: listen_key} = validate_params(params)
-
+  def start_link(listen_key, module, state, options \\ []) do
     url = QueryParams.append_listen_key(@url, listen_key)
 
-    {:ok, _pid} = Socket.start_link(url, module, state)
-  end
-
-  # Helpers
-  # =======
-
-  defp validate_params(params) do
-    %{listen_key: validate_param(params, :listen_key)}
-  end
-
-  defp validate_param(%{listen_key: x}, :listen_key) when is_binary(x), do: x
-
-  defp validate_param(_params, :listen_key) do
-    raise ArgumentError, "expected :listen_key param to be given and type of binary"
+    Socket.start_link(url, module, state, options)
   end
 end

@@ -14,12 +14,8 @@ if Code.ensure_loaded?(HTTPoison) do
 
     setup_all do
       {
-        :ok, 
-        method: :get, 
-        headers: [{"key", "value"}], 
-        url: "/fds", 
-        body: "VODS", 
-        options: [proxy: "NOPE"]
+        :ok,
+        method: :get, headers: [{"key", "value"}], url: "/fds", body: "VODS", options: [proxy: "NOPE"]
       }
     end
 
