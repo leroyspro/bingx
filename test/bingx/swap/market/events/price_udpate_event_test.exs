@@ -30,7 +30,7 @@ defmodule BingX.Swap.Market.PriceUpdateEventTest do
       assert %PriceUpdateEvent{type: nil} = PriceUpdateEvent.new(%{"dataType" => "KOK-USDT@lasPrice"})
     end
 
-    test_response_key_interp(PriceUpdateEvent, :new, [], :interp_as_float, ["data", "c"], :value)
+    test_response_key_interp(PriceUpdateEvent, :new, [], :interp_as_float, ["data", "p"], :value)
     test_response_key_interp(PriceUpdateEvent, :new, [], :interp_as_non_empty_binary, ["data", "s"], :symbol)
     test_response_key_interp(PriceUpdateEvent, :new, [], ["data", "E"], :timestamp)
   end

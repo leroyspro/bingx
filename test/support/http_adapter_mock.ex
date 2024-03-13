@@ -3,7 +3,7 @@ defmodule BingX.HTTP.Adapter.Mock do
 
   @behaviour BingX.HTTP.Adapter
 
-  def request(_method, _url, _body, _headers) do 
+  def request(_method, _url, _body, _headers) do
     {:ok, %Response{status_code: 300, body: ""}}
   end
 end
