@@ -28,7 +28,7 @@ defmodule BingX.Socket do
   @doc """
   Sends a message (channel) to the process to the specified PID.
   """
-  def send(pid, message) when is_pid(pid) and is_binary(message) do
+  def send(pid, message) do
     Kernel.send(pid, {:"$send", message})
   end
 
