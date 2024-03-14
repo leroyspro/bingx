@@ -26,6 +26,13 @@ defmodule BingX.Socket do
   end
 
   @doc """
+  Starts a WebSocket process.
+  """
+  def start(url, module, state, options \\ []) do
+    WebSockex.start(url, __MODULE__, {module, state}, options)
+  end
+
+  @doc """
   Sends a message (channel) to the process to the specified PID.
   """
   def send(pid, message) do

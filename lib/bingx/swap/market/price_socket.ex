@@ -72,6 +72,10 @@ defmodule BingX.Swap.Market.PriceSocket do
     Socket.start_link(@url, module, state, options)
   end
 
+  def start(module, state, options \\ []) do
+    Socket.start(@url, module, state, options)
+  end
+
   def subscribe(pid \\ self(), params) do
     %{symbol: symbol, type: type} = params
 

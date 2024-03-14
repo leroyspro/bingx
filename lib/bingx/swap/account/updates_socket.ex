@@ -67,4 +67,10 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
     Socket.start_link(url, module, state, options)
   end
+
+  def start(listen_key, module, state, options \\ []) do
+    url = QueryParams.append_listen_key(@url, listen_key)
+
+    Socket.start(url, module, state, options)
+  end
 end
