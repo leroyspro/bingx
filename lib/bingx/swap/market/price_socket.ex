@@ -68,10 +68,16 @@ defmodule BingX.Swap.Market.PriceSocket do
     end
   end
 
+  @doc """
+  Starts PriceSocket process linked to the current process.
+  """
   def start_link(module, state, options \\ []) do
     Socket.start_link(@url, module, state, options)
   end
 
+  @doc """
+  Starts PriceSocket process.
+  """
   def start(module, state, options \\ []) do
     Socket.start(@url, module, state, options)
   end

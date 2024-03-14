@@ -19,14 +19,14 @@ defmodule BingX.Socket do
   # =========
 
   @doc """
-  Starts a WebSocket process linked to the current process.
+  Starts Socket process linked to the current process.
   """
   def start_link(url, module, state, options \\ []) do
     WebSockex.start_link(url, __MODULE__, {module, state}, options)
   end
 
   @doc """
-  Starts a WebSocket process.
+  Starts Socket process.
   """
   def start(url, module, state, options \\ []) do
     WebSockex.start(url, __MODULE__, {module, state}, options)
