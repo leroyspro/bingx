@@ -13,7 +13,8 @@ defmodule BingX.Socket do
   @callback handle_connect(state :: term()) :: {:ok, new_state}
   @callback handle_disconnect(state :: term()) :: {:reconnect, new_state} | {:close, new_state}
   @callback handle_info(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:close, new_state}
-  @optional_callbacks handle_disconnect: 1, handle_connect: 1, handle_info: 2
+  @callback handle_cast(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:close, new_state}
+  @optional_callbacks handle_disconnect: 1, handle_connect: 1, handle_info: 2, handle_cast: 2
 
   # Interface
   # =========
@@ -33,10 +34,17 @@ defmodule BingX.Socket do
   end
 
   @doc """
-  Sends a message (channel) to the process to the specified PID.
+  Sends a message to the process to the specified PID.
   """
   def send(pid, message) do
-    Kernel.send(pid, {:"$send", message})
+    WebSockex.cast(pid, {:"$send", message})
+  end
+
+  @doc """
+  Sends an asynchronous message.
+  """
+  def cast(pid, message) do
+    WebSockex.cast(pid, message)
   end
 
   # Implementation
@@ -82,14 +90,27 @@ defmodule BingX.Socket do
   end
 
   @impl WebSockex
-  def handle_cast(message, {module, state}) do
-    warn("Got unknown cast message: #{inspect(message)}")
-    {:ok, {module, state}}
+  def handle_cast({:"$send", message}, state) do
+    {:reply, {:text, message}, state}
   end
 
   @impl WebSockex
-  def handle_info({:"$send", message}, {module, state}) when is_binary(message) do
-    {:reply, {:text, message}, {module, state}}
+  def handle_cast(message, {module, state}) do
+    if function_exported?(module, :handle_cast, 2) do
+      case apply(module, :handle_cast, [message, state]) do
+        {:close, new_state} ->
+          {:close, {module, new_state}}
+
+        {:ok, new_state} ->
+          {:ok, {module, new_state}}
+
+        {:send, message, new_state} ->
+          {:reply, {:text, message}, {module, new_state}}
+      end
+    else
+      warn("Got unknown cast message: #{inspect(message)}")
+      {:ok, {module, state}}
+    end
   end
 
   @impl WebSockex
