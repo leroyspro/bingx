@@ -12,7 +12,6 @@ defmodule BingX.Swap.TradeTest.CancelAllOrdersTest do
 
   alias BingX.Swap.{CancelAllOrdersResponse, Trade}
   alias BingX.HTTP.{Client, Response, Error}
-  alias BingX.Swap.Trade.Contract
 
   setup_all do
     {

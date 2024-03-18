@@ -21,9 +21,9 @@ defmodule BingX.Swap.Account do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, response} <- do_get_balance(api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(response)
+      {:ok, payload} <- Response.get_response_payload(response)
     ) do
-      {:ok, GetBalanceResponse.new(content)}
+      {:ok, GetBalanceResponse.new(payload)}
     end
   end
 

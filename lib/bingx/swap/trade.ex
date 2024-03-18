@@ -40,9 +40,9 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_place_order(order, api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, PlaceOrderResponse.new(content)}
+      {:ok, PlaceOrderResponse.new(payload)}
     end
   end
 
@@ -53,9 +53,9 @@ defmodule BingX.Swap.Trade do
       when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, PlaceOrdersResponse.new(content)}
+      {:ok, PlaceOrdersResponse.new(payload)}
     end
   end
 
@@ -66,9 +66,9 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, CancelOrderResponse.new(content)}
+      {:ok, CancelOrderResponse.new(payload)}
     end
   end
 
@@ -79,9 +79,9 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, CancelOrderResponse.new(content)}
+      {:ok, CancelOrderResponse.new(payload)}
     end
   end
 
@@ -95,9 +95,9 @@ defmodule BingX.Swap.Trade do
              is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, CancelOrdersResponse.new(content)}
+      {:ok, CancelOrdersResponse.new(payload)}
     end
   end
 
@@ -111,9 +111,9 @@ defmodule BingX.Swap.Trade do
              is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, CancelOrdersResponse.new(content)}
+      {:ok, CancelOrdersResponse.new(payload)}
     end
   end
 
@@ -124,9 +124,9 @@ defmodule BingX.Swap.Trade do
       when is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
-      {:ok, content} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.get_response_payload(resp)
     ) do
-      {:ok, CancelAllOrdersResponse.new(content)}
+      {:ok, CancelAllOrdersResponse.new(payload)}
     end
   end
 
