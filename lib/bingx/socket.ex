@@ -37,7 +37,7 @@ defmodule BingX.Socket do
   Sends a message to the process to the specified PID.
   """
   def send(pid, message) do
-    WebSockex.cast(pid, {:"$send", message})
+    WebSockex.cast(pid, {:"$bingx_send", message})
   end
 
   @doc """
@@ -56,7 +56,7 @@ defmodule BingX.Socket do
       {:ok, new_state} = apply(module, :handle_connect, [state])
       {:ok, {module, new_state}}
     else
-      {:ok, state}
+      {:ok, {module, state}}
     end
   end
 
@@ -90,7 +90,7 @@ defmodule BingX.Socket do
   end
 
   @impl WebSockex
-  def handle_cast({:"$send", message}, state) do
+  def handle_cast({:"$bingx_send", message}, state) do
     {:reply, {:text, message}, state}
   end
 

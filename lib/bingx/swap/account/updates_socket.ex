@@ -46,14 +46,6 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       end
 
       @impl true
-      def handle_event(event, state) do
-        require Logger
-        Logger.info("Got unknown event: #{inspect(event)}")
-
-        {:ok, state}
-      end
-
-      @impl true
       def handle_event(type, event, state) do
         raise "handle_event/3 not implemented"
       end
