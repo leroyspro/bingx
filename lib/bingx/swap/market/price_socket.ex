@@ -1,32 +1,31 @@
 defmodule BingX.Swap.Market.PriceSocket do
   @moduledoc """
 
-  defmodule BingX.Swap.Market.PriceSource do
-    use BingX.Swap.Market.PriceSocket
+    defmodule BingX.Swap.Market.PriceSource do
+      use BingX.Swap.Market.PriceSocket
 
-    require Logger
+      require Logger
 
-    alias BingX.Swap.Market.PriceSocket
+      alias BingX.Swap.Market.PriceSocket
 
-    def start_link do
-      PriceSocket.start_link(__MODULE__, :state)
+      def start_link do
+        PriceSocket.start_link(__MODULE__, :state)
+      end
+
+      @impl true
+      def handle_connect(state) do
+        PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
+
+        {:ok, state}
+      end
+
+      @impl true
+      def handle_event(type, event, state) do
+        Logger.info(%{ type: type, event: event, state: state })
+
+        {:ok, state}
+      end
     end
-
-    @impl true
-    def handle_connect(state) do
-      PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
-
-      {:ok, state}
-    end
-
-    @impl true
-    def handle_event(:price, price, state) do
-      Logger.info("Handled price:")
-      Logger.info(inspect(price))
-
-      {:ok, state}
-    end
-  end
   """
 
   alias BingX.Socket
