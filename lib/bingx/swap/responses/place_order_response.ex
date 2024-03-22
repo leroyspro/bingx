@@ -5,7 +5,7 @@ defmodule BingX.Swap.PlaceOrderResponse do
 
   @spec new(map()) :: map()
   def new(data) do
-    data = Map.get(data, "order", %{})
+    data = Map.get(data, "order", %{}) || %{}
 
     OrderInfo.cast(data, as: __MODULE__)
   end

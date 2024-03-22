@@ -7,7 +7,7 @@ defmodule BingX.Swap.PendingOrdersResponse do
 
   @spec new(map()) :: map()
   def new(data) do
-    data = Map.get(data, "orders", [])
+    data = Map.get(data, "orders", []) || []
     orders = Enum.map(data, &DetailedOrderInfo.new/1)
 
     %__MODULE__{orders: orders}
