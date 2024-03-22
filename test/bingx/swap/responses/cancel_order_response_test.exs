@@ -5,7 +5,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
   import BingX.TestHelpers
 
   alias BingX.Swap.CancelOrderResponse
-  alias BingX.Swap.Trade.CanceledOrder
+  alias BingX.Swap.Trade.DetailedOrderInfo
 
   @fields [
     :order_id,
@@ -50,15 +50,15 @@ defmodule BingX.Swap.CancelOrderResponseTest do
       assert %CancelOrderResponse{} = CancelOrderResponse.new(%{"x" => "x"})
     end
 
-    test "should retrieve data and cast it into CanceledOrder struct" do
+    test "should retrieve data and cast it into DetailedOrderInfo struct" do
       order = %{a: "a"}
 
       struct = %{c: "c"}
-      patch(CanceledOrder, :cast, struct)
+      patch(DetailedOrderInfo, :cast, struct)
 
       assert ^struct = CancelOrderResponse.new(%{"order" => order})
 
-      assert_called_once(CanceledOrder.cast(^order, as: CancelOrderResponse))
+      assert_called_once(DetailedOrderInfo.cast(^order, as: CancelOrderResponse))
     end
   end
 end

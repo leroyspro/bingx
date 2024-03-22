@@ -5,7 +5,7 @@ defmodule BingX.Swap.CancelAllOrdersResponseTest do
   import BingX.TestHelpers
 
   alias BingX.Swap.CancelAllOrdersResponse
-  alias BingX.Swap.Trade.CanceledOrder
+  alias BingX.Swap.Trade.DetailedOrderInfo
 
   @fields [:failed, :succeeded]
 
@@ -20,19 +20,19 @@ defmodule BingX.Swap.CancelAllOrdersResponseTest do
       assert %CancelAllOrdersResponse{} = CancelAllOrdersResponse.new(%{"x" => "x"})
     end
 
-    test "should retrieve and transform succeeded orders into CanceledOrder struct" do
+    test "should retrieve and transform succeeded orders into DetailedOrderInfo struct" do
       order_a = %{a: "a"}
       order_b = %{b: "b"}
       orders = [order_a, order_b]
 
-      patch(CanceledOrder, :new, %{c: "c"})
+      patch(DetailedOrderInfo, :new, %{c: "c"})
 
       assert %CancelAllOrdersResponse{
                succeeded: [%{c: "c"}, %{c: "c"}]
              } = CancelAllOrdersResponse.new(%{"success" => orders})
 
-      assert_called_once(CanceledOrder.new(^order_a))
-      assert_called_once(CanceledOrder.new(^order_b))
+      assert_called_once(DetailedOrderInfo.new(^order_a))
+      assert_called_once(DetailedOrderInfo.new(^order_b))
     end
   end
 end
