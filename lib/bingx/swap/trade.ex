@@ -17,7 +17,8 @@ defmodule BingX.Swap.Trade do
     PlaceOrdersResponse,
     CancelOrderResponse,
     CancelOrdersResponse,
-    CancelAllOrdersResponse
+    CancelAllOrdersResponse,
+    PendingOrdersResponse
   }
 
   @api_scope "/openApi/swap/v2/trade"
@@ -29,6 +30,8 @@ defmodule BingX.Swap.Trade do
   @cancel_orders_path @api_scope <> "/batchOrders"
 
   @cancel_all_orders_path @api_scope <> "/allOpenOrders"
+
+  @get_pending_orders_path @api_scope <> "/openOrders"
 
   # Interface
   # =========
@@ -60,7 +63,7 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  Requests to cancel an order by its market (symbol) and unique ID with account credentials.
+  Requests to cancel an order by its market symbol (ex. BTC-USDT) and order ID with account credentials.
   """
   def cancel_order_by_id(symbol, order_id, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
@@ -73,7 +76,7 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  Requests to cancel an order by its market (symbol) and client order ID with account credentials.
+  Requests to cancel an order by its market symbol (ex. BTC-USDT) and client order ID with account credentials.
   """
   def cancel_order_by_client_id(symbol, client_id, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
@@ -86,7 +89,7 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  Requests to cancel bunch of orders by their market (symbol) and theirs order IDs with account credentials.
+  Requests to cancel a batch of orders by their market symbol (ex. BTC-USDT) and order IDs with account credentials.
   """
   def cancel_orders_by_ids(symbol, order_ids, api_key, secret_key)
       when is_binary(symbol) and
@@ -102,7 +105,7 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  Requests to cancel bunch of orders by their market (symbol) and theirs client order IDs with account credentials.
+  Requests to cancel bunch of orders by their market symbol (ex. BTC-USDT) and client order IDs with account credentials.
   """
   def cancel_orders_by_client_ids(symbol, client_order_ids, api_key, secret_key)
       when is_binary(symbol) and
@@ -118,7 +121,7 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  Requests to cancel all orders by their market (symbol) with account credentials.
+  Requests to cancel all orders by their market symbol (ex. BTC-USDT) with account credentials.
   """
   def cancel_all_orders(symbol, api_key, secret_key)
       when is_binary(api_key) and is_binary(secret_key) do
@@ -127,6 +130,19 @@ defmodule BingX.Swap.Trade do
       {:ok, payload} <- Response.get_response_payload(resp)
     ) do
       {:ok, CancelAllOrdersResponse.new(payload)}
+    end
+  end
+
+  @doc """
+  Retrieves all the pending (not triggered) orders by their market symbol (ex. BTC-USDT) with account credentials.
+  """
+  def get_pending_orders(symbol, api_key, secret_key)
+      when is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_get_pending_orders(symbol, api_key, secret_key),
+      {:ok, payload} <- Response.get_response_payload(resp)
+    ) do
+      {:ok, PendingOrdersResponse.new(payload)}
     end
   end
 
@@ -174,5 +190,11 @@ defmodule BingX.Swap.Trade do
     params = %{"symbol" => symbol}
 
     signed_request(:delete, @cancel_all_orders_path, api_key, secret_key, params: params)
+  end
+
+  defp do_get_pending_orders(symbol, api_key, secret_key) do
+    params = %{"symbol" => symbol}
+
+    signed_request(:get, @get_pending_orders_path, api_key, secret_key, params: params)
   end
 end
