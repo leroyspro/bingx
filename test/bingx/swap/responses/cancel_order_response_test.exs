@@ -16,6 +16,8 @@ defmodule BingX.Swap.CancelOrderResponseTest do
     :stop_price,
     :price,
     :type,
+    :client_order_id,
+    :trigger_order_id,
     :working_type,
     :leverage,
     :fee,
@@ -32,6 +34,7 @@ defmodule BingX.Swap.CancelOrderResponseTest do
     :stop_loss_entrust_price,
     :take_profit,
     :take_profit_entrust_price,
+    :stop_guaranteed?,
     :timestamp,
     :update_time
   ]

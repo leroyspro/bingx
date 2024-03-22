@@ -15,6 +15,8 @@ defmodule BingX.Swap.Trade.CanceledOrderTest do
     :stop_price,
     :price,
     :type,
+    :client_order_id,
+    :trigger_order_id,
     :working_type,
     :leverage,
     :fee,
@@ -31,6 +33,7 @@ defmodule BingX.Swap.Trade.CanceledOrderTest do
     :stop_loss_entrust_price,
     :take_profit,
     :take_profit_entrust_price,
+    :stop_guaranteed?,
     :timestamp,
     :update_time
   ]
@@ -63,6 +66,8 @@ defmodule BingX.Swap.Trade.CanceledOrderTest do
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "stopPrice", :stop_price)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "price", :price)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :to_internal_order_type, "type", :type)
+    test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_non_empty_binary, "clientOrderId", :client_order_id)
+    test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_non_empty_binary, "triggerOrderId", :trigger_order_id)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :to_internal_working_type, "workingType", :working_type)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "leverage", :leverage)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "commission", :fee)
@@ -79,6 +84,7 @@ defmodule BingX.Swap.Trade.CanceledOrderTest do
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "stopLossEntrustPrice", :stop_loss_entrust_price)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], "takeProfit", :take_profit)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_float, "takeProfitEntrustPrice", :take_profit_entrust_price)
+    test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], :interp_as_boolean, "stopGuaranteed", :stop_guaranteed?)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], "time", :timestamp)
     test_response_key_interp(CanceledOrder, :cast, [[as: CanceledOrder]], "updateTime", :update_time)
   end
