@@ -51,7 +51,7 @@ defmodule BingX.Swap.TradeTest.GetPendingOrdersTest do
       assert_called_once(Client.signed_request(_method, _path, ^api_key, ^secret_key, _options))
     end
 
-    test "should put the symbol and order IDs into query params", context do
+    test "should put the symbol into query params", context do
       %{api_key: api_key, secret_key: secret_key} = context
 
       patch(Client, :signed_request, {:error, :http_error, %Error{message: :timeout}})
