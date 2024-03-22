@@ -1,4 +1,4 @@
-defmodule BingX.Swap.Trade.CanceledOrder do
+defmodule BingX.Swap.Trade.DetailedOrderInfo do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

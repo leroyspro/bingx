@@ -1,5 +1,5 @@
 defmodule BingX.Swap.CancelOrdersResponse do
-  alias BingX.Swap.Trade.CanceledOrder
+  alias BingX.Swap.Trade.DetailedOrderInfo
 
   defstruct [:failed, :succeeded]
 
@@ -19,6 +19,6 @@ defmodule BingX.Swap.CancelOrdersResponse do
     }
   end
 
-  def transform_succeeded(x) when is_list(x), do: Enum.map(x, &CanceledOrder.new/1)
+  def transform_succeeded(x) when is_list(x), do: Enum.map(x, &DetailedOrderInfo.new/1)
   def transform_succeeded(_), do: []
 end

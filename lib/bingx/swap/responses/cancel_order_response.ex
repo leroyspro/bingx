@@ -1,12 +1,12 @@
 defmodule BingX.Swap.CancelOrderResponse do
-  alias BingX.Swap.Trade.CanceledOrder
+  alias BingX.Swap.Trade.DetailedOrderInfo
 
-  defstruct CanceledOrder.fields()
+  defstruct DetailedOrderInfo.fields()
 
   @spec new(map()) :: map()
   def new(data) do
     data = Map.get(data, "order", %{})
 
-    CanceledOrder.cast(data, as: __MODULE__)
+    DetailedOrderInfo.cast(data, as: __MODULE__)
   end
 end
