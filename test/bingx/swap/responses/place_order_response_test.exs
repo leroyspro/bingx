@@ -24,7 +24,8 @@ defmodule BingX.Swap.PlaceOrderResponseTest do
     :reduce_only?,
     :price_rate,
     :activation_price,
-    :close_position?
+    :close_position?,
+    :stop_guaranteed?
   ]
 
   describe "BingX.Swap.PlaceOrderResponse new/1" do

@@ -23,7 +23,8 @@ defmodule BingX.Swap.Trade.PlacedOrderTest do
     :reduce_only?,
     :price_rate,
     :activation_price,
-    :close_position?
+    :close_position?,
+    :stop_guaranteed?
   ]
 
   defmodule Dummy do
@@ -63,6 +64,7 @@ defmodule BingX.Swap.Trade.PlacedOrderTest do
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "priceRate", :price_rate)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_float, "activationPrice", :activation_price)
     test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_boolean, "closePosition", :close_position?)
+    test_response_key_interp(PlacedOrder, :cast, [[as: PlacedOrder]], :interp_as_boolean, "stopGuaranteed", :stop_guaranteed?)
   end
 
   describe "BingX.Swap.Trade.PlacedOrder new/1" do
