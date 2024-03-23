@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Order.TriggerMarket do
   @moduledoc """
-  This module provides functions to struct a triggered market order model using `BingX.Swap.Order`.
+  This module provides functions to struct a TRIGGER_MARKET order model using `BingX.Swap.Order`.
   """
 
   alias BingX.Swap.Order
@@ -25,7 +25,7 @@ defmodule BingX.Swap.Order.TriggerMarket do
           :price => any(),
           :quantity => any(),
           :symbol => any(),
-          :stop_price => any(),
+          optional(:stop_price) => any(),
           optional(:working_type) => any()
         }) :: {:ok, TriggerMarket.t()} | {:error, reason}
   def new(params) do
@@ -40,7 +40,7 @@ defmodule BingX.Swap.Order.TriggerMarket do
           :price => any(),
           :quantity => any(),
           :symbol => any(),
-          :stop_price => any(),
+          optional(:stop_price) => any(),
           optional(:working_type) => any()
         }) :: TriggerMarket.t()
   def new!(params) do

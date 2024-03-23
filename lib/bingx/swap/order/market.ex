@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Order.Market do
   @moduledoc """
-  This module provides functions to struct a triggered market order model using `BingX.Swap.Order`.
+  This module provides functions to struct a MARKET order model using `BingX.Swap.Order`.
   """
 
   @type reason :: term
