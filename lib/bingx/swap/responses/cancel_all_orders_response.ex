@@ -1,7 +1,7 @@
 defmodule BingX.Swap.CancelAllOrdersResponse do
   @moduledoc false
 
-  alias BingX.Swap.Trade.CanceledOrder
+  alias BingX.Swap.Trade.DetailedOrderInfo
 
   defstruct [:failed, :succeeded]
 
@@ -12,8 +12,8 @@ defmodule BingX.Swap.CancelAllOrdersResponse do
 
   @spec new(map()) :: t()
   def new(data) do
-    succeeded = Map.get(data, "success", [])
-    failed = Map.get(data, "failed", [])
+    succeeded = Map.get(data, "success") || []
+    failed = Map.get(data, "failed") || []
 
     %__MODULE__{
       succeeded: transform_succeeded(succeeded),
@@ -21,6 +21,6 @@ defmodule BingX.Swap.CancelAllOrdersResponse do
     }
   end
 
-  def transform_succeeded(x) when is_list(x), do: Enum.map(x, &CanceledOrder.new/1)
+  def transform_succeeded(x) when is_list(x), do: Enum.map(x, &DetailedOrderInfo.new/1)
   def transform_succeeded(_), do: []
 end

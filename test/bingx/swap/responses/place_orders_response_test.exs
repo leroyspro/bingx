@@ -5,7 +5,7 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
   import BingX.TestHelpers
 
   alias BingX.Swap.PlaceOrdersResponse
-  alias BingX.Swap.Trade.PlacedOrder
+  alias BingX.Swap.Trade.OrderInfo
 
   @fields [:orders]
 
@@ -20,19 +20,19 @@ defmodule BingX.Swap.PlaceOrdersResponseTest do
       assert %PlaceOrdersResponse{} = PlaceOrdersResponse.new(%{"x" => "x"})
     end
 
-    test "should retrieve and transform succeeded orders into PlacedOrder struct" do
+    test "should retrieve and transform succeeded orders into OrderInfo struct" do
       order_a = %{a: "a"}
       order_b = %{b: "b"}
       orders = [order_a, order_b]
 
-      patch(PlacedOrder, :new, %{c: "c"})
+      patch(OrderInfo, :new, %{c: "c"})
 
       assert %PlaceOrdersResponse{
                orders: [%{c: "c"}, %{c: "c"}]
              } = PlaceOrdersResponse.new(%{"orders" => orders})
 
-      assert_called_once(PlacedOrder.new(^order_a))
-      assert_called_once(PlacedOrder.new(^order_b))
+      assert_called_once(OrderInfo.new(^order_a))
+      assert_called_once(OrderInfo.new(^order_b))
     end
   end
 end

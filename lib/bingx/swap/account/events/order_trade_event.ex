@@ -23,7 +23,7 @@ defmodule BingX.Swap.Account.OrderTradeEvent do
 
   def new(data) do
     timestamp = Map.get(data, "E")
-    data = Map.get(data, "o", %{})
+    data = Map.get(data, "o") || %{}
 
     %__MODULE__{
       timestamp: timestamp,

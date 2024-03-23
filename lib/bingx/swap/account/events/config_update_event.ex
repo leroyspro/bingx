@@ -14,7 +14,7 @@ defmodule BingX.Swap.Account.ConfigUpdateEvent do
 
   def new(data) do
     timestamp = Map.get(data, "E")
-    config = Map.get(data, "ac", %{})
+    config = Map.get(data, "ac") || %{}
 
     %__MODULE__{
       timestamp: timestamp,

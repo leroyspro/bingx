@@ -1,6 +1,4 @@
-defmodule BingX.Swap.Trade.CanceledOrder do
-  @moduledoc false
-
+defmodule BingX.Swap.Trade.DetailedOrderInfo do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 
@@ -13,6 +11,8 @@ defmodule BingX.Swap.Trade.CanceledOrder do
     :stop_price,
     :price,
     :type,
+    :client_order_id,
+    :trigger_order_id,
     :working_type,
     :leverage,
     :fee,
@@ -29,6 +29,7 @@ defmodule BingX.Swap.Trade.CanceledOrder do
     :stop_loss_entrust_price,
     :take_profit,
     :take_profit_entrust_price,
+    :stop_guaranteed?,
     :timestamp,
     :update_time
   ]
@@ -47,6 +48,8 @@ defmodule BingX.Swap.Trade.CanceledOrder do
       stop_price: get_and_transform(data, "stopPrice", &interp_as_float/1),
       price: get_and_transform(data, "price", &interp_as_float/1),
       type: get_and_transform(data, "type", &to_internal_order_type/1),
+      client_order_id: get_and_transform(data, "clientOrderId", &interp_as_non_empty_binary/1),
+      trigger_order_id: get_and_transform(data, "triggerOrderId", &interp_as_non_empty_binary/1),
       working_type: get_and_transform(data, "workingType", &to_internal_working_type/1),
       leverage: get_and_transform(data, "leverage", &interp_as_float/1),
       fee: get_and_transform(data, "commission", &interp_as_float/1),
@@ -63,6 +66,7 @@ defmodule BingX.Swap.Trade.CanceledOrder do
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
       take_profit: Map.get(data, "takeProfit"),
       take_profit_entrust_price: get_and_transform(data, "takeProfitEntrustPrice", &interp_as_float/1),
+      stop_guaranteed?: get_and_transform(data, "stopGuaranteed", &interp_as_boolean/1),
       timestamp: Map.get(data, "time"),
       update_time: Map.get(data, "updateTime")
     }

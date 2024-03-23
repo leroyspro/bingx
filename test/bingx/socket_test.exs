@@ -5,7 +5,7 @@ defmodule BingX.SocketTest do
   alias WebSockex
   alias BingX.Socket
 
-  @send_message :"$send"
+  @send_message :"$bingx_send"
 
   defmodule SocketMock do
     @behaviour BingX.Socket
