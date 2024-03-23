@@ -6,12 +6,23 @@ if Code.ensure_loaded?(HTTPoison) do
 
     @impl true
     def request(method, url, body, headers, options \\ []) do
-      %HTTPoison.Request{method: method, url: url, headers: headers, body: body, options: options}
+      %HTTPoison.Request{
+        method: method, 
+        url: url, 
+        headers: headers, 
+        body: body, 
+        options: options
+      }
       |> HTTPoison.request()
-      |> case do
-        {:ok, resp} -> {:ok, adapt_response(resp)}
-        {:error, err} -> {:error, :http_error, adapt_error(err)}
-      end
+      |> adapt_result()
+    end
+
+    defp adapt_result({:ok, response}) do
+      {:ok, adapt_response(response)}
+    end
+
+    defp adapt_result({:error, error}) do
+      {:error, :http_error, adapt_error(error)}
     end
 
     defp adapt_response(%HTTPoison.Response{} = resp) do
@@ -23,6 +34,8 @@ if Code.ensure_loaded?(HTTPoison) do
       }
     end
 
-    defp adapt_error(%HTTPoison.Error{} = err), do: %Error{message: err.reason}
+    defp adapt_error(%HTTPoison.Error{} = err) do 
+      %Error{message: err.reason}
+    end
   end
 end
