@@ -28,7 +28,7 @@ defmodule BingX.Swap.GetBalanceResponse do
 
   @spec new(map()) :: Balance.t()
   def new(data) do
-    data = Map.get(data, "balance", %{})
+    data = Map.get(data, "balance") || %{}
 
     %__MODULE__{
       asset: get_and_transform(data, "asset", &interp_as_non_empty_binary/1),
