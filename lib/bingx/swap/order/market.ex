@@ -1,4 +1,10 @@
 defmodule BingX.Swap.Order.Market do
+  @moduledoc """
+  This module provides functions to struct a triggered market order model using `BingX.Swap.Order`.
+  """
+
+  @type reason :: term
+
   alias BingX.Swap.Order
   alias __MODULE__
 
@@ -15,8 +21,26 @@ defmodule BingX.Swap.Order.Market do
           :position_side => any(),
           :quantity => any(),
           :symbol => any()
+        }) :: {:ok, Market.t()} | {:error, reason}
+  def new(params) do
+    params
+    |> prepare()
+    |> Order.new()
+  end
+
+  @spec new!(%{
+          :side => any(),
+          :position_side => any(),
+          :quantity => any(),
+          :symbol => any()
         }) :: Market.t()
-  def new(%{
+  def new!(params) do
+    params
+    |> prepare()
+    |> Order.new!()
+  end
+
+  defp prepare(%{
         side: side,
         position_side: position_side,
         quantity: quantity,
@@ -29,6 +53,5 @@ defmodule BingX.Swap.Order.Market do
       symbol: symbol,
       type: :market
     }
-    |> Order.new()
   end
 end
