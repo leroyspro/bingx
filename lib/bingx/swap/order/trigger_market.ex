@@ -55,7 +55,7 @@ defmodule BingX.Swap.Order.TriggerMarket do
            position_side: position_side,
            price: price,
            quantity: quantity,
-           symbol: symbol,
+           symbol: symbol
          } = params
        ) do
     %{

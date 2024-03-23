@@ -41,11 +41,11 @@ defmodule BingX.Swap.Order.Market do
   end
 
   defp prepare(%{
-        side: side,
-        position_side: position_side,
-        quantity: quantity,
-        symbol: symbol
-      }) do
+         side: side,
+         position_side: position_side,
+         quantity: quantity,
+         symbol: symbol
+       }) do
     %{
       side: side,
       position_side: position_side,
