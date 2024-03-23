@@ -53,7 +53,9 @@ defmodule BingX.Swap.Trade do
   Requests to place bunch of orders using list of order data with account credentials.
   """
   def place_orders(orders, api_key, secret_key)
-      when is_list(orders) and is_binary(api_key) and is_binary(secret_key) do
+      when is_list(orders) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_place_orders(orders, api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -66,7 +68,10 @@ defmodule BingX.Swap.Trade do
   Requests to cancel an order by its market symbol (ex. BTC-USDT) and order ID with account credentials.
   """
   def cancel_order_by_id(symbol, order_id, api_key, secret_key)
-      when is_binary(symbol) and is_binary(order_id) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_binary(order_id) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, order_id, "", api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -79,7 +84,10 @@ defmodule BingX.Swap.Trade do
   Requests to cancel an order by its market symbol (ex. BTC-USDT) and client order ID with account credentials.
   """
   def cancel_order_by_client_id(symbol, client_id, api_key, secret_key)
-      when is_binary(symbol) and is_binary(client_id) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_binary(client_id) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_order(symbol, "", client_id, api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -92,7 +100,10 @@ defmodule BingX.Swap.Trade do
   Requests to cancel a batch of orders by their market symbol (ex. BTC-USDT) and order IDs with account credentials.
   """
   def cancel_orders_by_ids(symbol, order_ids, api_key, secret_key)
-      when is_binary(symbol) and is_list(order_ids) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_list(order_ids) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, order_ids, [], api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -105,7 +116,10 @@ defmodule BingX.Swap.Trade do
   Requests to cancel bunch of orders by their market symbol (ex. BTC-USDT) and client order IDs with account credentials.
   """
   def cancel_orders_by_client_ids(symbol, client_order_ids, api_key, secret_key)
-      when is_binary(symbol) and is_list(client_order_ids) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_list(client_order_ids) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_orders(symbol, [], client_order_ids, api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -118,7 +132,9 @@ defmodule BingX.Swap.Trade do
   Requests to cancel all orders by their market symbol (ex. BTC-USDT) with account credentials.
   """
   def cancel_all_orders(symbol, api_key, secret_key)
-      when is_binary(symbol) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_cancel_all_orders(symbol, api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
@@ -131,7 +147,9 @@ defmodule BingX.Swap.Trade do
   Retrieves all the pending (not triggered) orders by their market symbol (ex. BTC-USDT) with account credentials.
   """
   def get_pending_orders(symbol, api_key, secret_key)
-      when is_binary(symbol) and is_binary(api_key) and is_binary(secret_key) do
+      when is_binary(symbol) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
     with(
       {:ok, resp} <- do_get_pending_orders(symbol, api_key, secret_key),
       {:ok, payload} <- Response.get_response_payload(resp)
