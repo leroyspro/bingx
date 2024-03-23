@@ -1,6 +1,6 @@
 defmodule BingX.HTTP.Adapter do
   @moduledoc """
-  This module provides behaviour for HTTP adapter which is used to perform requests.
+  This module provides behavior for the HTTP adapter which is used to perform requests.
   """
 
   alias BingX.HTTP.{Response, Error}

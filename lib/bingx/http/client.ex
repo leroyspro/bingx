@@ -1,6 +1,6 @@
 defmodule BingX.HTTP.Client do
   @moduledoc """
-  This module provides functions to make requests to BingX API with enhanced interface.
+  This module provides functions to make requests to BingX API with an enhanced interface.
   """
 
   alias BingX.HTTP.Request

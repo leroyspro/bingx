@@ -2,7 +2,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
   @moduledoc ~S"""
   This module provides a socket based on the `BingX.Socket` model, allowing to implement clients to process swap account updates.
 
-  The basic implementation could be as follow:
+  The basic implementation could be as follows:
 
       defmodule BingX.Swap.Account.UpdatesSource do
         use BingX.Swap.Account.UpdatesSocket

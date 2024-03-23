@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Trade.OrderInfo do
+  @doc """
+  This module defines general order info.
+  """
+
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

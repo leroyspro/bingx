@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Order do
   @moduledoc """
-  This module provides definition for the swap order sturct using in the swap domain.
+  This module defines the swap order sturct using in the swap domain.
   """
 
   alias __MODULE__

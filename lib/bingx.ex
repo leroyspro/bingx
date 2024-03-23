@@ -4,7 +4,7 @@ defmodule BingX do
 
   ## Overview
 
-  The BingX library serves as an HTTP API client for Elixir, providing various functionalities:
+  This BingX library provides HTTP and WebSocket API clients with various functionalities:
   - Swap (perpetual futures): to manage pending orders, including placement, deletion, retrieval, and viewing order history.
   - Account and Security: facilitating the generation and extension of API listen keys.
 
@@ -34,25 +34,25 @@ defmodule BingX do
   Output:
 
       {:ok,
-       %BingX.Swap.PlaceOrderResponse{
-         symbol: "BTC-USDT",
-         side: :buy,
-         position_side: :long,
-         price: 30000.0,
-         stop_price: 30000.0,
-         working_type: :mark_price,
-         quantity: 0.0001,
-         type: :trigger_market,
-         order_id: "1771329103850598400",
-         client_order_id: nil,
-         stop_loss: %{},
-         take_profit: %{},
-         time_in_force: "GTC",
-         reduce_only?: false,
-         price_rate: 0.0,
-         activation_price: 0.0,
-         close_position?: nil
-       }}
+        %BingX.Swap.PlaceOrderResponse{
+          symbol: "BTC-USDT",
+          side: :buy,
+          position_side: :long,
+          price: 30000.0,
+          stop_price: 30000.0,
+          working_type: :mark_price,
+          quantity: 0.0001,
+          type: :trigger_market,
+          order_id: "1771329103850598400",
+          client_order_id: nil,
+          stop_loss: %{},
+          take_profit: %{},
+          time_in_force: "GTC",
+          reduce_only?: false,
+          price_rate: 0.0,
+          activation_price: 0.0,
+          close_position?: nil
+        }}
 
   ### Reliability
 
@@ -66,7 +66,7 @@ defmodule BingX do
 
   You can implement a custom HTTP adapter which is used to perform HTTP requests. Refer to an existing `BingX.HTTP.Adapter.HTTPoison` [implementation](https://github.com/leroyspro/bingx/blob/main/lib/bingx/http/adapter/httpoison.ex) for example.
 
-  Specify which HTTP adapter should BingX library use in prefered configuration file (e.g. config/config.exs):
+  Specify which HTTP adapter should BingX library use in the preferred configuration file (e.g. config/config.exs):
 
       config :bingx, http_adapter: HTTPAdapter
 

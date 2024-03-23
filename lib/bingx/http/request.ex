@@ -1,6 +1,6 @@
 defmodule BingX.HTTP.Request do
   @moduledoc """
-  This module provides universal utilities for working with BingX API request.
+  This module provides universal utilities for working with BingX API requests.
   """
 
   alias BingX.HTTP.Request.{QueryParams, Headers}
