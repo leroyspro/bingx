@@ -5,7 +5,7 @@ defmodule BingX.Swap.PlaceOrderResponseTest do
   import BingX.TestHelpers
 
   alias BingX.Swap.PlaceOrderResponse
-  alias BingX.Swap.Trade.PlacedOrder
+  alias BingX.Swap.Trade.OrderInfo
 
   @fields [
     :symbol,
@@ -24,7 +24,8 @@ defmodule BingX.Swap.PlaceOrderResponseTest do
     :reduce_only?,
     :price_rate,
     :activation_price,
-    :close_position?
+    :close_position?,
+    :stop_guaranteed?
   ]
 
   describe "BingX.Swap.PlaceOrderResponse new/1" do
@@ -38,15 +39,15 @@ defmodule BingX.Swap.PlaceOrderResponseTest do
       assert %PlaceOrderResponse{} = PlaceOrderResponse.new(%{"x" => "x"})
     end
 
-    test "should retrieve data and cast it into PlacedOrder struct" do
+    test "should retrieve data and cast it into OrderInfo struct" do
       order = %{a: "a"}
 
       struct = %{c: "c"}
-      patch(PlacedOrder, :cast, struct)
+      patch(OrderInfo, :cast, struct)
 
       assert ^struct = PlaceOrderResponse.new(%{"order" => order})
 
-      assert_called_once(PlacedOrder.cast(^order, as: PlaceOrderResponse))
+      assert_called_once(OrderInfo.cast(^order, as: PlaceOrderResponse))
     end
   end
 end

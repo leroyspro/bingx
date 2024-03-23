@@ -1,12 +1,12 @@
 defmodule BingX.Swap.PlaceOrderResponse do
-  alias BingX.Swap.Trade.PlacedOrder
+  alias BingX.Swap.Trade.OrderInfo
 
-  defstruct PlacedOrder.fields()
+  defstruct OrderInfo.fields()
 
   @spec new(map()) :: map()
   def new(data) do
-    data = Map.get(data, "order", %{})
+    data = Map.get(data, "order") || %{}
 
-    PlacedOrder.cast(data, as: __MODULE__)
+    OrderInfo.cast(data, as: __MODULE__)
   end
 end

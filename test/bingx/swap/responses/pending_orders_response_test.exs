@@ -1,23 +1,23 @@
-defmodule BingX.Swap.CancelAllOrdersResponseTest do
+defmodule BingX.Swap.PendingOrdersResponseTest do
   use ExUnit.Case
   use Patch
 
   import BingX.TestHelpers
 
-  alias BingX.Swap.CancelAllOrdersResponse
+  alias BingX.Swap.PendingOrdersResponse
   alias BingX.Swap.Trade.DetailedOrderInfo
 
-  @fields [:failed, :succeeded]
+  @fields [:orders]
 
-  describe "BingX.Swap.CancelAllOrdersResponse new/1" do
+  describe "BingX.Swap.PendingOrdersResponse new/1" do
     test "should return empty struct without params" do
-      assert %CancelAllOrdersResponse{} = CancelAllOrdersResponse.new(%{})
+      assert %PendingOrdersResponse{} = PendingOrdersResponse.new(%{})
     end
 
-    test_module_struct(CancelAllOrdersResponse, @fields)
+    test_module_struct(PendingOrdersResponse, @fields)
 
     test "should be tolerant to wrong interface" do
-      assert %CancelAllOrdersResponse{} = CancelAllOrdersResponse.new(%{"x" => "x"})
+      assert %PendingOrdersResponse{} = PendingOrdersResponse.new(%{"x" => "x"})
     end
 
     test "should retrieve and transform succeeded orders into DetailedOrderInfo struct" do
@@ -27,9 +27,9 @@ defmodule BingX.Swap.CancelAllOrdersResponseTest do
 
       patch(DetailedOrderInfo, :new, %{c: "c"})
 
-      assert %CancelAllOrdersResponse{
-               succeeded: [%{c: "c"}, %{c: "c"}]
-             } = CancelAllOrdersResponse.new(%{"success" => orders})
+      assert %PendingOrdersResponse{
+               orders: [%{c: "c"}, %{c: "c"}]
+             } = PendingOrdersResponse.new(%{"orders" => orders})
 
       assert_called_once(DetailedOrderInfo.new(^order_a))
       assert_called_once(DetailedOrderInfo.new(^order_b))
