@@ -1,4 +1,6 @@
 defmodule BingX.Swap.Market.PriceUpdateEvent do
+  @moduledoc false
+
   import BingX.Helpers, only: [get_and_transform: 3]
   import BingX.Swap.Interpretators
 

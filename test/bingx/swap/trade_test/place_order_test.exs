@@ -19,8 +19,8 @@ defmodule BingX.Swap.TradeTest.PlaceOrderTest do
       %Order{
         side: :buy,
         position_side: :long,
-        price: 51000,
-        stop_price: 51000,
+        price: 51_000,
+        stop_price: 51_000,
         quantity: 0.0001,
         symbol: "BTC-USDT"
       }

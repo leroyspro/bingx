@@ -1,31 +1,35 @@
 defmodule BingX.Swap.Market.PriceSocket do
   @moduledoc """
+  This module provides a socket based on the `BingX.Socket` model, allowing to implement clients to process price updates from the swap market.
+  Both mark and last prices are supported
 
-    defmodule BingX.Swap.Market.PriceSource do
-      use BingX.Swap.Market.PriceSocket
+  The basic implementation could be as follow:
 
-      require Logger
+      defmodule BingX.Swap.Market.PriceSource do
+        use BingX.Swap.Market.PriceSocket
 
-      alias BingX.Swap.Market.PriceSocket
+        require Logger
 
-      def start_link do
-        PriceSocket.start_link(__MODULE__, :state)
+        alias BingX.Swap.Market.PriceSocket
+
+        def start_link do
+          PriceSocket.start_link(__MODULE__, :state)
+        end
+
+        @impl true
+        def handle_connect(state) do
+          PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
+
+          {:ok, state}
+        end
+
+        @impl true
+        def handle_event(type, event, state) do
+          Logger.info(%{ type: type, event: event, state: state })
+
+          {:ok, state}
+        end
       end
-
-      @impl true
-      def handle_connect(state) do
-        PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
-
-        {:ok, state}
-      end
-
-      @impl true
-      def handle_event(type, event, state) do
-        Logger.info(%{ type: type, event: event, state: state })
-
-        {:ok, state}
-      end
-    end
   """
 
   alias BingX.Socket

@@ -1,4 +1,6 @@
 defmodule BingX.Swap.Order.Helpers do
+  @moduledoc false
+
   alias BingX.Swap.Order
 
   @sides [:buy, :sell]

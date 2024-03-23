@@ -40,17 +40,17 @@ defmodule BingX.Swap.ContractTest do
     end
 
     test "should transform price properly" do
-      price = 12312.2131
+      price = 12_312.2131
       assert %{"price" => ^price} = Contract.from_order(%Order{price: price})
     end
 
     test "should transform stop price properly" do
-      stop_price = 12312.2131
+      stop_price = 12_312.2131
       assert %{"stopPrice" => ^stop_price} = Contract.from_order(%Order{stop_price: stop_price})
     end
 
     test "should transform quantity properly" do
-      quantity = 12312.2131
+      quantity = 12_312.2131
       assert %{"quantity" => ^quantity} = Contract.from_order(%Order{quantity: quantity})
     end
 

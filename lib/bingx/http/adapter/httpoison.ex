@@ -1,5 +1,11 @@
 if Code.ensure_loaded?(HTTPoison) do
   defmodule BingX.HTTP.Adapter.HTTPoison do
+    @moduledoc """
+    This module provides `BingX.HTTP.Adapter` implementation based on `HTTPoison`. 
+
+    This adapter is used by default if `HTTPoison` is in your deps.
+    """
+
     alias BingX.HTTP.{Response, Error}
 
     @behaviour BingX.HTTP.Adapter
@@ -7,10 +13,10 @@ if Code.ensure_loaded?(HTTPoison) do
     @impl true
     def request(method, url, body, headers, options \\ []) do
       %HTTPoison.Request{
-        method: method, 
-        url: url, 
-        headers: headers, 
-        body: body, 
+        method: method,
+        url: url,
+        headers: headers,
+        body: body,
         options: options
       }
       |> HTTPoison.request()
@@ -34,7 +40,7 @@ if Code.ensure_loaded?(HTTPoison) do
       }
     end
 
-    defp adapt_error(%HTTPoison.Error{} = err) do 
+    defp adapt_error(%HTTPoison.Error{} = err) do
       %Error{message: err.reason}
     end
   end

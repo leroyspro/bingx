@@ -8,7 +8,7 @@ defmodule BingX.SocketTest do
   @send_message :"$send"
 
   defmodule SocketMock do
-    @behaviour BingX.Socket 
+    @behaviour BingX.Socket
 
     def handle_event(_event, state) do
       {:ok, state}
@@ -18,7 +18,7 @@ defmodule BingX.SocketTest do
       {:ok, state}
     end
 
-    def handle_disconnect(state) do 
+    def handle_disconnect(state) do
       {:reconnect, state}
     end
 
@@ -32,7 +32,7 @@ defmodule BingX.SocketTest do
   end
 
   defmodule SocketMock.Basic do
-    @behaviour BingX.Socket 
+    @behaviour BingX.Socket
 
     def handle_event(_event, state) do
       {:ok, state}
@@ -95,7 +95,7 @@ defmodule BingX.SocketTest do
 
       assert_called_once(WebSockex.start(_url, _module, {^module, ^state}, _options))
     end
-    
+
     test "should use the provided options", context do
       %{url: url, module: module, state: state, options: options} = context
 
@@ -167,7 +167,7 @@ defmodule BingX.SocketTest do
 
       assert_called_once(WebSockex.start_link(_url, _module, {^module, ^state}, _options))
     end
-    
+
     test "should use the provided options", context do
       %{url: url, module: module, state: state, options: options} = context
 
@@ -211,7 +211,7 @@ defmodule BingX.SocketTest do
 
       assert ^result = Socket.send(pid, message)
     end
-    
+
     test "should send to the provided pid" do
       patch(WebSockex, :cast, :ok)
 
@@ -222,7 +222,7 @@ defmodule BingX.SocketTest do
 
       assert_called_once(WebSockex.cast(^pid, _message))
     end
-    
+
     test "should send the provided message" do
       patch(WebSockex, :cast, :ok)
 
@@ -284,10 +284,10 @@ defmodule BingX.SocketTest do
   describe "BingX.Socket handle_connect/2" do
     test "should support delegation skip" do
       state = {SocketMock.Basic, :state}
-      
+
       assert {:ok, _state} = Socket.handle_connect(:details, state)
     end
-    
+
     test "should delegate to the interface module", context do
       # NOTE:
       # Patch does not patch apply calls and other BIFs...
@@ -299,88 +299,74 @@ defmodule BingX.SocketTest do
     end
 
     test "should set the provided state by delegation" do
-      
     end
   end
 
   describe "BingX.Socket handle_disconnect/2" do
     test "should support delegation skip" do
       state = {SocketMock.Basic, :state}
-      
+
       assert {_status, _state} = Socket.handle_disconnect(:details, state)
     end
 
     test "should reconnect by default" do
       state = {SocketMock.Basic, :state}
-      
+
       assert {:reconnect, _state} = Socket.handle_disconnect(:details, state)
     end
-    
+
     test "should delegate to interface module" do
-      
     end
 
     test "should set the provided state by delegation" do
-      
     end
 
     test "should handle socket reconnect by delegation" do
-      
     end
 
     test "should handle socket close by delegation" do
-      
     end
   end
 
   describe "BingX.Socket handle_frame/2" do
     test "should send pongs on zipped pings" do
-      
     end
 
     test "should delegate message to the interface module" do
-      
     end
 
     test "should handle unknown text frames" do
-      
     end
   end
 
   describe "BingX.Socket handle_info/2" do
     test "should support delegation skip" do
       state = {SocketMock.Basic, :state}
-      
+
       assert {:ok, _state} = Socket.handle_info(:details, state)
     end
 
     test "should delegate message to the interface module" do
-      
     end
 
     test "should handle message to send" do
-      
     end
 
     test "should handle unknown messages" do
-      
     end
   end
 
   describe "BingX.Socket handle_cast/2" do
     test "should support delegation skip" do
       state = {SocketMock.Basic, :state}
-      
+
       assert {:ok, _state} = Socket.handle_cast(:details, state)
     end
-    
+
     test "should delegate message to the interface module" do
-      
     end
 
     test "should handle unknown messages" do
-      
     end
   end
-
 end

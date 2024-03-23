@@ -1,4 +1,6 @@
 defmodule BingX.TestHelpers do
+  @moduledoc false
+
   alias BingX.Swap.Interpretators
   alias BingX.Helpers
 

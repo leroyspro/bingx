@@ -1,4 +1,6 @@
 defmodule BingX.HTTP.Adapter.Mock do
+  @moduledoc false
+
   alias BingX.HTTP.Response
 
   @behaviour BingX.HTTP.Adapter

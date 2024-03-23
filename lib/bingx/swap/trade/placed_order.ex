@@ -1,4 +1,6 @@
 defmodule BingX.Swap.Trade.PlacedOrder do
+  @moduledoc false
+
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

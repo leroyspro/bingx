@@ -1,4 +1,8 @@
 defmodule BingX.HTTP.Request.QueryParams do
+  @moduledoc """
+  This module provides universal utilities for working with BingX API request query params.
+  """
+
   import BingX.Helpers
   alias BingX.Helpers
 
@@ -15,11 +19,10 @@ defmodule BingX.HTTP.Request.QueryParams do
   def append_signature(%{} = params, secret_key) do
     signature =
       params
-      |> Enum.map(fn
+      |> Enum.map_join("&", fn
         {k, v} when is_binary(v) -> k <> "=" <> v
         {k, v} -> k <> "=" <> Helpers.to_string(v)
       end)
-      |> Enum.join("&")
       |> signature(secret_key)
 
     Map.merge(params, %{"signature" => signature})

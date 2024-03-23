@@ -1,4 +1,8 @@
 defmodule BingX.Swap.Trade.Contract do
+  @moduledoc """
+  This module is used to transform internal order structs into external order contracts.
+  """
+
   alias BingX.Swap.Order
   alias BingX.Swap.Interpretators
 

@@ -75,7 +75,7 @@ defmodule BingX.HTTP.ResponseTest do
 
     test "should wrap message and code into exception for non-success code" do
       message = "supra"
-      code = 12321
+      code = 12_321
 
       assert {:error, :bingx_error, %BingX.Exception{message: ^message, code: ^code}} =
                Response.get_content_payload(%{"code" => code, "msg" => message})

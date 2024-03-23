@@ -1,7 +1,51 @@
 defmodule BingX.Socket do
-  @moduledoc """
-  This module provides enhanced interface over WebSocket connection to hide implementation details.
+  @moduledoc ~S"""
+  This module enhances the interface over WebSocket connections for implementing socket clients.
+
+  ## Overview
+
+  To initiate a new process, use `start_link/4` or `start/4`, providing the module with the BingX.Socket behavior, which serves as the implementation.
+
+  For example:
+
+    defmodule SocketSource do
+      require Logger
+
+      @behaviour BingX.Socket
+
+      def handle_connect(state) do
+        Logger.info "Socket established connection" 
+
+        # You can perform channel subscription like this:
+        # BingX.Socket.send(message)
+
+        {:ok, state} 
+      end
+
+      def handle_event(event, state) do
+        Logger.info(%{ event: event, state: state })
+
+        {:ok, :state}
+      end
+    end
+
+    Bingx.Socket.start_link(url, SocketSource, :state)
+
+  Use `send/2` to send an asynchronous message to the socket. Use `cast/2` for other non-socket asynchronous messages.
+
+  `handle_connect/1` is an optional callback invoked when a socket establishes connection.
+  - It can be useful for performing topic subscription immediately after connection establishment.
+
+  `handle_disconnect/1` is an optional callback invoked when a socket loses connection.
+  - You can choose to either stop the process via {:stop, new_state} or attempt to reconnect via {:reconnect, new_state}.
+  - If handle_disconnect/1 isn't implemented, you'll reconnect with the same state by default.
+
+  `handle_event/2` is a mandatory callback used to process inbound socket events.
+
+  `handle_cast/2` is an optional callback used to handle messages sent using `cast/2`.
+  All other asynchronous messages could be handled with `handle_info/2`.
   """
+
   use WebSockex
 
   alias :zlib, as: Zlib
@@ -65,7 +109,7 @@ defmodule BingX.Socket do
     if function_exported?(module, :handle_disconnect, 1) do
       case apply(module, :handle_disconnect, [state]) do
         {:reconnect, new_state} -> {:reconnect, {module, new_state}}
-        {:close, new_state} -> {:ok, {module, new_state}}
+        {:stop, new_state} -> {:ok, {module, new_state}}
       end
     else
       {:reconnect, {module, state}}

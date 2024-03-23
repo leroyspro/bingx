@@ -1,4 +1,6 @@
 defmodule BingX.Swap.PlaceOrdersResponse do
+  @moduledoc false
+
   alias BingX.Swap.Trade.PlacedOrder
 
   defstruct [:orders]

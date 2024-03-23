@@ -1,7 +1,5 @@
 defmodule BingX.Helpers do
-  @moduledoc """
-  This module provides global scope helper functions used in the library.
-  """
+  @moduledoc false
 
   @spec timestamp() :: integer()
   def timestamp, do: :os.system_time(:millisecond)
@@ -21,11 +19,7 @@ defmodule BingX.Helpers do
   def upcase(x), do: String.upcase(x)
 
   def to_string(x) when is_list(x) do
-    content =
-      x
-      |> Enum.map(&__MODULE__.to_string/1)
-      |> Enum.join(",")
-
+    content = Enum.map_join(x, ",", &__MODULE__.to_string/1)
     "[" <> content <> "]"
   end
 

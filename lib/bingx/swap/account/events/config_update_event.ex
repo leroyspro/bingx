@@ -1,4 +1,6 @@
 defmodule BingX.Swap.Account.ConfigUpdateEvent do
+  @moduledoc false
+
   import BingX.Helpers
   import BingX.Swap.Interpretators
 

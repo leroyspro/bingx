@@ -48,7 +48,9 @@ defmodule BingX.MixProject do
       {:jason, "~> 1.4"},
       {:websockex, "~> 0.4.3"},
       {:httpoison, "~> 2.2", optional: true},
-      {:patch, "~> 0.13.0", only: [:test]}
+      {:patch, "~> 0.13.0", only: [:test]},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
     ]
   end
 end

@@ -1,30 +1,27 @@
 defmodule BingX.Swap.Account.UpdatesSocket do
-  @moduledoc """
-  This module provides interface to build generic service consuming swap account update events.
+  @moduledoc ~S"""
+  This module provides a socket based on the `BingX.Socket` model, allowing to implement clients to process swap account updates.
 
-  BingX last price socket API: https://bingx-api.github.io/docs/#/en-us/swapV2/socket/account.html#Account%20balance%20and%20position%20update%20push
+  The basic implementation could be as follow:
 
-    defmodule BingX.Swap.Account.UpdatesSource do
-      use BingX.Swap.Account.UpdatesSocket
+      defmodule BingX.Swap.Account.UpdatesSource do
+        use BingX.Swap.Account.UpdatesSocket
 
-      require Logger
+        require Logger
 
-      alias BingX.Swap.Account.UpdatesSocket
-      alias BingX.Account.Security
+        alias BingX.Swap.Account.UpdatesSocket
+        alias BingX.Account.Security
 
-      def start_link do
-        api_key = System.fetch_env!("API_KEY")
-        {:ok, %{listen_key: listen_key}} = Security.generate_listen_key(api_key)
+        def start_link(listen_key) do
+          UpdatesSocket.start_link(listen_key, __MODULE__, :state)
+        end
 
-        UpdatesSocket.start_link(listen_key, __MODULE__, :state)
+        def handle_event(type, event, state) do
+          Logger.info(%{ type: type, event: event, state: state })
+
+          {:ok, state}
+        end
       end
-
-      def handle_event(type, event, state) do
-        Logger.info(%{ type: type, event: event, state: state })
-
-        {:ok, state}
-      end
-    end
   """
 
   alias BingX.HTTP.Request.QueryParams

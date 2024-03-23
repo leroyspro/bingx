@@ -37,7 +37,7 @@ defmodule BingX.Swap.OrderTest do
     end
 
     test "should validate :type key to be one of :market or :trigger_market if provided",
-      do: build_error_assert(:type, :oneof, [:market, :trigger_market])
+      do: build_error_assert(:type, :one_of, [:market, :trigger_market])
 
     test "should validate :order_id key to be binary() if provided",
       do: build_error_assert(:order_id, :binary)
@@ -49,10 +49,10 @@ defmodule BingX.Swap.OrderTest do
       do: build_error_assert(:symbol, :binary)
 
     test "should validate :side key to be one of :sell or :buy if provided",
-      do: build_error_assert(:side, :oneof, [:buy, :sell])
+      do: build_error_assert(:side, :one_of, [:buy, :sell])
 
     test "should validate :position_side key to be one of :short, :long or :both if provided",
-      do: build_error_assert(:position_side, :oneof, [:short, :long, :both])
+      do: build_error_assert(:position_side, :one_of, [:short, :long, :both])
 
     test "should validate :quantity key to be number() if provided",
       do: build_error_assert(:quantity, :number)
@@ -64,7 +64,7 @@ defmodule BingX.Swap.OrderTest do
       do: build_error_assert(:stop_price, :number)
 
     test "should validate :working_type key to be one of :index_price, :mark_price or :contract_price if provided",
-      do: build_error_assert(:working_type, :oneof, [:index_price, :mark_price, :contract_price])
+      do: build_error_assert(:working_type, :one_of, [:index_price, :mark_price, :contract_price])
 
     # Asserts
     # =======
@@ -85,12 +85,12 @@ defmodule BingX.Swap.OrderTest do
       assert {:error, ^message} = Order.new(%{key => :unknown})
     end
 
-    def build_error_assert(key, :oneof, valid_values) do
-      Enum.map(valid_values, fn val ->
+    def build_error_assert(key, :one_of, valid_values) do
+      Enum.each(valid_values, fn val ->
         assert %Order{} = %{^key => ^val} = Order.new!(%{key => val})
       end)
 
-      message = make_error_message(key, :oneof, valid_values, :unknown)
+      message = make_error_message(key, :one_of, valid_values, :unknown)
       assert {:error, ^message} = Order.new(%{key => :unknown})
     end
   end
@@ -128,7 +128,7 @@ defmodule BingX.Swap.OrderTest do
     end
 
     test "should validate :type key to be one of :market or :trigger_market if provided",
-      do: build_raised_error_assert(:type, :oneof, [:market, :trigger_market])
+      do: build_raised_error_assert(:type, :one_of, [:market, :trigger_market])
 
     test "should validate :order_id key to be binary() if provided",
       do: build_raised_error_assert(:order_id, :binary)
@@ -140,10 +140,10 @@ defmodule BingX.Swap.OrderTest do
       do: build_raised_error_assert(:symbol, :binary)
 
     test "should validate :side key to be one of :sell or :buy if provided",
-      do: build_raised_error_assert(:side, :oneof, [:buy, :sell])
+      do: build_raised_error_assert(:side, :one_of, [:buy, :sell])
 
     test "should validate :position_side key to be one of :short, :long or :both if provided",
-      do: build_raised_error_assert(:position_side, :oneof, [:short, :long, :both])
+      do: build_raised_error_assert(:position_side, :one_of, [:short, :long, :both])
 
     test "should validate :quantity key to be number() if provided",
       do: build_raised_error_assert(:quantity, :number)
@@ -155,7 +155,7 @@ defmodule BingX.Swap.OrderTest do
       do: build_raised_error_assert(:stop_price, :number)
 
     test "should validate :working_type key to be one of :index_price, :mark_price or :contract_price if provided",
-      do: build_raised_error_assert(:working_type, :oneof, [:index_price, :mark_price, :contract_price])
+      do: build_raised_error_assert(:working_type, :one_of, [:index_price, :mark_price, :contract_price])
 
     # Asserts
     # =======
@@ -176,12 +176,12 @@ defmodule BingX.Swap.OrderTest do
       assert_raise ArgumentError, message, fn -> Order.new!(%{key => :unknown}) end
     end
 
-    def build_raised_error_assert(key, :oneof, valid_values) do
-      Enum.map(valid_values, fn val ->
+    def build_raised_error_assert(key, :one_of, valid_values) do
+      Enum.each(valid_values, fn val ->
         assert %Order{} = %{^key => ^val} = Order.new!(%{key => val})
       end)
 
-      message = make_error_message(key, :oneof, valid_values, :unknown)
+      message = make_error_message(key, :one_of, valid_values, :unknown)
       assert_raise ArgumentError, message, fn -> Order.new!(%{key => :unknown}) end
     end
   end
@@ -199,7 +199,7 @@ defmodule BingX.Swap.OrderTest do
     "expected #{inspect(key)} to be type of number, got: #{inspect(value)}"
   end
 
-  def make_error_message(key, :oneof, valid_values, value) do
+  def make_error_message(key, :one_of, valid_values, value) do
     "expected #{inspect(key)} to be one of #{inspect(valid_values)}, got: #{inspect(value)}"
   end
 end

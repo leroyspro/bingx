@@ -1,4 +1,8 @@
 defmodule BingX.HTTP.Request do
+  @moduledoc """
+  This module provides universal utilities for working with BingX API request.
+  """
+
   alias BingX.HTTP.Request.{QueryParams, Headers}
 
   @origin Application.compile_env!(:bingx, :origin)

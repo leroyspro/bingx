@@ -12,6 +12,9 @@ defmodule BingX.Account.Security do
   @generate_listen_key_path @api_scope <> "/userDataStream"
   @extend_listen_key_path @api_scope <> "/userDataStream"
 
+  @doc """
+  Requests to generate new API listen key.
+  """
   def generate_listen_key(api_key) when is_binary(api_key) do
     with(
       {:ok, resp} <- do_generate_listen_key(api_key),
@@ -21,6 +24,9 @@ defmodule BingX.Account.Security do
     end
   end
 
+  @doc """
+  Requests to extend the provided API listen key.
+  """
   def extend_listen_key(listen_key, api_key)
       when is_binary(listen_key) and is_binary(api_key) do
     with(

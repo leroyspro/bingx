@@ -27,7 +27,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
 
   describe "BingX.HTTP.Request.QueryParams append_receive_window/2" do
     test "should append a custom value", _context do
-      custom = 21312
+      custom = 21_312
       assert %{"recvWindow" => ^custom} = QueryParams.append_receive_window(%{}, custom)
     end
 
@@ -49,7 +49,7 @@ defmodule BingX.HTTP.Request.QueryParamsTest do
     end
 
     test "should append only single param" do
-      params = %{"EXTRA" => 21312}
+      params = %{"EXTRA" => 21_312}
       result = QueryParams.append_timestamp(params)
 
       assert 2 === map_size(result)
