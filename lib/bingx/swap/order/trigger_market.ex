@@ -2,6 +2,8 @@ defmodule BingX.Swap.Order.TriggerMarket do
   alias BingX.Swap.Order
   alias __MODULE__
 
+  @type reason :: term
+
   @type t() :: %Order{
           :order_id => Order.order_id(),
           :side => any(),
@@ -21,17 +23,38 @@ defmodule BingX.Swap.Order.TriggerMarket do
           :symbol => any(),
           :stop_price => any(),
           optional(:working_type) => any()
+        }) :: {:ok, TriggerMarket.t()} | {:error, reason}
+  def new(params) do
+    params
+    |> prepare()
+    |> Order.new()
+  end
+
+  @spec new!(%{
+          :side => any(),
+          :position_side => any(),
+          :price => any(),
+          :quantity => any(),
+          :symbol => any(),
+          :stop_price => any(),
+          optional(:working_type) => any()
         }) :: TriggerMarket.t()
-  def new(
-        %{
-          side: side,
-          position_side: position_side,
-          price: price,
-          quantity: quantity,
-          symbol: symbol,
-          stop_price: stop_price
-        } = params
-      ) do
+  def new!(params) do
+    params
+    |> prepare()
+    |> Order.new!()
+  end
+
+  defp prepare(
+         %{
+           side: side,
+           position_side: position_side,
+           price: price,
+           quantity: quantity,
+           symbol: symbol,
+           stop_price: stop_price
+         } = params
+       ) do
     %{
       side: side,
       position_side: position_side,
@@ -42,6 +65,5 @@ defmodule BingX.Swap.Order.TriggerMarket do
       working_type: Map.get(params, :working_type, :mark_price),
       type: :trigger_market
     }
-    |> Order.new()
   end
 end
