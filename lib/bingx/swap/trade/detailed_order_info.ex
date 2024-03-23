@@ -36,6 +36,42 @@ defmodule BingX.Swap.Trade.DetailedOrderInfo do
 
   defstruct @fields
 
+  @type t() :: %__MODULE__{
+          :symbol => binary() | nil,
+          :side => BingX.Swap.Order.side() | nil,
+          :position_side => BingX.Swap.Order.position_side() | nil,
+          :price => float() | nil,
+          :stop_price => float() | nil,
+          :working_type => BingX.Swap.Order.working_type() | nil,
+          :type => BingX.Swap.Order.type() | nil,
+          :order_id => binary() | nil,
+          :client_order_id => binary() | nil,
+          :stop_loss => term(),
+          :take_profit => term(),
+          :reduce_only? => boolean() | nil,
+          :stop_guaranteed? => boolean() | nil,
+          :status => BingX.Swap.Order.status() | nil,
+          :trigger_order_id => binary() | nil,
+          :leverage => integer() | nil,
+          :fee => float() | nil,
+          :transaction_amount => float() | nil,
+          :executed_quantity => float() | nil,
+          :only_one_position? => boolean() | nil,
+          :order_type => term(),
+          :original_quantity => float() | nil,
+          :average_price => float() | nil,
+          :position_id => binary() | nil,
+          :profit => float() | nil,
+          :reduce_only? => boolean() | nil,
+          :stop_loss => term(),
+          :stop_loss_entrust_price => float() | nil,
+          :take_profit => term(),
+          :take_profit_entrust_price => float() | nil,
+          :stop_guaranteed? => boolean() | nil,
+          :timestamp => term(),
+          :update_time => term()
+        }
+
   def fields, do: @fields
 
   def cast(data, as: module) do
@@ -56,12 +92,12 @@ defmodule BingX.Swap.Trade.DetailedOrderInfo do
       transaction_amount: get_and_transform(data, "cumQuote", &interp_as_float/1),
       executed_quantity: get_and_transform(data, "executedQty", &interp_as_float/1),
       only_one_position?: get_and_transform(data, "onlyOnePosition", &interp_as_boolean/1),
-      order_type: get_and_transform(data, "orderType", &interp_as_non_empty_binary/1),
       original_quantity: get_and_transform(data, "origQty", &interp_as_float/1),
       average_price: get_and_transform(data, "avgPrice", &interp_as_float/1),
       position_id: get_and_transform(data, "positionID", &interp_as_non_empty_binary/1),
       profit: get_and_transform(data, "profit", &interp_as_float/1),
       reduce_only?: get_and_transform(data, "reduceOnly", &interp_as_boolean/1),
+      order_type: Map.get(data, "orderType"),
       stop_loss: Map.get(data, "stopLoss"),
       stop_loss_entrust_price: get_and_transform(data, "stopLossEntrustPrice", &interp_as_float/1),
       take_profit: Map.get(data, "takeProfit"),

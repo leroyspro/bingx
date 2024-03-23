@@ -36,6 +36,7 @@ defmodule BingX.Swap.Order do
         }
 
   @type type() :: :trigger_market
+  @type status() :: :placed | :triggered | :filled | :partially_filled | :canceled | :expired
   @type order_id() :: binary()
   @type client_order_id() :: binary()
   @type symbol() :: binary()

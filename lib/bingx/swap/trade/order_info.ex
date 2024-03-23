@@ -25,6 +25,27 @@ defmodule BingX.Swap.Trade.OrderInfo do
 
   defstruct @fields
 
+  @type t() :: %__MODULE__{
+          :symbol => binary() | nil,
+          :side => BingX.Swap.Order.side() | nil,
+          :position_side => BingX.Swap.Order.position_side() | nil,
+          :price => float() | nil,
+          :stop_price => float() | nil,
+          :working_type => BingX.Swap.Order.working_type() | nil,
+          :quantity => float() | nil,
+          :type => BingX.Swap.Order.type() | nil,
+          :order_id => binary() | nil,
+          :client_order_id => binary() | nil,
+          :stop_loss => term(),
+          :take_profit => term(),
+          :time_in_force => term(),
+          :reduce_only? => boolean() | nil,
+          :price_rate => float() | nil,
+          :activation_price => float() | nil,
+          :close_position? => boolean() | nil,
+          :stop_guaranteed? => boolean() | nil
+        }
+
   def fields, do: @fields
 
   def cast(data, as: module) do
