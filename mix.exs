@@ -13,6 +13,7 @@ defmodule BingX.MixProject do
       consolidate_protocols: Mix.env() != :dev,
       description: description(),
       package: package(),
+      test_coverage: [tool: ExCoveralls],
       deps: deps(),
       name: "BingX",
       source_url: @source_url
@@ -48,7 +49,8 @@ defmodule BingX.MixProject do
       {:jason, "~> 1.4"},
       {:websockex, "~> 0.4.3"},
       {:httpoison, "~> 2.2", optional: true},
-      {:patch, "~> 0.13.0", only: [:test]}
+      {:patch, "~> 0.13.0", only: [:test]},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 end
