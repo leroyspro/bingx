@@ -1,7 +1,7 @@
 defmodule BingX.HTTP.Request do
   alias BingX.HTTP.Request.{QueryParams, Headers}
 
-  @origin Application.compile_env!(:bingx, :origin)
+  @origin Application.compile_env(:bingx, :origin, "https://open-api.bingx.com")
 
   defdelegate auth_headers(headers \\ %{}, api_key), to: Headers, as: :append_api_key
 

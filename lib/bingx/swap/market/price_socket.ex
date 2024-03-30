@@ -31,7 +31,7 @@ defmodule BingX.Swap.Market.PriceSocket do
   alias BingX.Socket
   alias BingX.Swap.Market.PriceUpdateEvent
 
-  @url "wss://open-api-swap.bingx.com/swap-market"
+  @origin Application.compile_env(:bingx, :swap_origin, "wss://open-api-swap.bingx.com/swap-market")
 
   @callback handle_event(type :: :price, event :: PriceEvent.t(), state :: any()) :: {:ok, any()} | {:close, any()}
 
@@ -68,11 +68,11 @@ defmodule BingX.Swap.Market.PriceSocket do
   end
 
   def start_link(module, state, options \\ []) do
-    Socket.start_link(@url, module, state, options)
+    Socket.start_link(@origin, module, state, options)
   end
 
   def start(module, state, options \\ []) do
-    Socket.start(@url, module, state, options)
+    Socket.start(@origin, module, state, options)
   end
 
   def subscribe(pid \\ self(), params) do

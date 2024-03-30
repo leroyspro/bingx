@@ -31,7 +31,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
   alias BingX.Socket
   alias BingX.Swap.Account.{BalanceUpdateEvent, OrderTradeEvent, ConfigUpdateEvent}
 
-  @url "wss://open-api-swap.bingx.com/swap-market"
+  @origin Application.compile_env(:bingx, :swap_origin, "wss://open-api-swap.bingx.com/swap-market")
 
   @callback handle_event(type :: :config, event :: %ConfigUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
   @callback handle_event(type :: :balance, event :: %BalanceUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
@@ -87,6 +87,6 @@ defmodule BingX.Swap.Account.UpdatesSocket do
   end
 
   defp prepare_url(listen_key) do
-    @url <> "?" <> QueryParams.listen_key_query(listen_key)
+    @origin <> "?" <> QueryParams.listen_key_query(listen_key)
   end
 end
