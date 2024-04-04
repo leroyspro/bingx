@@ -4,16 +4,18 @@ defmodule BingX.Socket do
   """
   use WebSockex
 
+  require Logger
+
   alias :zlib, as: Zlib
 
   @type new_state :: term()
   @type message :: binary()
 
-  @callback handle_event(event :: map(), state :: term()) :: {:ok, new_state} | {:close, new_state}
   @callback handle_connect(state :: term()) :: {:ok, new_state}
-  @callback handle_disconnect(state :: term()) :: {:reconnect, new_state} | {:close, new_state}
-  @callback handle_info(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:close, new_state}
-  @callback handle_cast(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:close, new_state}
+  @callback handle_disconnect(state :: term()) :: {:stop, new_state} | {:reconnect, new_state}
+  @callback handle_event(event :: map(), state :: term()) :: {:ok, new_state} | {:disconnect, new_state}
+  @callback handle_info(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:disconnect, new_state}
+  @callback handle_cast(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:disconnect, new_state}
   @optional_callbacks handle_disconnect: 1, handle_connect: 1, handle_info: 2, handle_cast: 2
 
   # Interface
@@ -65,7 +67,7 @@ defmodule BingX.Socket do
     if function_exported?(module, :handle_disconnect, 1) do
       case apply(module, :handle_disconnect, [state]) do
         {:reconnect, new_state} -> {:reconnect, {module, new_state}}
-        {:close, new_state} -> {:ok, {module, new_state}}
+        {:stop, new_state} -> {:ok, {module, new_state}}
       end
     else
       {:reconnect, {module, state}}
@@ -85,7 +87,7 @@ defmodule BingX.Socket do
 
   @impl WebSockex
   def handle_frame(data, {module, state}) do
-    warn("Got unknown frame message: #{inspect(data)}")
+    Logger.warning("Got unknown frame message: #{inspect(data)}")
     {:ok, {module, state}}
   end
 
@@ -98,7 +100,7 @@ defmodule BingX.Socket do
   def handle_cast(message, {module, state}) do
     if function_exported?(module, :handle_cast, 2) do
       case apply(module, :handle_cast, [message, state]) do
-        {:close, new_state} ->
+        {:disconnect, new_state} ->
           {:close, {module, new_state}}
 
         {:ok, new_state} ->
@@ -108,7 +110,7 @@ defmodule BingX.Socket do
           {:reply, {:text, message}, {module, new_state}}
       end
     else
-      warn("Got unknown cast message: #{inspect(message)}")
+      Logger.warning("Got unknown cast message: #{inspect(message)}")
       {:ok, {module, state}}
     end
   end
@@ -117,7 +119,7 @@ defmodule BingX.Socket do
   def handle_info(message, {module, state}) do
     if function_exported?(module, :handle_info, 2) do
       case apply(module, :handle_info, [message, state]) do
-        {:close, new_state} ->
+        {:disconnect, new_state} ->
           {:close, {module, new_state}}
 
         {:ok, new_state} ->
@@ -127,7 +129,7 @@ defmodule BingX.Socket do
           {:reply, {:text, message}, {module, new_state}}
       end
     else
-      warn("Got unknown info message: #{inspect(message)}")
+      Logger.warning("Got unknown info message: #{inspect(message)}")
       {:ok, {module, state}}
     end
   end
@@ -138,17 +140,12 @@ defmodule BingX.Socket do
   defp handle_event_data(data, {module, state}) do
     case send_event_data(data, {module, state}) do
       {:ok, new_state} -> {:ok, {module, new_state}}
-      {:stop, new_state} -> {:close, {module, new_state}}
+      {:disconnect, new_state} -> {:close, {module, new_state}}
     end
   end
 
   defp send_event_data(data, {module, state}) do
     event = Jason.decode!(data)
     apply(module, :handle_event, [event, state])
-  end
-
-  defp warn(message) do
-    require Logger
-    Logger.warning("[BingX.Socket] " <> message)
   end
 end
