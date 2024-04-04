@@ -12,11 +12,11 @@ defmodule BingX.Socket do
   @type message :: binary()
 
   @callback handle_connect(state :: term()) :: {:ok, new_state}
-  @callback handle_disconnect(state :: term()) :: {:stop, new_state} | {:reconnect, new_state}
+  @callback handle_disconnect(details :: WebSockex.connection_status_map(), state :: term()) :: {:stop, new_state} | {:reconnect, new_state}
   @callback handle_event(event :: map(), state :: term()) :: {:ok, new_state} | {:disconnect, new_state}
   @callback handle_info(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:disconnect, new_state}
   @callback handle_cast(message :: any(), state :: term()) :: {:send, message, new_state} | {:ok, new_state} | {:disconnect, new_state}
-  @optional_callbacks handle_disconnect: 1, handle_connect: 1, handle_info: 2, handle_cast: 2
+  @optional_callbacks handle_disconnect: 2, handle_connect: 1, handle_info: 2, handle_cast: 2
 
   # Interface
   # =========
@@ -63,9 +63,9 @@ defmodule BingX.Socket do
   end
 
   @impl WebSockex
-  def handle_disconnect(_details, {module, state}) do
-    if function_exported?(module, :handle_disconnect, 1) do
-      case apply(module, :handle_disconnect, [state]) do
+  def handle_disconnect(details, {module, state}) do
+    if function_exported?(module, :handle_disconnect, 2) do
+      case apply(module, :handle_disconnect, [details, state]) do
         {:reconnect, new_state} -> {:reconnect, {module, new_state}}
         {:stop, new_state} -> {:ok, {module, new_state}}
       end
