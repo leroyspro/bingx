@@ -48,8 +48,9 @@ defmodule BingX.MixProject do
     [
       {:jason, "~> 1.4"},
       {:websockex, "~> 0.4.3"},
-      {:patch, "~> 0.13.0", only: [:test]},
-      {:excoveralls, "~> 0.18", only: :test}
+      {:patch, "~> 0.13.0", only: :test},
+      {:excoveralls, "~> 0.18", only: :test},
+      {:httpoison, "~> 2.2", optional: true}
     ]
   end
 end

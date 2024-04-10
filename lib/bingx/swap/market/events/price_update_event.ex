@@ -18,7 +18,6 @@ defmodule BingX.Swap.Market.PriceUpdateEvent do
 
   def new(data) when is_map(data) do
     type = get_type(data)
-
     content = Map.get(data, "data") || %{}
     value = get_value(content, type)
     symbol = get_and_transform(content, "s", &interp_as_non_empty_binary/1)
