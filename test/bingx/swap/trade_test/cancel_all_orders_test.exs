@@ -79,12 +79,12 @@ defmodule BingX.Swap.TradeTest.CancelAllOrdersTest do
       struct = %{"A" => :B}
 
       patch(CancelAllOrdersResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       Trade.cancel_all_orders("BTC-USDT", api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should wrap the success content into CancelAllOrdersResponse struct", context do
@@ -95,13 +95,13 @@ defmodule BingX.Swap.TradeTest.CancelAllOrdersTest do
       struct = %{"A" => :B}
 
       patch(CancelAllOrdersResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       assert {:ok, ^struct} = Trade.cancel_all_orders("BTC-USDT", api_key, secret_key)
 
       assert_called_once(CancelAllOrdersResponse.new(^content))
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original content error", context do
@@ -110,12 +110,12 @@ defmodule BingX.Swap.TradeTest.CancelAllOrdersTest do
       error = {:error, :content_error, "yep"}
       response = %Response{body: %{"data" => "a"}}
 
-      patch(Response, :get_response_payload, error)
+      patch(Response, :process_response, error)
       patch(Client, :signed_request, {:ok, response})
 
       assert ^error = Trade.cancel_all_orders("BTC-USDT", api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original request http error", context do

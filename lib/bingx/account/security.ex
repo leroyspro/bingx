@@ -15,7 +15,7 @@ defmodule BingX.Account.Security do
   def generate_listen_key(api_key) when is_binary(api_key) do
     with(
       {:ok, resp} <- do_generate_listen_key(api_key),
-      {:ok, payload} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.process_response(resp)
     ) do
       {:ok, GenerateListenKeyResponse.new(payload)}
     end

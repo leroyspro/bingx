@@ -36,6 +36,9 @@ defmodule BingX.HTTP.Response do
       %{"code" => 0, "data" => payload} ->
         {:ok, payload}
 
+      %{"code" => 0} ->
+        {:ok, :no_data}
+
       %{"code" => code, "msg" => message} ->
         {:error, :bingx_error, Exception.new(code, message)}
 
@@ -44,7 +47,7 @@ defmodule BingX.HTTP.Response do
     end
   end
 
-  def get_response_payload(%__MODULE__{} = response) do
+  def process_response(%__MODULE__{} = response) do
     with(
       {:ok, response} <- validate_statuses(response, [200, 201, 204]),
       {:ok, body} <- get_response_body(response),

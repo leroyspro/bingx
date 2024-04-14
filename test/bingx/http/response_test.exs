@@ -88,13 +88,13 @@ defmodule BingX.HTTP.ResponseTest do
     end
   end
 
-  describe "BingX.HTTP.Response get_response_payload/1" do
+  describe "BingX.HTTP.Response process_response/1" do
     test "should validate response on successful status codes" do
       response = %Response{status_code: 200}
 
       patch(Response, :validate_statuses, {:ok, response})
 
-      Response.get_response_payload(response)
+      Response.process_response(response)
 
       assert_called_once(Response.validate_statuses(^response, [200, 201, 204]))
     end
@@ -105,7 +105,7 @@ defmodule BingX.HTTP.ResponseTest do
 
       patch(Response, :validate_statuses, error)
 
-      assert ^error = Response.get_response_payload(response)
+      assert ^error = Response.process_response(response)
     end
 
     test "should return error from the local body content extracter" do
@@ -114,7 +114,7 @@ defmodule BingX.HTTP.ResponseTest do
       patch(Response, :get_body_content, error)
       response = %Response{status_code: 200}
 
-      assert ^error = Response.get_response_payload(response)
+      assert ^error = Response.process_response(response)
     end
 
     test "should return error from the local content payload extracter" do
@@ -123,7 +123,7 @@ defmodule BingX.HTTP.ResponseTest do
       patch(Response, :get_content_payload, error)
       response = %Response{status_code: 200, body: "{}"}
 
-      assert ^error = Response.get_response_payload(response)
+      assert ^error = Response.process_response(response)
     end
 
     test "should get body content properly" do
@@ -134,7 +134,7 @@ defmodule BingX.HTTP.ResponseTest do
 
       response = %Response{status_code: 200, body: body}
 
-      Response.get_response_payload(response)
+      Response.process_response(response)
 
       assert_called_once(Response.get_body_content(^body))
     end
@@ -147,7 +147,7 @@ defmodule BingX.HTTP.ResponseTest do
       patch(Response, :get_content_payload, {:ok, payload})
 
       response = %Response{status_code: 200, body: "{}"}
-      Response.get_response_payload(response)
+      Response.process_response(response)
 
       assert_called_once(Response.get_content_payload(^content))
     end
@@ -160,7 +160,7 @@ defmodule BingX.HTTP.ResponseTest do
       patch(Response, :get_content_payload, {:ok, payload})
 
       response = %Response{status_code: 200, body: "{}"}
-      assert {:ok, ^payload} = Response.get_response_payload(response)
+      assert {:ok, ^payload} = Response.process_response(response)
     end
   end
 end

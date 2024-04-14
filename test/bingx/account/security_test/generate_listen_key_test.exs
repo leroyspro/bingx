@@ -59,12 +59,12 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       struct = %{"KEY" => :ABC}
 
       patch(GenerateListenKeyResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :authed_request, {:ok, response})
 
       Security.generate_listen_key(api_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should wrap the success content into GenerateListenKeyResponse struct", context do
@@ -75,13 +75,13 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       struct = %{"KEY" => :ABCD}
 
       patch(GenerateListenKeyResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :authed_request, {:ok, response})
 
       assert {:ok, ^struct} = Security.generate_listen_key(api_key)
 
       assert_called_once(GenerateListenKeyResponse.new(^content))
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original content error", context do
@@ -90,12 +90,12 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       error = {:error, :content_error, "yep"}
       response = %Response{body: %{"data" => "a"}}
 
-      patch(Response, :get_response_payload, error)
+      patch(Response, :process_response, error)
       patch(Client, :authed_request, {:ok, response})
 
       assert ^error = Security.generate_listen_key(api_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original request http error", context do

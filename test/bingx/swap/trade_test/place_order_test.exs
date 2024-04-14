@@ -96,12 +96,12 @@ defmodule BingX.Swap.TradeTest.PlaceOrderTest do
       struct = %{"A" => :s}
 
       patch(PlaceOrderResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       Trade.place_order(order, api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should wrap the content into PlaceOrderResponse struct", context do
@@ -112,13 +112,13 @@ defmodule BingX.Swap.TradeTest.PlaceOrderTest do
       struct = %{"A" => :s}
 
       patch(PlaceOrderResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       assert {:ok, ^struct} = Trade.place_order(order, api_key, secret_key)
 
       assert_called_once(PlaceOrderResponse.new(^content))
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original content-error", context do
@@ -127,12 +127,12 @@ defmodule BingX.Swap.TradeTest.PlaceOrderTest do
       error = {:error, :content_error, "yep"}
       response = %Response{body: %{"data" => "a"}}
 
-      patch(Response, :get_response_payload, error)
+      patch(Response, :process_response, error)
       patch(Client, :signed_request, {:ok, response})
 
       assert ^error = Trade.place_order(order, api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
   end
 end

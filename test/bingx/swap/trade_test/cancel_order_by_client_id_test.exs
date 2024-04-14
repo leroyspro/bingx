@@ -90,12 +90,12 @@ defmodule BingX.Swap.TradeTest.CancelOrderByClientIDTest do
       struct = %{"A" => :s}
 
       patch(CancelOrderResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       Trade.cancel_order_by_client_id("BTC-USDT", "id", api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should wrap the content into CancelOrderResponse struct", context do
@@ -106,13 +106,13 @@ defmodule BingX.Swap.TradeTest.CancelOrderByClientIDTest do
       struct = %{"A" => :s}
 
       patch(CancelOrderResponse, :new, struct)
-      patch(Response, :get_response_payload, {:ok, content})
+      patch(Response, :process_response, {:ok, content})
       patch(Client, :signed_request, {:ok, response})
 
       assert {:ok, ^struct} = Trade.cancel_order_by_client_id("BTC-USDT", "id", api_key, secret_key)
 
       assert_called_once(CancelOrderResponse.new(^content))
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
 
     test "should return the original content-error", context do
@@ -121,12 +121,12 @@ defmodule BingX.Swap.TradeTest.CancelOrderByClientIDTest do
       error = {:error, :content_error, "yep"}
       response = %Response{body: %{"data" => "a"}}
 
-      patch(Response, :get_response_payload, error)
+      patch(Response, :process_response, error)
       patch(Client, :signed_request, {:ok, response})
 
       assert ^error = Trade.cancel_order_by_client_id("BTC-USDT", "id", api_key, secret_key)
 
-      assert_called_once(Response.get_response_payload(^response))
+      assert_called_once(Response.process_response(^response))
     end
   end
 end
