@@ -6,6 +6,7 @@ defmodule BingX.Swap.Trade do
   """
 
   import BingX.HTTP.Client, only: [signed_request: 5]
+  import BingX.Swap.Interpretators, only: [to_external_margin_mode: 1]
 
   alias BingX.Helpers
   alias BingX.HTTP.Response
@@ -29,6 +30,8 @@ defmodule BingX.Swap.Trade do
   @cancel_orders_path @api_scope <> "/batchOrders"
 
   @cancel_all_orders_path @api_scope <> "/allOpenOrders"
+
+  @set_margin_mode_path @api_scope <> "/marginType"
 
   # Interface
   # =========
@@ -130,6 +133,23 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Request to set user's margin mode by market symbol and account credentials.
+  Margin mode can be either `:crossed` or `:isolated`.
+  """
+  def set_margin_mode(symbol, margin_mode, api_key, secret_key)
+      when is_binary(symbol) and
+             is_atom(margin_mode) and
+             is_binary(api_key) and
+             is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_set_margin_mode(symbol, margin_mode, api_key, secret_key),
+      {:ok, _payload} <- Response.get_response_payload(resp)
+    ) do
+      :ok
+    end
+  end
+
   # Helpers
   # =======
 
@@ -174,5 +194,14 @@ defmodule BingX.Swap.Trade do
     params = %{"symbol" => symbol}
 
     signed_request(:delete, @cancel_all_orders_path, api_key, secret_key, params: params)
+  end
+
+  defp do_set_margin_mode(symbol, margin_mode, api_key, secret_key) do
+    params = %{
+      "symbol" => symbol,
+      "marginType" => to_external_margin_mode(margin_mode)
+    }
+
+    signed_request(:post, @set_margin_mode_path, api_key, secret_key, params: params)
   end
 end

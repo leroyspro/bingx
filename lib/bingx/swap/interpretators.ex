@@ -8,12 +8,16 @@ defmodule BingX.Swap.Interpretators do
   def to_internal_margin_mode(x) when is_binary(x) do
     case Helpers.upcase(x) do
       "ISOLATED" -> :isolated
-      "CROSS" -> :cross
+      "CROSS" -> :crossed
       _ -> nil
     end
   end
 
   def to_internal_margin_mode(_), do: nil
+
+  def to_external_margin_mode(:crossed), do: "CROSSED"
+  def to_external_margin_mode(:isolated), do: "ISOLATED"
+  def to_external_margin_mode(_), do: nil
 
   def to_internal_order_type(x) when is_binary(x) do
     case Helpers.upcase(x) do
