@@ -3,7 +3,7 @@ defmodule BingX.Swap.PlaceOrderResponse do
 
   defstruct PlacedOrder.fields()
 
-  @spec new(map()) :: map()
+  @spec new(map()) :: struct()
   def new(data) do
     data = Map.get(data, "order", %{})
 

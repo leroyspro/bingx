@@ -1,6 +1,6 @@
 import Config
 
-config :bingx, 
+config :bingx,
   origin: "https://open-api.bingx.com",
   swap_origin: "wss://open-api-swap.bingx.com/swap-market"
 

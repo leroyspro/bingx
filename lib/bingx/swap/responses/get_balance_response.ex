@@ -26,7 +26,7 @@ defmodule BingX.Swap.GetBalanceResponse do
           :user_id => binary()
         }
 
-  @spec new(map()) :: Balance.t()
+  @spec new(map()) :: t()
   def new(data) do
     data = Map.get(data, "balance", %{})
 
