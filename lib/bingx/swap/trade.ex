@@ -6,7 +6,7 @@ defmodule BingX.Swap.Trade do
   """
 
   import BingX.HTTP.Client, only: [signed_request: 5]
-  import BingX.Swap.Interpretators, only: [to_external_margin_mode: 1]
+  import BingX.Swap.Interpretators, only: [to_external_margin_mode: 1, to_external_position_side: 1]
 
   alias BingX.Helpers
   alias BingX.HTTP.Response
@@ -18,7 +18,8 @@ defmodule BingX.Swap.Trade do
     PlaceOrdersResponse,
     CancelOrderResponse,
     CancelOrdersResponse,
-    CancelAllOrdersResponse
+    CancelAllOrdersResponse,
+    SetLeverageResponse
   }
 
   @api_scope "/openApi/swap/v2/trade"
@@ -32,6 +33,7 @@ defmodule BingX.Swap.Trade do
   @cancel_all_orders_path @api_scope <> "/allOpenOrders"
 
   @set_margin_mode_path @api_scope <> "/marginType"
+  @set_leverage_path @api_scope <> "/leverage"
 
   # Interface
   # =========
@@ -150,6 +152,26 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Request to set user's leverage amount by market symbol, position side and account credentials.
+  Position side can be either `:crossed` or `:isolated`.
+  Currently, BingX allows leverage from 1 to 125.
+  """
+  def set_leverage(symbol, position_side, leverage, api_key, secret_key)
+      when is_binary(symbol) and
+             is_atom(position_side) and
+             is_integer(leverage) and
+             leverage > 0 and
+             is_binary(api_key) and
+             is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_set_leverage(symbol, position_side, leverage, api_key, secret_key),
+      {:ok, payload} <- Response.process_response(resp)
+    ) do
+      {:ok, SetLeverageResponse.new(payload)}
+    end
+  end
+
   # Helpers
   # =======
 
@@ -203,5 +225,15 @@ defmodule BingX.Swap.Trade do
     }
 
     signed_request(:post, @set_margin_mode_path, api_key, secret_key, params: params)
+  end
+
+  defp do_set_leverage(symbol, position_side, leverage, api_key, secret_key) do
+    params = %{
+      "symbol" => symbol,
+      "side" => to_external_position_side(position_side),
+      "leverage" => leverage
+    }
+
+    signed_request(:post, @set_leverage_path, api_key, secret_key, params: params)
   end
 end
