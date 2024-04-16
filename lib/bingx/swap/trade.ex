@@ -177,7 +177,7 @@ defmodule BingX.Swap.Trade do
       when is_binary(symbol) and is_binary(api_key) and is_binary(secret_key) do
     with(
       {:ok, resp} <- do_get_pending_orders(symbol, api_key, secret_key),
-      {:ok, payload} <- Response.get_response_payload(resp)
+      {:ok, payload} <- Response.process_response(resp)
     ) do
       {:ok, PendingOrdersResponse.new(payload)}
     end

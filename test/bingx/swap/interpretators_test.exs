@@ -21,7 +21,7 @@ defmodule BingX.Swap.InterpretatorsTest do
 
   describe "BingX.API.Interpretators to_internal_margin_mode/1" do
     test "should transform order types from external to internal API properly" do
-      assert :cross = Interpretators.to_internal_margin_mode("CrosS")
+      assert :crossed = Interpretators.to_internal_margin_mode("CrosS")
       assert :isolated = Interpretators.to_internal_margin_mode("IsolAted")
     end
 
@@ -29,6 +29,19 @@ defmodule BingX.Swap.InterpretatorsTest do
       assert nil === Interpretators.to_internal_margin_mode("")
       assert nil === Interpretators.to_internal_margin_mode("Unknown")
       assert nil === Interpretators.to_internal_margin_mode(0)
+    end
+  end
+
+  describe "BingX.API.Interpretators to_external_margin_mode/1" do
+    test "should transform margin modes from internal to external API properly" do
+      assert "CROSSED" = Interpretators.to_external_margin_mode(:crossed)
+      assert "ISOLATED" = Interpretators.to_external_margin_mode(:isolated)
+    end
+
+    test "should omit unexpected values" do
+      assert nil === Interpretators.to_external_margin_mode("")
+      assert nil === Interpretators.to_external_margin_mode("Unknown")
+      assert nil === Interpretators.to_external_margin_mode(0)
     end
   end
 
