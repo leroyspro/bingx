@@ -8,10 +8,10 @@ defmodule BingX.Swap.Account.PositionUpdateTest do
 
   @fields [
     :symbol,
-    :position_side,
-    :position_amount,
-    :position_margin,
-    :entry_price,
+    :side,
+    :value,
+    :margin,
+    :average_price,
     :unrealized_pnl,
     :margin_mode
   ]
@@ -28,10 +28,10 @@ defmodule BingX.Swap.Account.PositionUpdateTest do
     end
 
     test_response_key_interp(PositionUpdate, :new, [], :interp_as_non_empty_binary, "s", :symbol)
-    test_response_key_interp(PositionUpdate, :new, [], :to_internal_position_side, "ps", :position_side)
-    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "iw", :position_amount)
-    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "pa", :position_margin)
-    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "ep", :entry_price)
+    test_response_key_interp(PositionUpdate, :new, [], :to_internal_position_side, "ps", :side)
+    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "iw", :value)
+    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "pa", :margin)
+    test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "ep", :average_price)
     test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "up", :unrealized_pnl)
     test_response_key_interp(PositionUpdate, :new, [], :to_internal_margin_mode, "mt", :margin_mode)
   end
