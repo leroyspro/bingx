@@ -3,15 +3,11 @@ defmodule BingX.HTTP.Client do
   This module provides functions to make requests to BingX API with enhanced interface.
   """
 
+  require BingX.HTTP.Adapter.Loader
+
   alias BingX.HTTP.Request
 
-  case Code.ensure_loaded(HTTPoison) do
-    {:module, _} ->
-      @http_adapter Application.compile_env(:bingx, :http_adapter, BingX.HTTP.Adapter.HTTPoison)
-
-    {:error, :nofile} ->
-      @http_adapter Application.compile_env!(:bingx, :http_adapter)
-  end
+  BingX.HTTP.Adapter.Loader.load()
 
   def authed_request(method, path, api_key, options \\ []) do
     body = Keyword.get(options, :body, "")

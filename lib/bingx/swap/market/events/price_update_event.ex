@@ -17,20 +17,42 @@ defmodule BingX.Swap.Market.PriceUpdateEvent do
   ]
 
   def new(data) when is_map(data) do
-    type = Map.get(data, "dataType", "")
-    data = Map.get(data, "data") || %{}
+    type = get_type(data)
+    content = Map.get(data, "data") || %{}
+    value = get_value(content, type)
+    symbol = get_and_transform(content, "s", &interp_as_non_empty_binary/1)
+    timestamp = Map.get(content, "E")
 
     %__MODULE__{
-      type: extract_event_type(type),
-      value: get_and_transform(data, "p", &interp_as_float/1),
-      symbol: get_and_transform(data, "s", &interp_as_non_empty_binary/1),
-      timestamp: Map.get(data, "E")
+      type: type,
+      value: value,
+      symbol: symbol,
+      timestamp: timestamp
     }
   end
 
-  defp extract_event_type(""), do: nil
+  defp get_value(data, type) do
+    case type do
+      :last -> 
+        get_and_transform(data, "c", &interp_as_float/1)
 
-  defp extract_event_type(x) when is_binary(x) do
+      :mark -> 
+        get_and_transform(data, "p", &interp_as_float/1)
+
+      nil -> 
+        nil
+    end
+  end
+
+  defp get_type(data) do
+    data
+    |> Map.get("dataType", "")
+    |> extract_type()
+  end
+
+  defp extract_type(""), do: nil
+
+  defp extract_type(x) when is_binary(x) do
     size = byte_size(x)
 
     x
@@ -42,5 +64,5 @@ defmodule BingX.Swap.Market.PriceUpdateEvent do
     end
   end
 
-  defp extract_event_type(_x), do: nil
+  defp extract_type(_x), do: nil
 end

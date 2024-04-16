@@ -1,5 +1,5 @@
 defmodule BingX.Swap.Market.PriceSocket do
-  @moduledoc """
+  @moduledoc ~S"""
 
     defmodule BingX.Swap.Market.PriceSource do
       use BingX.Swap.Market.PriceSocket
@@ -8,21 +8,19 @@ defmodule BingX.Swap.Market.PriceSocket do
 
       alias BingX.Swap.Market.PriceSocket
 
-      def start_link do
+      def start_link(_args \\ []) do
         PriceSocket.start_link(__MODULE__, :state)
       end
 
       @impl true
       def handle_connect(state) do
-        PriceSocket.subscribe(%{symbol: "BTC-USDT", type: "mark"})
-
+        PriceSocket.subscribe(%{symbol: "BTC-USDT", type: :last})
         {:ok, state}
       end
 
       @impl true
       def handle_event(type, event, state) do
         Logger.info(%{ type: type, event: event, state: state })
-
         {:ok, state}
       end
     end
