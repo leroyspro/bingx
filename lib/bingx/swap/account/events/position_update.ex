@@ -3,7 +3,7 @@ defmodule BingX.Swap.Account.PositionUpdate do
   import BingX.Swap.Interpretators
 
   @type t :: %{
-          pair: binary() | nil,
+          symbol: binary() | nil,
           position_side: BingX.Swap.Order.position_side() | nil,
           position_amount: float() | nil,
           position_margin: float() | nil,
@@ -13,7 +13,7 @@ defmodule BingX.Swap.Account.PositionUpdate do
         }
 
   defstruct [
-    :pair,
+    :symbol,
     :position_side,
     :position_amount,
     :position_margin,
@@ -24,7 +24,7 @@ defmodule BingX.Swap.Account.PositionUpdate do
 
   def new(data) do
     %__MODULE__{
-      pair: get_and_transform(data, "s", &interp_as_non_empty_binary/1),
+      symbol: get_and_transform(data, "s", &interp_as_non_empty_binary/1),
       position_side: get_and_transform(data, "ps", &to_internal_position_side/1),
       position_amount: get_and_transform(data, "iw", &interp_as_float/1),
       position_margin: get_and_transform(data, "pa", &interp_as_float/1),

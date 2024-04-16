@@ -7,7 +7,7 @@ defmodule BingX.Swap.Account.PositionUpdateTest do
   alias BingX.Swap.Account.PositionUpdate
 
   @fields [
-    :pair,
+    :symbol,
     :position_side,
     :position_amount,
     :position_margin,
@@ -27,7 +27,7 @@ defmodule BingX.Swap.Account.PositionUpdateTest do
       assert %PositionUpdate{} = PositionUpdate.new(%{"x" => "x"})
     end
 
-    test_response_key_interp(PositionUpdate, :new, [], :interp_as_non_empty_binary, "s", :pair)
+    test_response_key_interp(PositionUpdate, :new, [], :interp_as_non_empty_binary, "s", :symbol)
     test_response_key_interp(PositionUpdate, :new, [], :to_internal_position_side, "ps", :position_side)
     test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "iw", :position_amount)
     test_response_key_interp(PositionUpdate, :new, [], :interp_as_float, "pa", :position_margin)
