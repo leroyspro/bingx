@@ -1,10 +1,10 @@
-defmodule BingX.Swap.Account.BalanceUpdateEventTest do
+defmodule BingX.Swap.Account.AccountUpdateEventTest do
   use ExUnit.Case
   use Patch
 
   import BingX.TestHelpers
 
-  alias BingX.Swap.Account.{BalanceUpdateEvent, PositionUpdate, WalletUpdate}
+  alias BingX.Swap.Account.{AccountUpdateEvent, PositionUpdate, WalletUpdate}
 
   @fields [
     :type,
@@ -14,27 +14,27 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
     :position_updates
   ]
 
-  describe "BingX.Swap.Market.BalanceUpdateEvent new/1" do
+  describe "BingX.Swap.Market.AccountUpdateEvent new/1" do
     test "should return empty struct without params" do
-      assert %BalanceUpdateEvent{} = BalanceUpdateEvent.new(%{})
+      assert %AccountUpdateEvent{} = AccountUpdateEvent.new(%{})
     end
 
-    test_module_struct(BalanceUpdateEvent, @fields)
+    test_module_struct(AccountUpdateEvent, @fields)
 
     test "should be tolerant to wrong data contract" do
-      assert %BalanceUpdateEvent{} = BalanceUpdateEvent.new(%{"x" => "x"})
+      assert %AccountUpdateEvent{} = AccountUpdateEvent.new(%{"x" => "x"})
     end
 
     test "should transform event type properly" do
-      assert %BalanceUpdateEvent{type: :order} = BalanceUpdateEvent.new(%{"a" => %{"m" => "ORDER"}})
-      assert %BalanceUpdateEvent{type: :funding_fee} = BalanceUpdateEvent.new(%{"a" => %{"m" => "FUNDING_FEE"}})
-      assert %BalanceUpdateEvent{type: :deposit} = BalanceUpdateEvent.new(%{"a" => %{"m" => "DEPOSIT"}})
-      assert %BalanceUpdateEvent{type: :withdraw} = BalanceUpdateEvent.new(%{"a" => %{"m" => "WITHDRAW"}})
-      assert %BalanceUpdateEvent{type: nil} = BalanceUpdateEvent.new(%{"a" => %{"m" => "SS"}})
-      assert %BalanceUpdateEvent{type: nil} = BalanceUpdateEvent.new(%{"a" => %{}})
+      assert %AccountUpdateEvent{type: :order} = AccountUpdateEvent.new(%{"a" => %{"m" => "ORDER"}})
+      assert %AccountUpdateEvent{type: :funding_fee} = AccountUpdateEvent.new(%{"a" => %{"m" => "FUNDING_FEE"}})
+      assert %AccountUpdateEvent{type: :deposit} = AccountUpdateEvent.new(%{"a" => %{"m" => "DEPOSIT"}})
+      assert %AccountUpdateEvent{type: :withdraw} = AccountUpdateEvent.new(%{"a" => %{"m" => "WITHDRAW"}})
+      assert %AccountUpdateEvent{type: nil} = AccountUpdateEvent.new(%{"a" => %{"m" => "SS"}})
+      assert %AccountUpdateEvent{type: nil} = AccountUpdateEvent.new(%{"a" => %{}})
     end
 
-    test_response_key_interp(BalanceUpdateEvent, :new, [], "E", :timestamp)
+    test_response_key_interp(AccountUpdateEvent, :new, [], "E", :timestamp)
 
     test "should transform position updates into PositionUpdate structs" do
       orig_update = %{"k" => "V"}
@@ -43,7 +43,7 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
       patch(PositionUpdate, :new, next_update)
 
       data = %{"a" => %{"P" => [orig_update]}}
-      BalanceUpdateEvent.new(data)
+      AccountUpdateEvent.new(data)
 
       assert_called_once(PositionUpdate.new(^orig_update))
     end
@@ -56,12 +56,12 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
 
       data = %{"a" => %{"P" => [orig_update]}}
 
-      assert %BalanceUpdateEvent{position_updates: [^next_update]} = BalanceUpdateEvent.new(data)
+      assert %AccountUpdateEvent{position_updates: [^next_update]} = AccountUpdateEvent.new(data)
     end
 
     test "should be tolerant for incorrect position update data contract" do
       data = %{"a" => %{"P" => nil}}
-      BalanceUpdateEvent.new(data)
+      AccountUpdateEvent.new(data)
     end
 
     test "should transform wallet updates into WalletUpdate structs" do
@@ -71,7 +71,7 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
       patch(WalletUpdate, :new, next_update)
 
       data = %{"a" => %{"B" => [orig_update]}}
-      BalanceUpdateEvent.new(data)
+      AccountUpdateEvent.new(data)
 
       assert_called_once(WalletUpdate.new(^orig_update))
     end
@@ -84,12 +84,12 @@ defmodule BingX.Swap.Account.BalanceUpdateEventTest do
 
       data = %{"a" => %{"B" => [orig_update]}}
 
-      assert %BalanceUpdateEvent{wallet_updates: [^next_update]} = BalanceUpdateEvent.new(data)
+      assert %AccountUpdateEvent{wallet_updates: [^next_update]} = AccountUpdateEvent.new(data)
     end
 
     test "should be tolerant for incorrect wallet update data contract" do
       data = %{"a" => %{"B" => nil}}
-      BalanceUpdateEvent.new(data)
+      AccountUpdateEvent.new(data)
     end
   end
 end

@@ -29,12 +29,12 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
   alias BingX.HTTP.Request.QueryParams
   alias BingX.Socket
-  alias BingX.Swap.Account.{BalanceUpdateEvent, OrderTradeEvent, ConfigUpdateEvent}
+  alias BingX.Swap.Account.{AccountUpdateEvent, OrderTradeEvent, ConfigUpdateEvent}
 
   @origin Application.compile_env(:bingx, :swap_origin, "wss://open-api-swap.bingx.com/swap-market")
 
   @callback handle_event(type :: :config, event :: %ConfigUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
-  @callback handle_event(type :: :balance, event :: %BalanceUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
+  @callback handle_event(type :: :account, event :: %AccountUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
   @callback handle_event(type :: :order, event :: %OrderTradeEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
 
   defmacro __using__(opts \\ []) do
@@ -64,7 +64,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
 
       @impl true
       def handle_event(%{"e" => "ACCOUNT_UPDATE"} = event, state) do
-        handle_event(:balance, BalanceUpdateEvent.new(event), state)
+        handle_event(:account, AccountUpdateEvent.new(event), state)
       end
 
       @impl true
