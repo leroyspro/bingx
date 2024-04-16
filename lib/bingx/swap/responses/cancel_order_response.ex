@@ -5,8 +5,8 @@ defmodule BingX.Swap.CancelOrderResponse do
 
   @spec new(map()) :: struct()
   def new(data) do
-    data = Map.get(data, "order", %{}) || %{}
+    order = Map.get(data, "order") || %{}
 
-    DetailedOrderInfo.cast(data, as: __MODULE__)
+    DetailedOrderInfo.cast(order, as: __MODULE__)
   end
 end

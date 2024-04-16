@@ -10,12 +10,12 @@ defmodule BingX.Swap.CancelAllOrdersResponse do
 
   @spec new(map()) :: t()
   def new(data) do
-    succeeded = Map.get(data, "success", [])
-    failed = Map.get(data, "failed", [])
+    succeeded = Map.get(data, "success") || []
+    failed = Map.get(data, "failed") || []
 
     %__MODULE__{
       succeeded: transform_succeeded(succeeded),
-      failed: failed || []
+      failed: failed
     }
   end
 
