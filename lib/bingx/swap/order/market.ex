@@ -10,12 +10,14 @@ defmodule BingX.Swap.Order.Market do
           :symbol => Order.symbol()
         }
 
-  @spec new(%{
+  @type params() :: %{
           :side => any(),
           :position_side => any(),
           :quantity => any(),
           :symbol => any()
-        }) :: Market.t()
+        }
+
+  @spec new(params()) :: {:ok, Market.t()} | {:error, any()}
   def new(%{
         side: side,
         position_side: position_side,
@@ -30,5 +32,13 @@ defmodule BingX.Swap.Order.Market do
       type: :market
     }
     |> Order.new()
+  end
+
+  @spec new(params()) :: t() | no_return()
+  def new!(params) do
+    case new(params) do
+      {:ok, order} -> order
+      {:error, reason} -> raise ArgumentError, reason
+    end
   end
 end
