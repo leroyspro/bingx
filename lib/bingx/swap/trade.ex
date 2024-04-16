@@ -18,12 +18,15 @@ defmodule BingX.Swap.Trade do
     PlaceOrdersResponse,
     CancelOrderResponse,
     CancelOrdersResponse,
+    CloseAllPositionsResponse,
     CancelAllOrdersResponse,
     SetLeverageResponse,
-    PendingOrdersResponse
+    PendingOrdersResponse,
+    GetAllOrdersResponse
   }
 
   @api_scope "/openApi/swap/v2/trade"
+  @api_scope_v1 "/openApi/swap/v1/trade"
 
   @place_order_path @api_scope <> "/order"
   @cancel_order_path @api_scope <> "/order"
@@ -31,12 +34,14 @@ defmodule BingX.Swap.Trade do
   @place_orders_path @api_scope <> "/batchOrders"
   @cancel_orders_path @api_scope <> "/batchOrders"
 
+  @close_all_positions_path @api_scope <> "/closeAllPositions"
   @cancel_all_orders_path @api_scope <> "/allOpenOrders"
 
   @set_margin_mode_path @api_scope <> "/marginType"
   @set_leverage_path @api_scope <> "/leverage"
 
   @get_pending_orders_path @api_scope <> "/openOrders"
+  @get_all_orders_path @api_scope_v1 <> "/fullOrder"
 
   # Interface
   # =========
@@ -120,6 +125,19 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
+  Request to close all positions by market symbol (ex. BTC-USDT) with account credentials.
+  """
+  def close_all_positions(symbol, api_key, secret_key)
+      when is_binary(symbol) and is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_close_all_positions(symbol, api_key, secret_key),
+      {:ok, payload} <- Response.process_response(resp)
+    ) do
+      {:ok, CloseAllPositionsResponse.new(payload)}
+    end
+  end
+
+  @doc """
   Requests to cancel all orders by their market symbol (ex. BTC-USDT) with account credentials.
   """
   def cancel_all_orders(symbol, api_key, secret_key)
@@ -133,7 +151,6 @@ defmodule BingX.Swap.Trade do
   end
 
   @doc """
-  <<<<<<< HEAD
   Request to set user's margin mode by market symbol and account credentials.
   Margin mode can be either `:crossed` or `:isolated`.
   """
@@ -183,6 +200,20 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Request to get all user's orders (pending, active, ...) by an optional period (start_time, end_time)
+  and an optional limit of returned amount of orders with account credentials.
+  """
+  def get_all_orders(symbol, start_time \\ nil, end_time \\ nil, limit \\ 50, api_key, secret_key)
+      when is_binary(symbol) and is_integer(limit) and is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_get_all_orders(symbol, start_time, end_time, limit, api_key, secret_key),
+      {:ok, payload} <- Response.process_response(resp)
+    ) do
+      {:ok, GetAllOrdersResponse.new(payload)}
+    end
+  end
+
   # Helpers
   # =======
 
@@ -201,6 +232,12 @@ defmodule BingX.Swap.Trade do
     params = %{"batchOrders" => raw_orders}
 
     signed_request(:post, @place_orders_path, api_key, secret_key, params: params)
+  end
+
+  defp do_close_all_positions(symbol, api_key, secret_key) do
+    params = %{"symbol" => symbol}
+
+    signed_request(:post, @close_all_positions_path, api_key, secret_key, params: params)
   end
 
   defp do_cancel_order(symbol, order_id, client_order_id, api_key, secret_key) do
@@ -252,5 +289,19 @@ defmodule BingX.Swap.Trade do
     params = %{"symbol" => symbol}
 
     signed_request(:get, @get_pending_orders_path, api_key, secret_key, params: params)
+  end
+
+  defp do_get_all_orders(symbol, start_time, end_time, limit, api_key, secret_key) do
+    params =
+      %{
+        "symbol" => symbol,
+        "startTime" => start_time,
+        "endTime" => end_time,
+        "limit" => limit
+      }
+      |> Enum.reject(fn {_, v} -> is_nil(v) end)
+      |> Map.new()
+
+    signed_request(:get, @get_all_orders_path, api_key, secret_key, params: params)
   end
 end

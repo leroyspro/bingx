@@ -7,10 +7,10 @@ if Code.ensure_loaded?(HTTPoison) do
     @impl true
     def request(method, url, body, headers, options \\ []) do
       %HTTPoison.Request{
-        method: method, 
-        url: url, 
-        headers: headers, 
-        body: body, 
+        method: method,
+        url: url,
+        headers: headers,
+        body: body,
         options: options
       }
       |> HTTPoison.request()
