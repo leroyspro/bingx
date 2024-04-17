@@ -62,7 +62,7 @@ defmodule BingX.Swap.Account.OrderTradeEvent do
       price: get_and_transform(order, "p", &interp_as_float/1),
       trigger_price: get_and_transform(order, "sp", &interp_as_float/1),
       actual_price: get_and_transform(order, "ap", &interp_as_float/1),
-      fee: get_and_transform(order, "n", &interp_as_float/1),
+      fee: get_and_transform(order, "n", &interp_as_abs/1),
       fee_asset: get_and_transform(order, "N", &interp_as_non_empty_binary/1),
       # guaranteed_sl_tp: get_and_transform(order, "sg", &interp_as_boolean/1),
       working_type: get_and_transform(order, "wt", &to_internal_working_type/1),

@@ -52,7 +52,7 @@ defmodule BingX.Swap.Trade.DetailedOrderInfo do
       trigger_order_id: get_and_transform(data, "triggerOrderId", &interp_as_non_empty_binary/1),
       working_type: get_and_transform(data, "workingType", &to_internal_working_type/1),
       leverage: get_and_transform(data, "leverage", &interp_as_float/1),
-      fee: get_and_transform(data, "commission", &interp_as_float/1),
+      fee: get_and_transform(data, "commission", &interp_as_abs/1),
       transaction_amount: get_and_transform(data, "cumQuote", &interp_as_float/1),
       executed_quantity: get_and_transform(data, "executedQty", &interp_as_float/1),
       only_one_position?: get_and_transform(data, "onlyOnePosition", &interp_as_boolean/1),

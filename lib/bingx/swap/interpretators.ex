@@ -131,6 +131,13 @@ defmodule BingX.Swap.Interpretators do
 
   def interp_as_float(_), do: nil
 
+  def interp_as_abs(x) do
+    case interp_as_float(x) do
+      nil -> nil
+      x -> abs(x)
+    end
+  end
+
   def interp_as_non_empty_binary(""), do: nil
   def interp_as_non_empty_binary(x), do: interp_as_binary(x)
 
