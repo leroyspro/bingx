@@ -4,6 +4,14 @@ defmodule BingX.Swap.Account.AccountUpdateEvent do
 
   alias BingX.Swap.Account.{WalletUpdate, PositionUpdate}
 
+  defstruct [
+    :type,
+    :symbol,
+    :timestamp,
+    :wallet_updates,
+    :position_updates
+  ]
+
   @type update_type :: :order | :funding_fee | :deposit | :withdraw
 
   @type t :: %__MODULE__{
@@ -13,14 +21,6 @@ defmodule BingX.Swap.Account.AccountUpdateEvent do
           wallet_updates: list(WalletUpdate.t()),
           position_updates: list(PositionUpdate.t())
         }
-
-  defstruct [
-    :type,
-    :symbol,
-    :timestamp,
-    :wallet_updates,
-    :position_updates
-  ]
 
   @spec new(map()) :: t()
   def new(data) do

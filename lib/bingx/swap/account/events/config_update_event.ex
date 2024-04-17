@@ -10,6 +10,14 @@ defmodule BingX.Swap.Account.ConfigUpdateEvent do
     :long_leverage
   ]
 
+  @type t :: %__MODULE__{
+          symbol: binary() | nil,
+          timestamp: integer(),
+          margin_mode: :crossed,
+          short_leverage: float() | nil,
+          long_leverage: float() | nil
+        }
+
   def new(data) do
     timestamp = Map.get(data, "E")
     config = Map.get(data, "ac", %{})

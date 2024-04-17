@@ -2,16 +2,6 @@ defmodule BingX.Swap.Account.PositionUpdate do
   import BingX.Helpers
   import BingX.Swap.Interpretators
 
-  @type t :: %{
-          symbol: binary() | nil,
-          side: BingX.Swap.Order.position_side() | nil,
-          value: float() | nil,
-          margin: float() | nil,
-          average_price: float() | nil,
-          unrealized_pnl: float() | nil,
-          margin_mode: :cross | :isolated | nil
-        }
-
   defstruct [
     :symbol,
     :side,
@@ -22,6 +12,17 @@ defmodule BingX.Swap.Account.PositionUpdate do
     :margin_mode
   ]
 
+  @type t :: %__MODULE__{
+          symbol: binary() | nil,
+          side: :long | :short,
+          value: float() | nil,
+          margin: float() | nil,
+          average_price: float() | nil,
+          unrealized_pnl: float() | nil,
+          margin_mode: :crossed | :isolated | nil
+        }
+
+  @spec new(map()) :: t()
   def new(data) do
     %__MODULE__{
       symbol: get_and_transform(data, "s", &interp_as_non_empty_binary/1),
