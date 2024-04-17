@@ -184,6 +184,24 @@ defmodule BingX.Swap.InterpretatorsTest do
     end
   end
 
+  describe "BingX.API.Interpretators interp_as_abs/1" do
+    test "should transform numbers to absolute float" do
+      assert 25.0 = Interpretators.interp_as_abs(25)
+      assert 25.0 = Interpretators.interp_as_abs(-25)
+    end
+
+    test "should parse binary based numbers to absolute float" do
+      assert +0.0 = Interpretators.interp_as_abs("0")
+      assert 1.0021 = Interpretators.interp_as_abs("1.0021")
+      assert 2.001 = Interpretators.interp_as_abs("-2.001")
+    end
+
+    test "should omit unexpected values" do
+      assert nil === Interpretators.interp_as_abs("AA25")
+      assert nil === Interpretators.interp_as_abs(nil)
+    end
+  end
+
   describe "BingX.API.Interpretators interp_as_binary/1" do
     test "should return original binaries" do
       assert "25" = Interpretators.interp_as_binary("25")

@@ -70,7 +70,7 @@ defmodule BingX.Swap.Trade.DetailedOrderInfoTest do
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_non_empty_binary, "triggerOrderId", :trigger_order_id)
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :to_internal_working_type, "workingType", :working_type)
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_float, "leverage", :leverage)
-    test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_float, "commission", :fee)
+    test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_abs, "commission", :fee)
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_float, "cumQuote", :transaction_amount)
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_float, "executedQty", :executed_quantity)
     test_response_key_interp(DetailedOrderInfo, :cast, [[as: DetailedOrderInfo]], :interp_as_boolean, "onlyOnePosition", :only_one_position?)

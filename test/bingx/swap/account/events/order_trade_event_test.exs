@@ -52,7 +52,7 @@ defmodule BingX.Swap.Account.OrderTradeEventTest do
     test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_float, ["o", "p"], :price)
     test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_float, ["o", "sp"], :trigger_price)
     test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_float, ["o", "ap"], :actual_price)
-    test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_float, ["o", "n"], :fee)
+    test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_abs, ["o", "n"], :fee)
     test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_non_empty_binary, ["o", "N"], :fee_asset)
     # test_response_key_interp(OrderTradeEvent, :new, [], :interp_as_boolean, ["o", "sg"], :guaranteed_sl_tp)
     test_response_key_interp(OrderTradeEvent, :new, [], :to_internal_working_type, ["o", "wt"], :working_type)
