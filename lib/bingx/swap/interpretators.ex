@@ -46,7 +46,7 @@ defmodule BingX.Swap.Interpretators do
   def to_internal_order_execution_type(x) when is_binary(x) do
     case Helpers.upcase(x) do
       "NEW" -> :placed
-      "CANCELLED" -> :canceled
+      "CANCELED" -> :canceled
       "CALCULATED" -> :calculated
       "EXPIRED" -> :expired
       "TRADE" -> :trade
@@ -62,7 +62,7 @@ defmodule BingX.Swap.Interpretators do
       "TRIGGERED" -> :triggered
       "FILLED" -> :filled
       "PARTIALLY_FILLED" -> :partially_filled
-      "CANCELLED" -> :canceled
+      "CANCELED" -> :canceled
       "EXPIRED" -> :expired
       _ -> nil
     end
