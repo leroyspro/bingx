@@ -6,6 +6,10 @@ defmodule BingX.Helpers do
   @spec timestamp() :: integer()
   def timestamp, do: :os.system_time(:millisecond)
 
+  def keyword_from_map(%{} = map) do
+    Enum.map(map, & &1)
+  end
+
   def get_and_transform(data, key, default \\ nil, transformer)
       when is_function(transformer, 1) do
     case Map.get(data, key, :default) do

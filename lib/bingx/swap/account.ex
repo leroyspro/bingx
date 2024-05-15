@@ -47,10 +47,7 @@ defmodule BingX.Swap.Account do
   end
 
   defp do_get_all_positions(symbol, api_key, secret_key) do
-    params = %{
-      "symbol" => symbol
-    }
-
+    params = %{"symbol" => symbol}
     signed_request(:get, @get_all_positions_path, api_key, secret_key, params: params)
   end
 end

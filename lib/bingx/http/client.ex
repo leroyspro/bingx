@@ -28,4 +28,6 @@ defmodule BingX.HTTP.Client do
 
     @http_adapter.request(method, url, body, headers)
   end
+
+  def adapter(), do: @http_adapter
 end

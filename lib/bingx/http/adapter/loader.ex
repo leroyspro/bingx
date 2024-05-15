@@ -4,10 +4,18 @@ defmodule BingX.HTTP.Adapter.Loader do
   @doc false
   defmacro load() do
     default = 
-      if Code.ensure_loaded?(HTTPoison) do 
-        Adapter.HTTPoison 
-      else 
-        Adapter.Stub
+      cond do
+        Code.ensure_loaded?(HTTPoison) ->
+          IO.puts("[BingX] *INFO* Loaded HTTPoison HTTP adapter")
+          Adapter.HTTPoison 
+
+        Code.ensure_loaded?(Finch) ->
+          IO.puts("[BingX] *INFO* Loaded Finch HTTP adapter")
+          Adapter.Finch
+
+        true ->
+          IO.puts("[BingX] *WARN* Not found HTTP adapter; Loaded HTTP adapter stub")
+          Adapter.Stub
       end
 
     quote do
