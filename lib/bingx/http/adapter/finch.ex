@@ -26,6 +26,7 @@ if Code.ensure_loaded?(Finch) do
       }
     end
 
-    defp adapt_error(%Finch.Error{} = err), do: %Error{message: err.reason}
+    defp adapt_error(%{reason: message}), do: %Error{message: message}
+    defp adapt_error(error), do: %Error{message: inspect(error)}
   end
 end
