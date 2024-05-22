@@ -6,7 +6,7 @@ if Code.ensure_loaded?(HTTPoison) do
 
     @impl true
     def request(method, url, body, headers, options \\ []) do
-      request = 
+      request =
         %HTTPoison.Request{
           method: method,
           url: url,
@@ -14,7 +14,7 @@ if Code.ensure_loaded?(HTTPoison) do
           body: body,
           options: options
         }
-      
+
       case HTTPoison.request(request) do
         {:ok, resp} -> {:ok, adapt_response(resp)}
         {:error, err} -> {:error, :http_error, adapt_error(err)}

@@ -82,6 +82,7 @@ defmodule BingX.Swap.InterpretatorsTest do
       assert :filled = Interpretators.to_internal_order_status("FillEd")
       assert :partially_filled = Interpretators.to_internal_order_status("PArtiALLY_FillEd")
       assert :canceled = Interpretators.to_internal_order_status("CANCEllED")
+      assert :canceled = Interpretators.to_internal_order_status("CANCElED")
       assert :expired = Interpretators.to_internal_order_status("EXPIred")
     end
 
@@ -98,7 +99,7 @@ defmodule BingX.Swap.InterpretatorsTest do
       assert "TRIGGERED" = Interpretators.to_external_order_status(:triggered)
       assert "FILLED" = Interpretators.to_external_order_status(:filled)
       assert "PARTIALLY_FILLED" = Interpretators.to_external_order_status(:partially_filled)
-      assert "CANCELLED" = Interpretators.to_external_order_status(:canceled)
+      assert "CANCELED" = Interpretators.to_external_order_status(:canceled)
       assert "EXPIRED" = Interpretators.to_external_order_status(:expired)
     end
   end
