@@ -22,25 +22,27 @@ defmodule BingX.Swap.Trade do
     CancelAllOrdersResponse,
     SetLeverageResponse,
     PendingOrdersResponse,
-    GetAllOrdersResponse
+    GetAllOrdersResponse,
+    GetOrderResponse
   }
 
-  @api_scope "/openApi/swap/v2/trade"
+  @api_scope_v2 "/openApi/swap/v2/trade"
   @api_scope_v1 "/openApi/swap/v1/trade"
 
-  @place_order_path @api_scope <> "/order"
-  @cancel_order_path @api_scope <> "/order"
+  @place_order_path @api_scope_v2 <> "/order"
+  @cancel_order_path @api_scope_v2 <> "/order"
+  @get_order_path @api_scope_v2 <> "/order"
 
-  @place_orders_path @api_scope <> "/batchOrders"
-  @cancel_orders_path @api_scope <> "/batchOrders"
+  @place_orders_path @api_scope_v2 <> "/batchOrders"
+  @cancel_orders_path @api_scope_v2 <> "/batchOrders"
 
-  @close_all_positions_path @api_scope <> "/closeAllPositions"
-  @cancel_all_orders_path @api_scope <> "/allOpenOrders"
+  @close_all_positions_path @api_scope_v2 <> "/closeAllPositions"
+  @cancel_all_orders_path @api_scope_v2 <> "/allOpenOrders"
 
-  @set_margin_mode_path @api_scope <> "/marginType"
-  @set_leverage_path @api_scope <> "/leverage"
+  @set_margin_mode_path @api_scope_v2 <> "/marginType"
+  @set_leverage_path @api_scope_v2 <> "/leverage"
 
-  @get_pending_orders_path @api_scope <> "/openOrders"
+  @get_pending_orders_path @api_scope_v2 <> "/openOrders"
   @get_all_orders_path @api_scope_v1 <> "/fullOrder"
 
   # Interface
@@ -214,12 +216,24 @@ defmodule BingX.Swap.Trade do
     end
   end
 
+  @doc """
+  Request to get a specific user's order (pending, active, ...) with account credentials.
+  """
+  def get_order(symbol, order_id, api_key, secret_key)
+      when is_binary(symbol) and is_binary(order_id) and is_binary(api_key) and is_binary(secret_key) do
+    with(
+      {:ok, resp} <- do_get_order(symbol, order_id, api_key, secret_key),
+      {:ok, payload} <- Response.process_response(resp)
+    ) do
+      {:ok, GetOrderResponse.new(payload)}
+    end
+  end
+
   # Helpers
   # =======
 
   defp do_place_order(order, api_key, secret_key) do
     params = Contract.from_order(order)
-
     signed_request(:post, @place_order_path, api_key, secret_key, params: params)
   end
 
@@ -236,7 +250,6 @@ defmodule BingX.Swap.Trade do
 
   defp do_close_all_positions(symbol, api_key, secret_key) do
     params = %{"symbol" => symbol}
-
     signed_request(:post, @close_all_positions_path, api_key, secret_key, params: params)
   end
 
@@ -262,7 +275,6 @@ defmodule BingX.Swap.Trade do
 
   defp do_cancel_all_orders(symbol, api_key, secret_key) do
     params = %{"symbol" => symbol}
-
     signed_request(:delete, @cancel_all_orders_path, api_key, secret_key, params: params)
   end
 
@@ -287,7 +299,6 @@ defmodule BingX.Swap.Trade do
 
   defp do_get_pending_orders(symbol, api_key, secret_key) do
     params = %{"symbol" => symbol}
-
     signed_request(:get, @get_pending_orders_path, api_key, secret_key, params: params)
   end
 
@@ -303,5 +314,10 @@ defmodule BingX.Swap.Trade do
       |> Map.new()
 
     signed_request(:get, @get_all_orders_path, api_key, secret_key, params: params)
+  end
+
+  defp do_get_order(symbol, order_id, api_key, secret_key) do
+    params = %{"symbol" => symbol, "orderId" => order_id}
+    signed_request(:get, @get_order_path, api_key, secret_key, params: params)
   end
 end
