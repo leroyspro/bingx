@@ -40,7 +40,8 @@ defmodule BingX.HTTP.Response do
         {:ok, :no_data}
 
       %{"code" => code, "msg" => message} ->
-        {:error, :bingx_error, Exception.new(code, message)}
+        data = Map.get(content, "data", %{})
+        {:error, :bingx_error, Exception.new(code, message, data)}
 
       payload ->
         {:ok, payload}
