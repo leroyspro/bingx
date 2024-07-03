@@ -33,11 +33,15 @@ defmodule BingX.HTTP.Response do
 
   def get_content_payload(content) do
     case content do
-      %{"code" => 0, "data" => payload} ->
-        {:ok, payload}
-
       %{"code" => 0} ->
-        {:ok, :no_data}
+        msg = Map.get(content, "msg", "")
+        data = Map.get(content, "data", %{})
+
+        if message_contains_error(msg) do
+          {:error, :bingx_error, Exception.new(0, msg, data)}
+        else
+          {:ok, data}
+        end
 
       %{"code" => code, "msg" => message} ->
         data = Map.get(content, "data", %{})
@@ -57,5 +61,10 @@ defmodule BingX.HTTP.Response do
     ) do
       {:ok, payload}
     end
+  end
+
+  defp message_contains_error(message) do
+    ["lock fail", "try again later"]
+    |> Enum.any?(&(message =~ &1))
   end
 end
