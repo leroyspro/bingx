@@ -3,11 +3,11 @@ defmodule BingX.Account.GetReferralsResponse do
 
   defstruct [:list, :total]
 
-  def new(data) do 
+  def new(data) do
     list = data["list"] || []
 
     %__MODULE__{
-      list: Enum.map(list, & ReferralInfo.struct/1),
+      list: Enum.map(list, &ReferralInfo.new/1),
       total: length(list)
     }
   end

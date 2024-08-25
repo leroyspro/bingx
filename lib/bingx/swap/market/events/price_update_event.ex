@@ -33,13 +33,13 @@ defmodule BingX.Swap.Market.PriceUpdateEvent do
 
   defp get_value(data, type) do
     case type do
-      :last -> 
+      :last ->
         get_and_transform(data, "c", &interp_as_float/1)
 
-      :mark -> 
+      :mark ->
         get_and_transform(data, "p", &interp_as_float/1)
 
-      nil -> 
+      nil ->
         nil
     end
   end
