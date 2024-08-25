@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Trade.Contract do
   alias BingX.Swap.Order
-  alias BingX.Swap.Interpretators
+  alias BingX.Interpretators
 
   def from_order(%Order{} = order) do
     order

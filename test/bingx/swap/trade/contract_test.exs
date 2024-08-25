@@ -4,7 +4,7 @@ defmodule BingX.Swap.ContractTest do
 
   alias BingX.Swap.Order
   alias BingX.Swap.Trade.Contract
-  alias BingX.Swap.Interpretators
+  alias BingX.Interpretators
 
   describe "BingX.API.Contract from_order/2" do
     test "should return map struct" do

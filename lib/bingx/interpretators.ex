@@ -1,6 +1,7 @@
-defmodule BingX.Swap.Interpretators do
+defmodule BingX.Interpretators do
   @moduledoc """
-  This module provides interpreters (adapters) to perform conversions from local terminology to BingX API terminology, and vice versa.
+  This module provides interpreters (adapters) to perform conversions 
+  from local terminology to BingX API terminology, and vice versa.
   """
 
   alias BingX.Helpers
@@ -132,6 +133,17 @@ defmodule BingX.Swap.Interpretators do
   end
 
   def interp_as_float(_), do: nil
+
+  def interp_as_int(x) when is_number(x), do: trunc(x)
+
+  def interp_as_int(x) when is_binary(x) do
+    case Integer.parse(x) do
+      :error -> nil
+      {x, _} -> x
+    end
+  end
+
+  def interp_as_int(_), do: nil
 
   def interp_as_abs(x) do
     case interp_as_float(x) do

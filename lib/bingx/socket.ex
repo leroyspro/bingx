@@ -8,6 +8,8 @@ defmodule BingX.Socket do
 
   alias :zlib, as: Zlib
 
+  @debug Application.compile_env(:bingx, :debug)
+
   @type new_state :: term()
   @type message :: binary()
 
@@ -76,11 +78,14 @@ defmodule BingX.Socket do
 
   @impl WebSockex
   def handle_frame({:binary, frame}, {module, state}) do
+    if @debug, do: Logger.info("[BingX debug] got message from socket")
+
     case Zlib.gunzip(frame) do
       "Ping" ->
         {:reply, {:text, "Pong"}, {module, state}}
 
       data ->
+        if @debug, do: Logger.info("[BingX debug] handling unzipped message: #{inspect(data)}")
         handle_event_data(data, {module, state})
     end
   end

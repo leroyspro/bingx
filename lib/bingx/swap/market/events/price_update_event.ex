@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Market.PriceUpdateEvent do
   import BingX.Helpers, only: [get_and_transform: 3]
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   @type t :: %__MODULE__{
           :type => :last | :mark | nil,

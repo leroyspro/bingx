@@ -6,7 +6,7 @@ defmodule BingX.Swap.Trade do
   """
 
   import BingX.HTTP.Client, only: [signed_request: 5]
-  import BingX.Swap.Interpretators, only: [to_external_margin_mode: 1, to_external_position_side: 1]
+  import BingX.Interpretators, only: [to_external_margin_mode: 1, to_external_position_side: 1]
 
   alias BingX.Helpers
   alias BingX.HTTP.Response

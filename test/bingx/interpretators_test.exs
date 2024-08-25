@@ -1,7 +1,7 @@
-defmodule BingX.Swap.InterpretatorsTest do
+defmodule BingX.InterpretatorsTest do
   use ExUnit.Case, async: true
 
-  alias BingX.Swap.Interpretators
+  alias BingX.Interpretators
 
   describe "BingX.API.Interpretators to_internal_order_execution_type/1" do
     test "should transform order types from internal to external API properly" do

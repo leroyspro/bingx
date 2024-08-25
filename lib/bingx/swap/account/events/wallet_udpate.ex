@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Account.WalletUpdate do
   import BingX.Helpers
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   @type t :: %{
           asset: binary() | nil,

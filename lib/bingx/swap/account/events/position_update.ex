@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Account.PositionUpdate do
   import BingX.Helpers
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   defstruct [
     :symbol,

@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Account.AccountUpdateEvent do
   import BingX.Helpers
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   alias BingX.Swap.Account.{WalletUpdate, PositionUpdate}
 

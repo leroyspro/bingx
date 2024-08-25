@@ -31,7 +31,7 @@ defmodule BingX.Swap.Market.PriceSocket do
 
   @origin Application.compile_env(:bingx, :swap_origin, "wss://open-api-swap.bingx.com/swap-market")
 
-  @callback handle_event(type :: :price, event :: PriceEvent.t(), state :: any()) :: {:ok, any()} | {:close, any()}
+  @callback handle_event(type :: :price, event :: PriceUpdateEvent.t(), state :: any()) :: {:ok, any()} | {:close, any()}
 
   @doc false
   defmacro __using__(opts \\ []) do

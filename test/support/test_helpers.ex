@@ -1,5 +1,5 @@
 defmodule BingX.TestHelpers do
-  alias BingX.Swap.Interpretators
+  alias BingX.Interpretators
   alias BingX.Helpers
 
   defmacro test_module_struct(module, fields) do

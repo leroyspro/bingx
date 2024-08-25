@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Trade.DetailedOrderInfo do
   import BingX.Helpers
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   @fields [
     :order_id,
