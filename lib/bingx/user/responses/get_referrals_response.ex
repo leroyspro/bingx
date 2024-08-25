@@ -1,5 +1,5 @@
-defmodule BingX.Account.GetReferralsResponse do
-  alias BingX.Account.ReferralInfo
+defmodule BingX.User.GetReferralsResponse do
+  alias BingX.User.ReferralInfo
 
   defstruct [:list, :total]
 

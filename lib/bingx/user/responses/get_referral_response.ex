@@ -1,5 +1,5 @@
-defmodule BingX.Account.GetReferralResponse do
-  alias BingX.Account.ReferralInfo
+defmodule BingX.User.GetReferralResponse do
+  alias BingX.User.ReferralInfo
 
   defstruct ReferralInfo.fields()
 

@@ -10,11 +10,11 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       require Logger
 
       alias BingX.Swap.Account.UpdatesSocket
-      alias BingX.Account.Security
+      alias BingX.User.Auth
 
       def start_link do
         api_key = System.fetch_env!("API_KEY")
-        {:ok, %{listen_key: listen_key}} = Security.generate_listen_key(api_key)
+        {:ok, %{listen_key: listen_key}} = Auth.generate_listen_key(api_key)
 
         UpdatesSocket.start_link(listen_key, __MODULE__, :state)
       end

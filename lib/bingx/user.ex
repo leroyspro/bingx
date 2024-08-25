@@ -1,7 +1,7 @@
-defmodule BingX.Account do
+defmodule BingX.User do
   import BingX.HTTP.Client, only: [signed_request: 5]
 
-  alias BingX.Account.{GetReferralsResponse, GetReferralResponse}
+  alias BingX.User.{GetReferralsResponse, GetReferralResponse}
   alias BingX.HTTP.Response
 
   @api_scope "/openApi/agent/v1/account"

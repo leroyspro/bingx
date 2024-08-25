@@ -1,4 +1,4 @@
-defmodule BingX.Account.ReferralInfo do
+defmodule BingX.User.ReferralInfo do
   import BingX.Helpers, only: [get_and_transform: 3]
   import BingX.Interpretators
 

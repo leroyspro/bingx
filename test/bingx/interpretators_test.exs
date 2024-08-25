@@ -3,7 +3,7 @@ defmodule BingX.InterpretatorsTest do
 
   alias BingX.Interpretators
 
-  describe "BingX.API.Interpretators to_internal_order_execution_type/1" do
+  describe "BingX.Interpretators to_internal_order_execution_type/1" do
     test "should transform order types from internal to external API properly" do
       assert :placed = Interpretators.to_internal_order_execution_type("NeW")
       assert :canceled = Interpretators.to_internal_order_execution_type("CaNCELlED")
@@ -19,7 +19,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_margin_mode/1" do
+  describe "BingX.Interpretators to_internal_margin_mode/1" do
     test "should transform order types from external to internal API properly" do
       assert :crossed = Interpretators.to_internal_margin_mode("CrosS")
       assert :isolated = Interpretators.to_internal_margin_mode("IsolAted")
@@ -32,7 +32,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_margin_mode/1" do
+  describe "BingX.Interpretators to_external_margin_mode/1" do
     test "should transform margin modes from internal to external API properly" do
       assert "CROSSED" = Interpretators.to_external_margin_mode(:crossed)
       assert "ISOLATED" = Interpretators.to_external_margin_mode(:isolated)
@@ -45,7 +45,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_order_type/1" do
+  describe "BingX.Interpretators to_internal_order_type/1" do
     test "should transform order types from external to internal API properly" do
       assert :market = Interpretators.to_internal_order_type("MARkEt")
       assert :trigger_market = Interpretators.to_internal_order_type("Trigger_Market")
@@ -63,7 +63,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_order_type/1" do
+  describe "BingX.Interpretators to_external_order_type/1" do
     test "should transform order types from internal to external API properly" do
       assert "MARKET" = Interpretators.to_external_order_type(:market)
       assert "TRIGGER_MARKET" = Interpretators.to_external_order_type(:trigger_market)
@@ -75,7 +75,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_order_status/1" do
+  describe "BingX.Interpretators to_internal_order_status/1" do
     test "should transform order statuses from external to internal API properly" do
       assert :placed = Interpretators.to_internal_order_status("neW")
       assert :triggered = Interpretators.to_internal_order_status("TriGGERED")
@@ -93,7 +93,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_order_status/1" do
+  describe "BingX.Interpretators to_external_order_status/1" do
     test "should transform order statuses from internal to external API properly" do
       assert "NEW" = Interpretators.to_external_order_status(:placed)
       assert "TRIGGERED" = Interpretators.to_external_order_status(:triggered)
@@ -104,7 +104,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_position_side/1" do
+  describe "BingX.Interpretators to_internal_position_side/1" do
     test "should transform position sides from external to internal API properly" do
       assert :long = Interpretators.to_internal_position_side("LOnG")
       assert :short = Interpretators.to_internal_position_side("sHORT")
@@ -118,7 +118,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_position_side/1" do
+  describe "BingX.Interpretators to_external_position_side/1" do
     test "should transform position sides from internal to external API properly" do
       assert "LONG" = Interpretators.to_external_position_side(:long)
       assert "SHORT" = Interpretators.to_external_position_side(:short)
@@ -126,7 +126,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_order_side/1" do
+  describe "BingX.Interpretators to_internal_order_side/1" do
     test "should transform order sides from external to internal API properly" do
       assert :buy = Interpretators.to_internal_order_side("Buy")
       assert :sell = Interpretators.to_internal_order_side("SeLL")
@@ -139,14 +139,14 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_order_side/1" do
+  describe "BingX.Interpretators to_external_order_side/1" do
     test "should transform order sides from internal to external API properly" do
       assert "BUY" = Interpretators.to_external_order_side(:buy)
       assert "SELL" = Interpretators.to_external_order_side(:sell)
     end
   end
 
-  describe "BingX.API.Interpretators to_internal_working_type/1" do
+  describe "BingX.Interpretators to_internal_working_type/1" do
     test "should transform working types from external to internal API properly" do
       assert :index_price = Interpretators.to_internal_working_type("INDEX_PRICE")
       assert :mark_price = Interpretators.to_internal_working_type("MARK_PRICE")
@@ -160,7 +160,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators to_external_working_types/1" do
+  describe "BingX.Interpretators to_external_working_types/1" do
     test "should transform working types from internal to external API properly" do
       assert "INDEX_PRICE" = Interpretators.to_external_working_type(:index_price)
       assert "MARK_PRICE" = Interpretators.to_external_working_type(:mark_price)
@@ -168,7 +168,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators interp_as_float/1" do
+  describe "BingX.Interpretators interp_as_float/1" do
     test "should transform numbers to float" do
       assert 25.0 = Interpretators.interp_as_float(25)
     end
@@ -185,7 +185,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators interp_as_abs/1" do
+  describe "BingX.Interpretators interp_as_abs/1" do
     test "should transform numbers to absolute float" do
       assert 25.0 = Interpretators.interp_as_abs(25)
       assert 25.0 = Interpretators.interp_as_abs(-25)
@@ -203,7 +203,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators interp_as_binary/1" do
+  describe "BingX.Interpretators interp_as_binary/1" do
     test "should return original binaries" do
       assert "25" = Interpretators.interp_as_binary("25")
       assert "" = Interpretators.interp_as_binary("")
@@ -216,7 +216,7 @@ defmodule BingX.InterpretatorsTest do
     end
   end
 
-  describe "BingX.API.Interpretators interp_as_non_empty_binary/1" do
+  describe "BingX.Interpretators interp_as_non_empty_binary/1" do
     test "should return original binaries" do
       assert "25" = Interpretators.interp_as_non_empty_binary("25")
       assert "___" = Interpretators.interp_as_non_empty_binary("___")
