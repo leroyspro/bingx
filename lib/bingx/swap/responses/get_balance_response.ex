@@ -11,7 +11,8 @@ defmodule BingX.Swap.GetBalanceResponse do
     :realized_profit,
     :unrealized_profit,
     :used_margin,
-    :user_id
+    :user_id,
+    :uid
   ]
 
   @type t() :: %__MODULE__{
@@ -23,12 +24,13 @@ defmodule BingX.Swap.GetBalanceResponse do
           :realized_profit => float(),
           :unrealized_profit => float(),
           :used_margin => float(),
-          :user_id => binary()
+          :user_id => binary(),
+          :uid => binary()
         }
 
   @spec new(map()) :: t()
   def new(data) do
-    data = Map.get(data, "balance") || %{}
+    data = get_balance(data)
 
     %__MODULE__{
       asset: get_and_transform(data, "asset", &interp_as_non_empty_binary/1),
@@ -39,7 +41,19 @@ defmodule BingX.Swap.GetBalanceResponse do
       realized_profit: get_and_transform(data, "realisedProfit", &interp_as_float/1),
       unrealized_profit: get_and_transform(data, "unrealizedProfit", &interp_as_float/1),
       used_margin: get_and_transform(data, "usedMargin", &interp_as_float/1),
-      user_id: get_and_transform(data, "userId", &interp_as_non_empty_binary/1)
+      user_id: get_and_transform(data, "userId", &interp_as_non_empty_binary/1),
+      uid: get_and_transform(data, "shortUid", &interp_as_non_empty_binary/1)
     }
+  end
+
+  defp get_balance(data) when is_list(data) do
+    Enum.find(data, %{}, fn 
+      %{"asset" => "USDT"} -> true
+      _balance -> false
+    end)
+  end
+
+  defp get_balance(_data) do
+    %{}
   end
 end
