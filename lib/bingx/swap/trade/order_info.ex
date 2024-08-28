@@ -1,6 +1,6 @@
 defmodule BingX.Swap.Trade.OrderInfo do
   import BingX.Helpers
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   @fields [
     :symbol,

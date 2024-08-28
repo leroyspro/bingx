@@ -1,6 +1,6 @@
-defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
+defmodule BingX.User.AuthTest.ExtendListenKeyTest do
   @moduledoc """
-  This is module is used to test BingX.Account.Security module.
+  This is module is used to test BingX.User.Auth module.
 
   ## ATTENTION
   Patch **every** network request to the real world!
@@ -10,7 +10,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
   use ExUnit.Case
   use Patch
 
-  alias BingX.Account.Security
+  alias BingX.User.Auth
   alias BingX.HTTP.{Client, Response, Error}
 
   setup_all do
@@ -20,13 +20,13 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
     }
   end
 
-  describe "BingX.Account.Security extend_listen_key/2" do
+  describe "BingX.User.Auth extend_listen_key/2" do
     test "should make a PUT request", context do
       %{api_key: api_key, listen_key: listen_key} = context
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.extend_listen_key(listen_key, api_key)
+      Auth.extend_listen_key(listen_key, api_key)
 
       assert_called_once(Client.authed_request(:put, _path, _api_key, _options))
     end
@@ -36,7 +36,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.extend_listen_key(listen_key, api_key)
+      Auth.extend_listen_key(listen_key, api_key)
 
       assert_called_once(Client.authed_request(_method, ^path, _api_key, _options))
     end
@@ -46,7 +46,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.extend_listen_key(listen_key, api_key)
+      Auth.extend_listen_key(listen_key, api_key)
 
       assert_called_once(Client.authed_request(_method, _path, ^api_key, _options))
     end
@@ -56,7 +56,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.extend_listen_key(listen_key, api_key)
+      Auth.extend_listen_key(listen_key, api_key)
 
       assert_called_once(Client.authed_request(_method, _path, _api_key, params: %{"listenKey" => ^listen_key}))
     end
@@ -67,7 +67,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
       patch(Response, :validate_statuses, {:ok, ""})
       patch(Client, :authed_request, {:ok, %Response{status_code: 200}})
 
-      Security.extend_listen_key(listen_key, api_key)
+      Auth.extend_listen_key(listen_key, api_key)
 
       assert_called_once(Response.validate_statuses(_response, [200, 204]))
     end
@@ -79,7 +79,7 @@ defmodule BingX.Account.SecurityTest.ExtendListenKeyTest do
 
       patch(Client, :authed_request, error)
 
-      assert ^error = Security.extend_listen_key(listen_key, api_key)
+      assert ^error = Auth.extend_listen_key(listen_key, api_key)
     end
   end
 end

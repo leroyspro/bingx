@@ -1,6 +1,6 @@
-defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
+defmodule BingX.User.AuthTest.GenerateListenKeyTest do
   @moduledoc """
-  This is module is used to test BingX.Account.Security module.
+  This is module is used to test BingX.User.Auth module.
 
   ## ATTENTION
   Patch **every** network request to the real world!
@@ -10,7 +10,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
   use ExUnit.Case
   use Patch
 
-  alias BingX.Account.{Security, GenerateListenKeyResponse}
+  alias BingX.User.{Auth, GenerateListenKeyResponse}
   alias BingX.HTTP.{Client, Response, Error}
 
   setup_all do
@@ -20,13 +20,13 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
     }
   end
 
-  describe "BingX.Account.Security generate_listen_key/1" do
+  describe "BingX.User.Auth generate_listen_key/1" do
     test "should make a POST request", context do
       %{api_key: api_key} = context
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.generate_listen_key(api_key)
+      Auth.generate_listen_key(api_key)
 
       assert_called_once(Client.authed_request(:post, _path, _api_key))
     end
@@ -36,7 +36,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.generate_listen_key(api_key)
+      Auth.generate_listen_key(api_key)
 
       assert_called_once(Client.authed_request(_method, ^path, _api_key))
     end
@@ -46,7 +46,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
 
       patch(Client, :authed_request, {:error, :http_error, %Error{message: :timeout}})
 
-      Security.generate_listen_key(api_key)
+      Auth.generate_listen_key(api_key)
 
       assert_called_once(Client.authed_request(_method, _path, ^api_key))
     end
@@ -62,7 +62,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       patch(Response, :process_response, {:ok, content})
       patch(Client, :authed_request, {:ok, response})
 
-      Security.generate_listen_key(api_key)
+      Auth.generate_listen_key(api_key)
 
       assert_called_once(Response.process_response(^response))
     end
@@ -78,7 +78,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       patch(Response, :process_response, {:ok, content})
       patch(Client, :authed_request, {:ok, response})
 
-      assert {:ok, ^struct} = Security.generate_listen_key(api_key)
+      assert {:ok, ^struct} = Auth.generate_listen_key(api_key)
 
       assert_called_once(GenerateListenKeyResponse.new(^content))
       assert_called_once(Response.process_response(^response))
@@ -93,7 +93,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
       patch(Response, :process_response, error)
       patch(Client, :authed_request, {:ok, response})
 
-      assert ^error = Security.generate_listen_key(api_key)
+      assert ^error = Auth.generate_listen_key(api_key)
 
       assert_called_once(Response.process_response(^response))
     end
@@ -105,7 +105,7 @@ defmodule BingX.Account.SecurityTest.GenerateListenKeyTest do
 
       patch(Client, :authed_request, error)
 
-      assert ^error = Security.generate_listen_key(api_key)
+      assert ^error = Auth.generate_listen_key(api_key)
     end
   end
 end

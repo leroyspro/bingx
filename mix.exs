@@ -51,7 +51,7 @@ defmodule BingX.MixProject do
       {:patch, "~> 0.13.0", only: :test},
       {:excoveralls, "~> 0.18", only: :test},
       {:finch, "~> 0.18", optional: true},
-      {:httpoison, "~> 2.2", optional: true},
+      {:httpoison, "~> 2.2", optional: true}
     ]
   end
 end

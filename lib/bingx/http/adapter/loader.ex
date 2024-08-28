@@ -3,11 +3,11 @@ defmodule BingX.HTTP.Adapter.Loader do
 
   @doc false
   defmacro load() do
-    default = 
+    default =
       cond do
         Code.ensure_loaded?(HTTPoison) ->
           IO.puts("[BingX] *INFO* Loaded HTTPoison HTTP adapter")
-          Adapter.HTTPoison 
+          Adapter.HTTPoison
 
         Code.ensure_loaded?(Finch) ->
           IO.puts("[BingX] *INFO* Loaded Finch HTTP adapter")

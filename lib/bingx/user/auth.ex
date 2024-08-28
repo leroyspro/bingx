@@ -1,4 +1,4 @@
-defmodule BingX.Account.Security do
+defmodule BingX.User.Auth do
   @moduledoc """
   This module provides functions making requests for account API methods using abstractions on known internal interfaces.
   """
@@ -6,7 +6,7 @@ defmodule BingX.Account.Security do
   import BingX.HTTP.Client, only: [authed_request: 3, authed_request: 4]
 
   alias BingX.HTTP.Response
-  alias BingX.Account.GenerateListenKeyResponse
+  alias BingX.User.GenerateListenKeyResponse
 
   @api_scope "/openApi/user/auth"
   @generate_listen_key_path @api_scope <> "/userDataStream"

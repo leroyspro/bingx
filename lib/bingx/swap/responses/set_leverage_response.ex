@@ -1,6 +1,6 @@
 defmodule BingX.Swap.SetLeverageResponse do
   import BingX.Helpers, only: [get_and_transform: 3]
-  import BingX.Swap.Interpretators
+  import BingX.Interpretators
 
   defstruct [
     :symbol,
