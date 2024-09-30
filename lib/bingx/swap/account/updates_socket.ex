@@ -69,6 +69,12 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       end
 
       @impl true
+      def handle_event(%{"e" => "SNAPSHOT"}, state) do
+        # Some weird event
+        {:ok, state}
+      end
+
+      @impl true
       def handle_event(event, state) do
         fallback(event, state)
       end
