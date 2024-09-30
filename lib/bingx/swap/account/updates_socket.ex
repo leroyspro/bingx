@@ -69,6 +69,11 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       end
 
       @impl true
+      def handle_event(event, state) do
+        fallback(event, state)
+      end
+
+      @impl true
       def handle_event(type, event, state) do
         raise "handle_event/3 not implemented"
       end
