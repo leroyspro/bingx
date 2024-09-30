@@ -36,6 +36,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
   @callback handle_event(type :: :config, event :: %ConfigUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
   @callback handle_event(type :: :account, event :: %AccountUpdateEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
   @callback handle_event(type :: :order, event :: %OrderTradeEvent{}, state :: any()) :: {:ok, any()} | {:close, any()}
+  @callback fallback(event :: map(), state :: any()) :: {:ok, any()} | {:close, any()}
 
   defmacro __using__(opts \\ []) do
     quote location: :keep, bind_quoted: [opts: opts] do
@@ -53,7 +54,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       end
 
       @impl true
-      def handle_event(%{"e" => "ACCOUNT_CONFIG_UPDATE"} = event, state) do
+      def handle_event(%{"e" => "SNAPSHOT"} = event, state) do
         handle_event(:config, ConfigUpdateEvent.new(event), state)
       end
 
@@ -72,7 +73,13 @@ defmodule BingX.Swap.Account.UpdatesSocket do
         raise "handle_event/3 not implemented"
       end
 
-      defoverridable child_spec: 1, handle_event: 2, handle_event: 3
+      @impl true
+      def fallback(event, state) do
+        IO.warn("** BingX.Swap.Account.UpdatesSocket got fallbacked event: #{inspect(event)} **")
+        {:ok, state}
+      end
+
+      defoverridable child_spec: 1, handle_event: 2, handle_event: 3, fallback: 2
     end
   end
 
