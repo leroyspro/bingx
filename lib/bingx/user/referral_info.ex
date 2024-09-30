@@ -17,7 +17,7 @@ defmodule BingX.User.ReferralInfo do
     :own_invite_code,
     :registration_date,
     :has_trades?,
-    :user_id,
+    :uid,
     :user_level
   ]
 
@@ -41,7 +41,7 @@ defmodule BingX.User.ReferralInfo do
       own_invite_code: get_and_transform(data, "ownInviteCode", &interp_as_binary/1),
       registration_date: get_and_transform(data, "registerDateTime", &interp_as_int/1),
       has_trades?: get_and_transform(data, "trade", &interp_as_boolean/1),
-      user_id: get_and_transform(data, "uid", &interp_as_binary/1),
+      uid: get_and_transform(data, "uid", &interp_as_binary/1),
       user_level: get_and_transform(data, "userLevel", &interp_as_binary/1)
     }
 

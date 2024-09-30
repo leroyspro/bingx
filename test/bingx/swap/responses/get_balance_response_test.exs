@@ -15,18 +15,23 @@ defmodule BingX.Swap.GetBalanceResponseTest do
     :realized_profit,
     :unrealized_profit,
     :used_margin,
-    :user_id
+    :user_id,
+    :uid
   ]
 
   describe "BingX.Swap.GetBalanceResponse new/1" do
     test "should return empty struct without params" do
-      assert %GetBalanceResponse{} = GetBalanceResponse.new(%{})
+      assert %GetBalanceResponse{} = GetBalanceResponse.new([])
     end
 
     test_module_struct(GetBalanceResponse, @fields)
 
     test "should be tolerant to wrong data contract" do
       assert %GetBalanceResponse{} = GetBalanceResponse.new(%{"x" => "x"})
+    end
+
+    test "should be tolerant to empty data list" do
+      assert %GetBalanceResponse{} = GetBalanceResponse.new([])
     end
 
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_non_empty_binary, ["balance", "asset"], :asset)
@@ -38,5 +43,6 @@ defmodule BingX.Swap.GetBalanceResponseTest do
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "unrealizedProfit"], :unrealized_profit)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_float, ["balance", "usedMargin"], :used_margin)
     test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_non_empty_binary, ["balance", "userId"], :user_id)
+    test_response_key_interp(GetBalanceResponse, :new, [], :interp_as_non_empty_binary, ["balance", "shortUid"], :uid)
   end
 end

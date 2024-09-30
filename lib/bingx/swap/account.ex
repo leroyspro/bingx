@@ -10,10 +10,8 @@ defmodule BingX.Swap.Account do
   alias BingX.Swap.GetBalanceResponse
   alias BingX.HTTP.Response
 
-  @api_scope "/openApi/swap/v2/user"
-
-  @get_balance_path @api_scope <> "/balance"
-  @get_all_positions_path @api_scope <> "/positions"
+  @api_v2 "/openApi/swap/v2/user"
+  @api_v3 "/openApi/swap/v3/user"
 
   # Interface
   # =========
@@ -43,11 +41,11 @@ defmodule BingX.Swap.Account do
   # =======
 
   defp do_get_balance(api_key, secret_key) do
-    signed_request(:get, @get_balance_path, api_key, secret_key)
+    signed_request(:get, @api_v3 <> "/balance", api_key, secret_key)
   end
 
   defp do_get_all_positions(symbol, api_key, secret_key) do
     params = %{"symbol" => symbol}
-    signed_request(:get, @get_all_positions_path, api_key, secret_key, params: params)
+    signed_request(:get, @api_v2 <> "/positions", api_key, secret_key, params: params)
   end
 end
