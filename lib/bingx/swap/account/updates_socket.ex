@@ -54,7 +54,7 @@ defmodule BingX.Swap.Account.UpdatesSocket do
       end
 
       @impl true
-      def handle_event(%{"e" => "SNAPSHOT"} = event, state) do
+      def handle_event(%{"e" => "ACCOUNT_CONFIG_UPDATE"} = event, state) do
         handle_event(:config, ConfigUpdateEvent.new(event), state)
       end
 
